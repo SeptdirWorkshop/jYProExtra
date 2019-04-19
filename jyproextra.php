@@ -31,7 +31,55 @@ class PlgSystemJYProExtra extends CMSPlugin
 	protected $autoloadLanguage = true;
 
 	/**
-	 * Set child constant Override classes, load languages.
+	 * Set child constant and override classes.
+	 *
+	 * @throws  Exception
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	public function onAfterInitialise()
+	{
+		$app = Factory::getApplication();
+		if ($app->isClient('site'))
+		{
+			if ($app->isClient('site'))
+			{
+				$template = $app->getTemplate();
+				if ($template === 'yootheme')
+				{
+					$params = $app->getTemplate(true)->params->get('config');
+					$params = new Registry($params);
+
+					if ($child = $params->get('child_theme'))
+					{
+						// Set constant
+						define('YOOTHEME_CHILD', $child);
+
+						// Override FileLayout class
+						if ($this->params->get('child_layouts', 1))
+						{
+							$this->overrideClass('FileLayout');
+						}
+
+						// Override HtmlView class
+						if ($this->params->get('child_views', 1))
+						{
+							$this->overrideClass('HtmlView');
+						}
+
+						// Override ModuleHelper class
+						if ($this->params->get('child_modules', 1))
+						{
+							$this->overrideClass('ModuleHelper');
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Load child languages.
 	 *
 	 * @throws  Exception
 	 *
@@ -42,46 +90,18 @@ class PlgSystemJYProExtra extends CMSPlugin
 		$app = Factory::getApplication();
 		if ($app->isClient('site'))
 		{
-			$template = $app->getTemplate();
-			if ($template === 'yootheme')
+			if (defined('YOOTHEME_CHILD'))
 			{
-				$params = $app->getTemplate(true)->params->get('config');
-				$params = new Registry($params);
-
-				if ($child = $params->get('child_theme'))
-				{
-					// Set constant
-					define('YOOTHEME_CHILD', $child);
-				}
-
-				// Child layouts
-				if ($this->params->get('child_layouts', 1))
-				{
-					$this->overrideClass('FileLayout');
-				}
-
-				// Child views
-				if ($this->params->get('child_views', 1))
-				{
-					$this->overrideClass('HtmlView');
-				}
-
-				// Child modules
-				if ($this->params->get('child_modules', 1))
-				{
-					$this->overrideClass('ModuleHelper');
-				}
-
-				// Child site languages
+				// Load child site languages
 				if ($this->params->get('child_languages', 1))
 				{
 					$language = Factory::getLanguage();
-					$language->load('tpl_yootheme_' . $child, JPATH_SITE, $language->getTag(), true);
+					$language->load('tpl_yootheme_' . YOOTHEME_CHILD, JPATH_SITE, $language->getTag(), true);
 				}
 			}
 		}
 
-		// Load YoothemePro admin languages
+		// Load child languages in control panel
 		if ($app->isClient('administrator') && $this->params->get('child_languages', 1))
 		{
 			if ($child = Folder::folders(JPATH_SITE . '/templates', 'yootheme_', false))
@@ -111,7 +131,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 			'HtmlView'     => JPATH_ROOT . '/libraries/src/MVC/View/HtmlView.php',
 		);
 
-		if (!empty($classes[$class]))
+		if (!empty($classes[$class]) && !class_exists($class))
 		{
 			$coreClass = $class . 'Core';
 			if (!class_exists($coreClass))
