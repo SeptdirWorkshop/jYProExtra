@@ -169,7 +169,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	public function onContentPrepareForm($form, $data)
 	{
 		$formName = $form->getName();
-		if ($formName == 'com_modules.module')
+		if ($formName == 'com_modules.module' || $formName == 'com_advancedmodules.module')
 		{
 			// Child modules
 			if ($this->params->get('child_modules', 1))
