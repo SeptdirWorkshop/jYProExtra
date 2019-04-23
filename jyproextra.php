@@ -13,6 +13,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Folder;
+use Joomla\CMS\Filesystem\Path;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Plugin\CMSPlugin;
@@ -136,17 +137,16 @@ class PlgSystemJYProExtra extends CMSPlugin
 			$coreClass = $class . 'Core';
 			if (!class_exists($coreClass))
 			{
-				$path     = $classes[$class];
-				$core     = __DIR__ . '/classes/' . $coreClass . '.php';
-				$override = __DIR__ . '/classes/' . $class . '.php';
+				$path     = Path::clean($classes[$class]);
+				$core     = Path::clean(__DIR__ . '/classes/' . $coreClass . '.php');
+				$override = Path::clean(__DIR__ . '/classes/' . $class . '.php');
 				if (!file_exists($core))
 				{
 					file_put_contents($core, '');
 				}
 
 				$context = file_get_contents($path);
-				$context = str_replace('class ' . $class . ' ', 'class ' . $coreClass . ' ', $context);
-				$context = str_replace('class ' . $class . PHP_EOL, 'class ' . $coreClass . PHP_EOL, $context);
+				$context = str_replace('class ' . $class, 'class ' . $coreClass, $context);
 				if (file_get_contents($core) !== $context)
 				{
 					file_put_contents($core, $context);
