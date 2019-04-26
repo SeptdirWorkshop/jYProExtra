@@ -37,6 +37,26 @@ class PlgSystemJYProExtraInstallerScript
 	protected $minimumJoomla = '3.9.0';
 
 	/**
+	 * Runs right before any installation action.
+	 *
+	 * @param   string            $type    Type of PostFlight action. Possible values are:
+	 * @param   InstallerAdapter  $parent  Parent object calling object.
+	 *
+	 * @throws  Exception
+	 *
+	 * @return  boolean True if install complete.
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	function preflight($type, $parent)
+	{
+		// Check compatible
+		if (!$this->checkCompatible()) return false;
+
+		return true;
+	}
+
+	/**
 	 * Runs right after any installation action.
 	 *
 	 * @param   string            $type    Type of PostFlight action. Possible values are:
