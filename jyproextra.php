@@ -156,7 +156,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	}
 
 	/**
-	 * Change fields types.
+	 * Change fields types and add params.
 	 *
 	 * @param   Form   $form  The form to be altered.
 	 * @param   mixed  $data  The associated data for the form.
@@ -173,6 +173,10 @@ class PlgSystemJYProExtra extends CMSPlugin
 			{
 				$this->changeFieldType($form, 'layout', 'yooModuleLayout', 'params');
 			}
+
+			// Add params
+			Form::addFormPath(__DIR__ . '/forms');
+			$form->loadFile('module');
 		}
 	}
 
@@ -205,7 +209,8 @@ class PlgSystemJYProExtra extends CMSPlugin
 	public function onAfterRender()
 	{
 		$app = Factory::getApplication();
-		if ($app->isClient('site') && $app->input->get('format', 'html') == 'html' && !$app->input->get('customizer'))
+		if ($app->isClient('site') && $app->getTemplate() === 'yootheme' && $app->input->get('format', 'html') == 'html'
+			&& !$app->input->get('customizer'))
 		{
 			$body = $app->getBody();
 			if ($this->params->get('images_handler', 0))
@@ -392,5 +397,57 @@ class PlgSystemJYProExtra extends CMSPlugin
 		}
 
 		return true;
+	}
+
+	/**
+	 * Method to hide module content based on module params.
+	 *
+	 * @param   object  $module   The module object.
+	 * @param   array   $attribs  The render attributes.
+	 *
+	 * @throws  Exception
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	function onRenderModule(&$module, &$attribs)
+	{
+		$app = Factory::getApplication();
+		if ($app->isClient('site') && $app->getTemplate() === 'yootheme' && !empty($module->params))
+		{
+			$params = new Registry($module->params);
+
+			// Hide in customizer
+			if ($params->get('unset_customizer') && $app->input->get('customizer'))
+			{
+				$module = false;
+			}
+		}
+	}
+
+	/**
+	 * Method to unset modules based on module params.
+	 *
+	 * @param   array  $modules  The modules array.
+	 *
+	 * @throws  Exception
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	function onAfterCleanModuleList(&$modules)
+	{
+		$app = Factory::getApplication();
+		if ($app->isClient('site') && $app->getTemplate() === 'yootheme' && !empty($modules))
+		{
+			foreach ($modules as $key => $module)
+			{
+				$params = new Registry($module->params);
+
+				// Unset in customizer
+				if ($params->get('unset_customizer') && $app->input->get('customizer'))
+				{
+					unset($modules[$key]);
+				}
+			}
+		}
 	}
 }

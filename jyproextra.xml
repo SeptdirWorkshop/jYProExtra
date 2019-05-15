@@ -19,6 +19,7 @@
 	<files>
 		<folder>classes</folder>
 		<folder>fields</folder>
+		<folder>forms</folder>
 		<folder>templates</folder>
 		<filename plugin="jyproextra">jyproextra.php</filename>
 	</files>
