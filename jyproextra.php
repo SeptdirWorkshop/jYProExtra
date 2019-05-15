@@ -244,6 +244,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 			$unsetScripts[] = '/media/jui/js/jquery-noconflict';
 			$unsetScripts[] = '/media/jui/js/jquery-migrate';
 
+			$replaceScript[] = '~jQuery\(function\(\$\){.*?(\$\((?!document\).ready).*?\}\);).*?}\);~sim';
 			$replaceScript[] = '/jQuery\(function\(\$\)\{(.?)*\}\)\;/';
 		}
 
