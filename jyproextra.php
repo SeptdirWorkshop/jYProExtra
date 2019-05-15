@@ -15,6 +15,7 @@ use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Filesystem\Path;
 use Joomla\CMS\Form\Form;
+use Joomla\CMS\Helper\ModuleHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Uri\Uri;
@@ -166,7 +167,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	public function onContentPrepareForm($form, $data)
 	{
 		$formName = $form->getName();
-		if ($formName == 'com_modules.module' || $formName == 'com_advancedmodules.module')
+		if (in_array($formName, array('com_modules.module', 'com_advancedmodules.module', 'com_config.modules')))
 		{
 			// Child modules
 			if ($this->params->get('child_modules', 1))
@@ -409,7 +410,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  __DEPLOY_VERSION__
 	 */
-	function onRenderModule(&$module, &$attribs)
+	public function onRenderModule(&$module, &$attribs)
 	{
 		$app = Factory::getApplication();
 		if ($app->isClient('site') && $app->getTemplate() === 'yootheme' && !empty($module->params))
@@ -419,7 +420,13 @@ class PlgSystemJYProExtra extends CMSPlugin
 			// Hide in customizer
 			if ($params->get('unset_customizer') && $app->input->get('customizer'))
 			{
-				$module = false;
+				$module = null;
+			}
+
+			// Hide empty content modules
+			elseif ($params->get('unset_empty') && empty($module->content))
+			{
+				$module = null;
 			}
 		}
 	}
@@ -433,7 +440,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  __DEPLOY_VERSION__
 	 */
-	function onAfterCleanModuleList(&$modules)
+	public function onAfterCleanModuleList(&$modules)
 	{
 		$app = Factory::getApplication();
 		if ($app->isClient('site') && $app->getTemplate() === 'yootheme' && !empty($modules))
@@ -444,6 +451,12 @@ class PlgSystemJYProExtra extends CMSPlugin
 
 				// Unset in customizer
 				if ($params->get('unset_customizer') && $app->input->get('customizer'))
+				{
+					unset($modules[$key]);
+				}
+
+				// Hide empty content modules
+				elseif ($params->get('unset_empty') && !$content = ModuleHelper::renderModule($module))
 				{
 					unset($modules[$key]);
 				}

@@ -10,6 +10,14 @@
 				<option value="1">JYES</option>
 				<option value="0">JNO</option>
 			</field>
+			<field name="unset_empty" type="radio"
+				   label="PLG_SYSTEM_JYPROEXTRA_PARAMS_MODULES_UNSET_EMPTY"
+				   description="PLG_SYSTEM_JYPROEXTRA_PARAMS_MODULES_UNSET_EMPTY_DESC"
+				   class="btn-group btn-group-yesno"
+				   default="0">
+				<option value="1">JYES</option>
+				<option value="0">JNO</option>
+			</field>
 		</fieldset>
 	</fields>
 </form>
