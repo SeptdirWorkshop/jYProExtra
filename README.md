@@ -3,7 +3,7 @@
 [![Documentation](https://img.shields.io/badge/documentation--0.svg?style=for-the-badge&colorA=555&colorB=555&logoWidth=20)](https://www.septdir.com/marketplace/joomla/plugins/jyproextra)
 [![Support](https://img.shields.io/badge/support--0.svg?style=for-the-badge&colorA=555&colorB=555&logoWidth=20)](https://github.com/SeptdirWorkshop/JYProExtra/issues)
 [![Demo](https://img.shields.io/badge/demo--0.svg?style=for-the-badge&colorA=555&colorB=555&logoWidth=20)](https://www.septdir.com/)
-[![Download](https://img.shields.io/github/release/SeptdirWorkshop/JYProExtra.svg?style=for-the-badge&colorA=555&colorB=1e87f0&label=download)](https://www.septdir.com/marketplace?task=download&project_id=2)
+[![Download](https://img.shields.io/github/release/SeptdirWorkshop/JYProExtra.svg?style=for-the-badge&colorA=555&colorB=1e87f0&label=download)](https://www.septdir.com/marketplace/download?element=plg_system_jyproextra)
 
 ## Features
 ### Child theme
