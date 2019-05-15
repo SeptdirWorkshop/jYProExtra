@@ -53,57 +53,13 @@ class PlgSystemJYProExtraInstallerScript
 		// Check compatible
 		if (!$this->checkCompatible()) return false;
 
-		return true;
-	}
-
-	/**
-	 * Runs right after any installation action.
-	 *
-	 * @param   string            $type    Type of PostFlight action. Possible values are:
-	 * @param   InstallerAdapter  $parent  Parent object calling object.
-	 *
-	 * @throws  Exception
-	 *
-	 * @return  boolean True on success, false on failure.
-	 *
-	 * @since  1.0.0
-	 */
-	function postflight($type, $parent)
-	{
-		// Check compatible
-		if (!$this->checkCompatible()) return false;
-
-		// Enable plugin
-		if ($type == 'install')
+		// Check update server
+		if ($type == 'update')
 		{
-			$this->enablePlugin($parent);
+			$this->checkUpdateServer();
 		}
 
-		// Update files
-		$this->updateFiles();
-
 		return true;
-	}
-
-	/**
-	 * Method to update files.
-	 *
-	 * @since  1.0.0
-	 */
-	protected function updateFiles()
-	{
-		$files = array(
-			__DIR__ . '/templates/jyproextra-image.php' => JPATH_THEMES . '/yootheme/templates/jyproextra-image.php',
-		);
-
-		foreach ($files as $src => $dest)
-		{
-			if (File::exists($dest))
-			{
-				File::delete($dest);
-				File::copy($src, $dest);
-			}
-		}
 	}
 
 	/**
@@ -148,6 +104,75 @@ class PlgSystemJYProExtraInstallerScript
 		}
 
 		return true;
+	}
+
+	/**
+	 * Method to check update server and change if need.
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected function checkUpdateServer()
+	{
+		$db    = Factory::getDbo();
+		$query = $db->getQuery(true)
+			->select(array('update_site_id'))
+			->from($db->quoteName('#__update_sites'))
+			->where($db->quoteName('name') . ' = ' . $db->quote('Joomla YooThemePro Extra'));
+		$old   = $db->setQuery($query)->loadObject();
+		if (!empty($old))
+		{
+			$new           = $old;
+			$new->name     = 'JYProExtra';
+			$new->location = 'https://www.septdir.com/marketplace/joomla/update?element=plg_system_jyproextra';
+			$db->updateObject('#__update_sites', $new, array('update_site_id'));
+		}
+	}
+
+	/**
+	 * Runs right after any installation action.
+	 *
+	 * @param   string            $type    Type of PostFlight action. Possible values are:
+	 * @param   InstallerAdapter  $parent  Parent object calling object.
+	 *
+	 * @throws  Exception
+	 *
+	 * @return  boolean True on success, false on failure.
+	 *
+	 * @since  1.0.0
+	 */
+	function postflight($type, $parent)
+	{
+		// Enable plugin
+		if ($type == 'install')
+		{
+			$this->enablePlugin($parent);
+		}
+
+		// Update files
+		$this->updateFiles();
+
+		return true;
+	}
+
+	/**
+	 * Method to update files.
+	 *
+	 * @since  1.0.0
+	 */
+	protected function updateFiles()
+	{
+		$files = array(
+			__DIR__ . '/templates/jyproextra-image.php' => JPATH_THEMES . '/yootheme/templates/jyproextra-image.php',
+		);
+
+		foreach ($files as $src => $dest)
+		{
+			if (File::exists($dest))
+			{
+				File::delete($dest);
+				File::copy($src, $dest);
+			}
+		}
 	}
 
 	/**

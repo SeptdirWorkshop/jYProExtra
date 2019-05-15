@@ -106,8 +106,8 @@
 		</fields>
 	</config>
 	<updateservers>
-		<server type="extension" priority="1" name="Joomla YooThemePro Extra">
-			https://www.septdir.com/jupdate?element=plg_system_jyproextra
+		<server type="extension" priority="1" name="JYProExtra">
+			https://www.septdir.com/marketplace/joomla/update?element=plg_system_jyproextra
 		</server>
 	</updateservers>
 </extension>
