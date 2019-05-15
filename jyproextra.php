@@ -43,36 +43,33 @@ class PlgSystemJYProExtra extends CMSPlugin
 		$app = Factory::getApplication();
 		if ($app->isClient('site'))
 		{
-			if ($app->isClient('site'))
+			$template = $app->getTemplate();
+			if ($template === 'yootheme')
 			{
-				$template = $app->getTemplate();
-				if ($template === 'yootheme')
+				$params = $app->getTemplate(true)->params->get('config');
+				$params = new Registry($params);
+
+				if ($child = $params->get('child_theme'))
 				{
-					$params = $app->getTemplate(true)->params->get('config');
-					$params = new Registry($params);
+					// Set constant
+					define('YOOTHEME_CHILD', $child);
 
-					if ($child = $params->get('child_theme'))
+					// Override FileLayout class
+					if ($this->params->get('child_layouts', 1))
 					{
-						// Set constant
-						define('YOOTHEME_CHILD', $child);
+						$this->overrideClass('FileLayout');
+					}
 
-						// Override FileLayout class
-						if ($this->params->get('child_layouts', 1))
-						{
-							$this->overrideClass('FileLayout');
-						}
+					// Override HtmlView class
+					if ($this->params->get('child_views', 1))
+					{
+						$this->overrideClass('HtmlView');
+					}
 
-						// Override HtmlView class
-						if ($this->params->get('child_views', 1))
-						{
-							$this->overrideClass('HtmlView');
-						}
-
-						// Override ModuleHelper class
-						if ($this->params->get('child_modules', 1))
-						{
-							$this->overrideClass('ModuleHelper');
-						}
+					// Override ModuleHelper class
+					if ($this->params->get('child_modules', 1))
+					{
+						$this->overrideClass('ModuleHelper');
 					}
 				}
 			}

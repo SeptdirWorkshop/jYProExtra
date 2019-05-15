@@ -24,6 +24,7 @@ class HtmlView extends HtmlViewCore
 	public function __construct($config = array())
 	{
 		parent::__construct($config);
+
 		if (defined('YOOTHEME_CHILD'))
 		{
 			foreach ($this->_path['template'] as $path)

@@ -44,7 +44,7 @@ class PlgSystemJYProExtraInstallerScript
 	 *
 	 * @throws  Exception
 	 *
-	 * @return  boolean True if install complete.
+	 * @return  boolean True on success, false on failure.
 	 *
 	 * @since  1.0.1
 	 */
@@ -64,7 +64,7 @@ class PlgSystemJYProExtraInstallerScript
 	 *
 	 * @throws  Exception
 	 *
-	 * @return  boolean True if install complete.
+	 * @return  boolean True on success, false on failure.
 	 *
 	 * @since  1.0.0
 	 */
@@ -111,7 +111,7 @@ class PlgSystemJYProExtraInstallerScript
 	 *
 	 * @throws  Exception
 	 *
-	 * @return  boolean True if compatible.
+	 * @return  boolean True on success, false on failure.
 	 *
 	 * @since  1.0.0
 	 */
