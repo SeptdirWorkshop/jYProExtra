@@ -29,3 +29,9 @@ Removes the Bootstrap script from the head
 Removes the core.js script from the head
 * **Remove Keepalive**  
 Removes the keepalive.js script from the head
+
+### Modules (in modules manager)
+* **Unset in customizer**  
+Module will not be displayed in YooThemePro customizer
+* **Unset empty**  
+Module will not be displayed if content is empty
