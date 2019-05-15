@@ -205,7 +205,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	public function onAfterRender()
 	{
 		$app = Factory::getApplication();
-		if ($app->isClient('site') && ($app->input->get('format', 'html') == 'html'))
+		if ($app->isClient('site') && $app->input->get('format', 'html') == 'html' && !$app->input->get('customizer'))
 		{
 			$body = $app->getBody();
 			if ($this->params->get('images_handler', 0))
