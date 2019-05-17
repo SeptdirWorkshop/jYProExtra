@@ -445,6 +445,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 		$app = Factory::getApplication();
 		if ($app->isClient('site') && $app->getTemplate() === 'yootheme' && !empty($modules))
 		{
+			$resetKeys = false;
 			foreach ($modules as $key => $module)
 			{
 				$params = new Registry($module->params);
@@ -452,14 +453,22 @@ class PlgSystemJYProExtra extends CMSPlugin
 				// Unset in customizer
 				if ($params->get('unset_customizer') && $app->input->get('customizer'))
 				{
+					$resetKeys = true;
 					unset($modules[$key]);
 				}
 
 				// Hide empty content modules
 				elseif ($params->get('unset_empty') && !$content = ModuleHelper::renderModule($module))
 				{
+					$resetKeys = true;
 					unset($modules[$key]);
 				}
+			}
+
+			// Reset modules array keys
+			if ($resetKeys)
+			{
+				$modules = array_values($modules);
 			}
 		}
 	}
