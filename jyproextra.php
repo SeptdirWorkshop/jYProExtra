@@ -401,7 +401,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	}
 
 	/**
-	 * Method to hide module content based on module params.
+	 * Method to unset module based on module params.
 	 *
 	 * @param   object  $module   The module object.
 	 * @param   array   $attribs  The render attributes.
@@ -415,16 +415,26 @@ class PlgSystemJYProExtra extends CMSPlugin
 		$app = Factory::getApplication();
 		if ($app->isClient('site') && $app->getTemplate() === 'yootheme' && !empty($module->params))
 		{
-			$params = new Registry($module->params);
+			$params     = new Registry($module->params);
+			$customizer = (!empty($app->input->get('customizer')));
+			$component  = $app->input->get('option');
+			$view       = $app->input->get('view');
 
-			// Hide in customizer
-			if ($params->get('unset_customizer') && $app->input->get('customizer'))
+			// Unset in YooThemePro customizer
+			if ($params->get('unset_customizer') && $customizer)
 			{
 				$module = null;
 			}
 
-			// Hide empty content modules
-			elseif ($params->get('unset_empty') && empty($module->content))
+			// Unset in com_content views
+			elseif ($component == 'com_content' && $params->get('unset_content')
+				&& in_array($view, $params->get('unset_content')))
+			{
+				$module = null;
+			}
+
+			// Unset empty content modules
+			elseif ($params->get('unset_empty') && empty(trim($module->content)))
 			{
 				$module = null;
 			}
@@ -445,20 +455,32 @@ class PlgSystemJYProExtra extends CMSPlugin
 		$app = Factory::getApplication();
 		if ($app->isClient('site') && $app->getTemplate() === 'yootheme' && !empty($modules))
 		{
-			$resetKeys = false;
+			$resetKeys  = false;
+			$customizer = (!empty($app->input->get('customizer')));
+			$component  = $app->input->get('option');
+			$view       = $app->input->get('view');
+
 			foreach ($modules as $key => $module)
 			{
 				$params = new Registry($module->params);
 
-				// Unset in customizer
-				if ($params->get('unset_customizer') && $app->input->get('customizer'))
+				// Unset in YooThemePro customizer
+				if ($params->get('unset_customizer') && $customizer)
 				{
 					$resetKeys = true;
 					unset($modules[$key]);
 				}
 
-				// Hide empty content modules
-				elseif ($params->get('unset_empty') && !$content = ModuleHelper::renderModule($module))
+				// Unset in com_content views
+				elseif ($component == 'com_content' && $params->get('unset_content')
+					&& in_array($view, $params->get('unset_content')))
+				{
+					$resetKeys = true;
+					unset($modules[$key]);
+				}
+
+				// Unset empty content modules
+				elseif ($params->get('unset_empty') && empty(trim(ModuleHelper::renderModule($module))))
 				{
 					$resetKeys = true;
 					unset($modules[$key]);
