@@ -116,6 +116,120 @@ class PlgSystemJYProExtra extends CMSPlugin
 	}
 
 	/**
+	 * Change fields types and add params.
+	 *
+	 * @param   Form   $form  The form to be altered.
+	 * @param   mixed  $data  The associated data for the form.
+	 *
+	 * @since  1.0.0
+	 */
+	public function onContentPrepareForm($form, $data)
+	{
+		$formName = $form->getName();
+		if (in_array($formName, array('com_modules.module', 'com_advancedmodules.module', 'com_config.modules')))
+		{
+			// Child modules
+			if ($this->params->get('child_modules', 1))
+			{
+				$this->changeFieldType($form, 'layout', 'yooModuleLayout', 'params');
+			}
+
+			// Add params
+			Form::addFormPath(__DIR__ . '/forms');
+			$form->loadFile('module');
+		}
+	}
+
+	/**
+	 * Method to handle image and rerender head.
+	 *
+	 * @throws  Exception
+	 *
+	 * @since   1.0.0
+	 */
+	public function onAfterRender()
+	{
+		$app = Factory::getApplication();
+		if ($app->isClient('site') && $app->getTemplate() === 'yootheme' && $app->input->get('format', 'html') == 'html'
+			&& !$app->input->get('customizer'))
+		{
+			$body = $app->getBody();
+			if ($this->params->get('images_handler', 0))
+			{
+				$this->imagesHandler($body);
+			}
+
+			if ($this->params->get('scripts_remove_jquery', 0)
+				|| $this->params->get('scripts_remove_bootstrap', 0)
+				|| $this->params->get('scripts_remove_core', 0)
+				|| $this->params->get('scripts_remove_keepalive', 0))
+			{
+				$this->cleanHead($body);
+			}
+
+			$app->setBody($body);
+		}
+	}
+
+	/**
+	 * Method to include inline files contents to head.
+	 *
+	 * @throws  Exception
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	public function onBeforeCompileHead()
+	{
+		$app = Factory::getApplication();
+		if ($app->isClient('site') && $app->getTemplate() === 'yootheme')
+		{
+			$doc = Factory::getDocument();
+
+			// JavaScripts
+			$pathsJS = array(
+				Path::clean(JPATH_THEMES . '/yootheme/js/inline.min.js'),
+				Path::clean(JPATH_THEMES . '/yootheme/js/inline.js'),
+			);
+			if (defined('YOOTHEME_CHILD'))
+			{
+				$pathsJS = array_merge(array(
+					Path::clean(JPATH_THEMES . '/yootheme_' . YOOTHEME_CHILD . '/js/inline.min.js'),
+					Path::clean(JPATH_THEMES . '/yootheme_' . YOOTHEME_CHILD . '/js/inline.js'),
+				), $pathsJS);
+			}
+			foreach ($pathsJS as $path)
+			{
+				if (file_exists($path))
+				{
+					$doc->addScriptDeclaration(file_get_contents($path));
+					break;
+				}
+			}
+
+			// Stylesheets
+			$pathsJS = array(
+				Path::clean(JPATH_THEMES . '/yootheme/css/inline.min.css'),
+				Path::clean(JPATH_THEMES . '/yootheme/css/inline.css'),
+			);
+			if (defined('YOOTHEME_CHILD'))
+			{
+				$pathsJS = array_merge(array(
+					Path::clean(JPATH_THEMES . '/yootheme_' . YOOTHEME_CHILD . '/css/inline.min.css'),
+					Path::clean(JPATH_THEMES . '/yootheme_' . YOOTHEME_CHILD . '/css/inline.css'),
+				), $pathsJS);
+			}
+			foreach ($pathsJS as $path)
+			{
+				if (file_exists($path))
+				{
+					$doc->addStyleDeclaration(file_get_contents($path));
+					break;
+				}
+			}
+		}
+	}
+
+	/**
 	 * Method to override code class.
 	 *
 	 * @param   string  $class  Class name.
@@ -157,31 +271,6 @@ class PlgSystemJYProExtra extends CMSPlugin
 	}
 
 	/**
-	 * Change fields types and add params.
-	 *
-	 * @param   Form   $form  The form to be altered.
-	 * @param   mixed  $data  The associated data for the form.
-	 *
-	 * @since  1.0.0
-	 */
-	public function onContentPrepareForm($form, $data)
-	{
-		$formName = $form->getName();
-		if (in_array($formName, array('com_modules.module', 'com_advancedmodules.module', 'com_config.modules')))
-		{
-			// Child modules
-			if ($this->params->get('child_modules', 1))
-			{
-				$this->changeFieldType($form, 'layout', 'yooModuleLayout', 'params');
-			}
-
-			// Add params
-			Form::addFormPath(__DIR__ . '/forms');
-			$form->loadFile('module');
-		}
-	}
-
-	/**
 	 * Method to change field type.
 	 *
 	 * @param   Form    $form   Current form object.
@@ -197,37 +286,6 @@ class PlgSystemJYProExtra extends CMSPlugin
 		{
 			Form::addFieldPath(__DIR__ . '/fields');
 			$form->setFieldAttribute($field, 'type', $type, $group);
-		}
-	}
-
-	/**
-	 * Method to handle image and rerender head.
-	 *
-	 * @throws  Exception
-	 *
-	 * @since   1.0.0
-	 */
-	public function onAfterRender()
-	{
-		$app = Factory::getApplication();
-		if ($app->isClient('site') && $app->getTemplate() === 'yootheme' && $app->input->get('format', 'html') == 'html'
-			&& !$app->input->get('customizer'))
-		{
-			$body = $app->getBody();
-			if ($this->params->get('images_handler', 0))
-			{
-				$this->imagesHandler($body);
-			}
-
-			if ($this->params->get('scripts_remove_jquery', 0)
-				|| $this->params->get('scripts_remove_bootstrap', 0)
-				|| $this->params->get('scripts_remove_core', 0)
-				|| $this->params->get('scripts_remove_keepalive', 0))
-			{
-				$this->cleanHead($body);
-			}
-
-			$app->setBody($body);
 		}
 	}
 
