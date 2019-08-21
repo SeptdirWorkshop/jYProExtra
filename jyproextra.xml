@@ -25,40 +25,6 @@
 	</files>
 	<config>
 		<fields name="params">
-			<fieldset name="child" label="PLG_SYSTEM_JYPROEXTRA_PARAMS_CHILD">
-				<field name="child_layouts" type="radio"
-					   label="PLG_SYSTEM_JYPROEXTRA_PARAMS_CHILD_LAYOUTS"
-					   description="PLG_SYSTEM_JYPROEXTRA_PARAMS_CHILD_LAYOUTS_DESC"
-					   class="btn-group btn-group-yesno"
-					   default="1">
-					<option value="1">JYES</option>
-					<option value="0">JNO</option>
-				</field>
-				<field name="child_views" type="radio"
-					   label="PLG_SYSTEM_JYPROEXTRA_PARAMS_CHILD_VIEWS"
-					   description="PLG_SYSTEM_JYPROEXTRA_PARAMS_CHILD_VIEWS_DESC"
-					   class="btn-group btn-group-yesno"
-					   default="1">
-					<option value="1">JYES</option>
-					<option value="0">JNO</option>
-				</field>
-				<field name="child_modules" type="radio"
-					   label="PLG_SYSTEM_JYPROEXTRA_PARAMS_CHILD_MODULES"
-					   description="PLG_SYSTEM_JYPROEXTRA_PARAMS_CHILD_MODULES_DESC"
-					   class="btn-group btn-group-yesno"
-					   default="1">
-					<option value="1">JYES</option>
-					<option value="0">JNO</option>
-				</field>
-				<field name="child_languages" type="radio"
-					   label="PLG_SYSTEM_JYPROEXTRA_PARAMS_CHILD_LANGUAGES"
-					   description="PLG_SYSTEM_JYPROEXTRA_PARAMS_CHILD_LANGUAGES_DESC"
-					   class="btn-group btn-group-yesno"
-					   default="1">
-					<option value="1">JYES</option>
-					<option value="0">JNO</option>
-				</field>
-			</fieldset>
 			<fieldset name="images" label="PLG_SYSTEM_JYPROEXTRA_PARAMS_IMAGES">
 				<field name="images_handler" type="radio"
 					   label="PLG_SYSTEM_JYPROEXTRA_PARAMS_IMAGES_HANDLER"

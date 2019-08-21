@@ -56,22 +56,13 @@ class PlgSystemJYProExtra extends CMSPlugin
 					define('YOOTHEME_CHILD', $child);
 
 					// Override FileLayout class
-					if ($this->params->get('child_layouts', 1))
-					{
-						$this->overrideClass('FileLayout');
-					}
+					$this->overrideClass('FileLayout');
 
 					// Override HtmlView class
-					if ($this->params->get('child_views', 1))
-					{
-						$this->overrideClass('HtmlView');
-					}
+					$this->overrideClass('HtmlView');
 
 					// Override ModuleHelper class
-					if ($this->params->get('child_modules', 1))
-					{
-						$this->overrideClass('ModuleHelper');
-					}
+					$this->overrideClass('ModuleHelper');
 				}
 			}
 		}
@@ -92,18 +83,15 @@ class PlgSystemJYProExtra extends CMSPlugin
 			if (defined('YOOTHEME_CHILD'))
 			{
 				// Load child site languages
-				if ($this->params->get('child_languages', 1))
-				{
-					$language = Factory::getLanguage();
-					$language->load('tpl_yootheme_' . YOOTHEME_CHILD, JPATH_SITE, $language->getTag(), true);
-				}
+				$language = Factory::getLanguage();
+				$language->load('tpl_yootheme_' . YOOTHEME_CHILD, JPATH_SITE, $language->getTag(), true);
 			}
 		}
 
 		// Load child languages in control panel
-		if ($app->isClient('administrator') && $this->params->get('child_languages', 1))
+		if ($app->isClient('administrator'))
 		{
-			if ($child = Folder::folders(JPATH_SITE . '/templates', 'yootheme_', false))
+			if ($child = Folder::folders(JPATH_SITE . '/templates', '^yootheme_', false))
 			{
 				$language = Factory::getLanguage();
 
@@ -125,15 +113,29 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 */
 	public function onContentPrepareForm($form, $data)
 	{
-		$formName = $form->getName();
-		if (in_array($formName, array('com_modules.module', 'com_advancedmodules.module', 'com_config.modules')))
+		// Change fields type
+		$types = array(
+			'ModuleLayout'    => 'YooModuleLayout',
+			'ComponentLayout' => 'YooComponentLayout'
+		);
+		Form::addFieldPath(__DIR__ . '/fields');
+		foreach ($form->getFieldsets() as $fieldset)
 		{
-			// Child modules
-			if ($this->params->get('child_modules', 1))
+			foreach ($form->getFieldset($fieldset->name) as $field)
 			{
-				$this->changeFieldType($form, 'layout', 'yooModuleLayout', 'params');
+				$type = $field->__get('type');
+				if (isset($types[$type]))
+				{
+					$name  = $field->__get('fieldname');
+					$group = $field->__get('group');
+					$form->setFieldAttribute($name, 'type', $types[$type], $group);
+				}
 			}
+		}
 
+		// Change modules form
+		if (in_array($form->getName(), array('com_modules.module', 'com_advancedmodules.module', 'com_config.modules')))
+		{
 			// Add params
 			Form::addFormPath(__DIR__ . '/forms');
 			$form->loadFile('module');
@@ -267,25 +269,6 @@ class PlgSystemJYProExtra extends CMSPlugin
 				require_once $core;
 				require_once $override;
 			}
-		}
-	}
-
-	/**
-	 * Method to change field type.
-	 *
-	 * @param   Form    $form   Current form object.
-	 * @param   string  $field  Field name.
-	 * @param   string  $type   New field type.
-	 * @param   string  $group  Field group.
-	 *
-	 * @since   1.0.0
-	 */
-	protected function changeFieldType(&$form = null, $field = null, $type = null, $group = null)
-	{
-		if (!empty($form) && !empty($field) && !empty($type))
-		{
-			Form::addFieldPath(__DIR__ . '/fields');
-			$form->setFieldAttribute($field, 'type', $type, $group);
 		}
 	}
 

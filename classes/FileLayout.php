@@ -12,6 +12,8 @@ namespace Joomla\CMS\Layout;
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Filesystem\Path;
+
 class FileLayout extends FileLayoutCore
 {
 	/**
@@ -33,12 +35,20 @@ class FileLayout extends FileLayoutCore
 			$paths = array();
 			foreach ($default as $path)
 			{
-				if (preg_match('/templates\/yootheme\//', $path))
+				// Add child
+				if (preg_match('#(.*)[\\\/]templates[\\\/]yootheme[\\\/](.*)$#', $path, $matches))
 				{
-					$paths[] = str_replace('templates/yootheme/', 'templates/yootheme_' . YOOTHEME_CHILD . '/', $path);
+					$child = Path::clean($matches[1] . '/templates/yootheme_' . YOOTHEME_CHILD . '/' . $matches[2]);
+					if (!in_array($child, $paths))
+					{
+						$paths[] = $child;
+					}
 				}
 				$paths[] = $path;
 			}
+
+			// Clean layout paths
+			$paths = array_unique($paths);
 		}
 		else
 		{
