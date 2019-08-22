@@ -12,6 +12,7 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Filesystem\Path;
 use Joomla\CMS\Installer\InstallerAdapter;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Version;
@@ -162,11 +163,13 @@ class PlgSystemJYProExtraInstallerScript
 	protected function updateFiles()
 	{
 		$files = array(
-			__DIR__ . '/templates/jyproextra-image.php' => JPATH_THEMES . '/yootheme/templates/jyproextra-image.php',
+			__DIR__ . '/templates/jyproextra-image.php' => JPATH_ROOT . '/templates/yootheme/templates/jyproextra-image.php',
 		);
 
 		foreach ($files as $src => $dest)
 		{
+			$src  = Path::clean($src);
+			$dest = Path::clean($dest);
 			if (File::exists($dest))
 			{
 				File::delete($dest);
@@ -193,5 +196,39 @@ class PlgSystemJYProExtraInstallerScript
 
 		// Update record
 		Factory::getDbo()->updateObject('#__extensions', $plugin, array('type', 'element', 'folder'));
+	}
+
+	/**
+	 * This method is called after extension is uninstalled.
+	 *
+	 * @param   InstallerAdapter  $parent  Parent object calling object.
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	public function uninstall($parent)
+	{
+		// Remove files
+		$this->removeFiles();
+	}
+
+	/**
+	 * Method to remove files.
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected function removeFiles()
+	{
+		$files = array(
+			JPATH_ROOT . '/templates/yootheme/templates/jyproextra-image.php',
+			JPATH_ROOT . '/templates/yootheme/html/pagination_all.php',
+		);
+		foreach ($files as $file)
+		{
+			$file = Path::clean($file);
+			if (File::exists($file))
+			{
+				File::delete($file);
+			}
+		}
 	}
 }

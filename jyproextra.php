@@ -10,6 +10,7 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Folder;
@@ -24,6 +25,15 @@ use Joomla\Registry\Registry;
 class PlgSystemJYProExtra extends CMSPlugin
 {
 	/**
+	 * Loads the application object.
+	 *
+	 * @var  CMSApplication
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected $app = null;
+
+	/**
 	 * Affects constructor behavior.
 	 *
 	 * @var  boolean
@@ -35,19 +45,16 @@ class PlgSystemJYProExtra extends CMSPlugin
 	/**
 	 * Set child constant and override classes.
 	 *
-	 * @throws  Exception
-	 *
 	 * @since  1.0.1
 	 */
 	public function onAfterInitialise()
 	{
-		$app = Factory::getApplication();
-		if ($app->isClient('site'))
+		if ($this->app->isClient('site'))
 		{
-			$template = $app->getTemplate();
+			$template = $this->app->getTemplate();
 			if ($template === 'yootheme')
 			{
-				$params = $app->getTemplate(true)->params->get('config');
+				$params = $this->app->getTemplate(true)->params->get('config');
 				$params = new Registry($params);
 
 				if ($child = $params->get('child_theme'))
@@ -69,27 +76,31 @@ class PlgSystemJYProExtra extends CMSPlugin
 	}
 
 	/**
-	 * Load child languages.
-	 *
-	 * @throws  Exception
+	 * Load child languages and enable pagination for all components.
 	 *
 	 * @since  1.0.0
 	 */
 	public function onAfterRoute()
 	{
-		$app = Factory::getApplication();
-		if ($app->isClient('site'))
+		if ($this->app->isClient('site'))
 		{
+			// Load child site languages
 			if (defined('YOOTHEME_CHILD'))
 			{
-				// Load child site languages
 				$language = Factory::getLanguage();
 				$language->load('tpl_yootheme_' . YOOTHEME_CHILD, JPATH_SITE, $language->getTag(), true);
+			}
+
+			// Enable pagination for all components
+			if ($this->params->get('pagination_all')
+				&& !in_array($this->app->input->get('option'), array('com_content', 'com_finder', 'com_search', 'com_tags')))
+			{
+				$this->enablePaginationAll();
 			}
 		}
 
 		// Load child languages in control panel
-		if ($app->isClient('administrator'))
+		if ($this->app->isClient('administrator'))
 		{
 			if ($child = Folder::folders(JPATH_SITE . '/templates', '^yootheme_', false))
 			{
@@ -145,17 +156,14 @@ class PlgSystemJYProExtra extends CMSPlugin
 	/**
 	 * Method to handle image and rerender head.
 	 *
-	 * @throws  Exception
-	 *
 	 * @since   1.0.0
 	 */
 	public function onAfterRender()
 	{
-		$app = Factory::getApplication();
-		if ($app->isClient('site') && $app->getTemplate() === 'yootheme' && $app->input->get('format', 'html') == 'html'
-			&& !$app->input->get('customizer'))
+		if ($this->app->isClient('site') && $this->app->getTemplate() === 'yootheme'
+			&& $this->app->input->get('format', 'html') == 'html' && !$this->app->input->get('customizer'))
 		{
-			$body = $app->getBody();
+			$body = $this->app->getBody();
 			if ($this->params->get('images_handler', 0))
 			{
 				$this->imagesHandler($body);
@@ -169,21 +177,18 @@ class PlgSystemJYProExtra extends CMSPlugin
 				$this->cleanHead($body);
 			}
 
-			$app->setBody($body);
+			$this->app->setBody($body);
 		}
 	}
 
 	/**
 	 * Method to include inline files contents to head.
 	 *
-	 * @throws  Exception
-	 *
 	 * @since  __DEPLOY_VERSION__
 	 */
 	public function onBeforeCompileHead()
 	{
-		$app = Factory::getApplication();
-		if ($app->isClient('site') && $app->getTemplate() === 'yootheme')
+		if ($this->app->isClient('site') && $this->app->getTemplate() === 'yootheme')
 		{
 			$doc = Factory::getDocument();
 
@@ -227,6 +232,95 @@ class PlgSystemJYProExtra extends CMSPlugin
 					$doc->addStyleDeclaration(file_get_contents($path));
 					break;
 				}
+			}
+		}
+	}
+
+	/**
+	 * Method to unset module based on module params.
+	 *
+	 * @param   object  $module   The module object.
+	 * @param   array   $attribs  The render attributes.
+	 *
+	 * @since  1.1.0
+	 */
+	public function onRenderModule(&$module, &$attribs)
+	{
+		if ($this->app->isClient('site') && $this->app->getTemplate() === 'yootheme' && !empty($module->params))
+		{
+			$params     = new Registry($module->params);
+			$customizer = (!empty($this->app->input->get('customizer')));
+			$component  = $this->app->input->get('option');
+			$view       = $this->app->input->get('view');
+
+			// Unset in YooThemePro customizer
+			if ($params->get('unset_customizer') && $customizer)
+			{
+				$module = null;
+			}
+
+			// Unset in com_content views
+			elseif ($component == 'com_content' && $params->get('unset_content')
+				&& in_array($view, $params->get('unset_content')))
+			{
+				$module = null;
+			}
+
+			// Unset empty content modules
+			elseif ($params->get('unset_empty') && empty(trim($module->content)))
+			{
+				$module = null;
+			}
+		}
+	}
+
+	/**
+	 * Method to unset modules based on module params.
+	 *
+	 * @param   array  $modules  The modules array.
+	 *
+	 * @since  1.1.0
+	 */
+	public function onAfterCleanModuleList(&$modules)
+	{
+		if ($this->app->isClient('site') && $this->app->getTemplate() === 'yootheme' && !empty($modules))
+		{
+			$resetKeys  = false;
+			$customizer = (!empty($this->app->input->get('customizer')));
+			$component  = $this->app->input->get('option');
+			$view       = $this->app->input->get('view');
+
+			foreach ($modules as $key => $module)
+			{
+				$params = new Registry($module->params);
+
+				// Unset in YooThemePro customizer
+				if ($params->get('unset_customizer') && $customizer)
+				{
+					$resetKeys = true;
+					unset($modules[$key]);
+				}
+
+				// Unset in com_content views
+				elseif ($component == 'com_content' && $params->get('unset_content')
+					&& in_array($view, $params->get('unset_content')))
+				{
+					$resetKeys = true;
+					unset($modules[$key]);
+				}
+
+				// Unset empty content modules
+				elseif ($params->get('unset_empty') && empty(trim(ModuleHelper::renderModule($module))))
+				{
+					$resetKeys = true;
+					unset($modules[$key]);
+				}
+			}
+
+			// Reset modules array keys
+			if ($resetKeys)
+			{
+				$modules = array_values($modules);
 			}
 		}
 	}
@@ -442,97 +536,34 @@ class PlgSystemJYProExtra extends CMSPlugin
 	}
 
 	/**
-	 * Method to unset module based on module params.
+	 * Method to enable yootheme pagination on all components.
 	 *
-	 * @param   object  $module   The module object.
-	 * @param   array   $attribs  The render attributes.
-	 *
-	 * @throws  Exception
-	 *
-	 * @since  1.1.0
+	 * @since  __DEPLOY_VERSION__
 	 */
-	public function onRenderModule(&$module, &$attribs)
+	public function enablePaginationAll()
 	{
-		$app = Factory::getApplication();
-		if ($app->isClient('site') && $app->getTemplate() === 'yootheme' && !empty($module->params))
+		// Create pagination_all file
+		$src     = Path::clean(JPATH_THEMES . '/yootheme/html/pagination.php');
+		$dest    = Path::clean(JPATH_THEMES . '/yootheme/html/pagination_all.php');
+		$context = file_get_contents($src);
+		$context = preg_replace('#if(.?)*#', '', $context, 1);
+		$context = trim($context);
+		$context = rtrim($context, '}');
+		if (File::exists($dest))
 		{
-			$params     = new Registry($module->params);
-			$customizer = (!empty($app->input->get('customizer')));
-			$component  = $app->input->get('option');
-			$view       = $app->input->get('view');
-
-			// Unset in YooThemePro customizer
-			if ($params->get('unset_customizer') && $customizer)
-			{
-				$module = null;
-			}
-
-			// Unset in com_content views
-			elseif ($component == 'com_content' && $params->get('unset_content')
-				&& in_array($view, $params->get('unset_content')))
-			{
-				$module = null;
-			}
-
-			// Unset empty content modules
-			elseif ($params->get('unset_empty') && empty(trim($module->content)))
-			{
-				$module = null;
-			}
+			File::delete($dest);
 		}
-	}
+		file_put_contents($dest, $context);
 
-	/**
-	 * Method to unset modules based on module params.
-	 *
-	 * @param   array  $modules  The modules array.
-	 *
-	 * @throws  Exception
-	 *
-	 * @since  1.1.0
-	 */
-	public function onAfterCleanModuleList(&$modules)
-	{
-		$app = Factory::getApplication();
-		if ($app->isClient('site') && $app->getTemplate() === 'yootheme' && !empty($modules))
+		// Override Pagination Class
+		$src     = Path::clean(JPATH_ROOT . '/libraries/src/Pagination/Pagination.php');
+		$dest    = Path::clean(__DIR__ . '/classes/PaginationAll.php');
+		$context = str_replace('pagination.php', 'pagination_all.php', file_get_contents($src));
+		if (File::exists($dest))
 		{
-			$resetKeys  = false;
-			$customizer = (!empty($app->input->get('customizer')));
-			$component  = $app->input->get('option');
-			$view       = $app->input->get('view');
-
-			foreach ($modules as $key => $module)
-			{
-				$params = new Registry($module->params);
-
-				// Unset in YooThemePro customizer
-				if ($params->get('unset_customizer') && $customizer)
-				{
-					$resetKeys = true;
-					unset($modules[$key]);
-				}
-
-				// Unset in com_content views
-				elseif ($component == 'com_content' && $params->get('unset_content')
-					&& in_array($view, $params->get('unset_content')))
-				{
-					$resetKeys = true;
-					unset($modules[$key]);
-				}
-
-				// Unset empty content modules
-				elseif ($params->get('unset_empty') && empty(trim(ModuleHelper::renderModule($module))))
-				{
-					$resetKeys = true;
-					unset($modules[$key]);
-				}
-			}
-
-			// Reset modules array keys
-			if ($resetKeys)
-			{
-				$modules = array_values($modules);
-			}
+			File::delete($dest);
 		}
+		file_put_contents($dest, $context);
+		require_once $dest;
 	}
 }

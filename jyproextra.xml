@@ -25,6 +25,17 @@
 	</files>
 	<config>
 		<fields name="params">
+			<fieldset name="basic">
+				<field type="note" label="PLG_SYSTEM_JYPROEXTRA_PARAMS_PAGINATION"/>
+				<field name="pagination_all" type="radio"
+					   label="PLG_SYSTEM_JYPROEXTRA_PARAMS_PAGINATION_ALL"
+					   description="PLG_SYSTEM_JYPROEXTRA_PARAMS_PAGINATION_ALL_DESC"
+					   class="btn-group btn-group-yesno"
+					   default="0">
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
+				</field>
+			</fieldset>
 			<fieldset name="images" label="PLG_SYSTEM_JYPROEXTRA_PARAMS_IMAGES">
 				<field name="images_handler" type="radio"
 					   label="PLG_SYSTEM_JYPROEXTRA_PARAMS_IMAGES_HANDLER"
