@@ -49,7 +49,7 @@ class JFormFieldToolbar extends FormField
 		Factory::getApplication()->enqueueMessage($message->render(), '');
 
 		// Toolbar Style
-		Factory::getDocument()->addStyleDeclaration('#toolbar-support,#toolbar-donate{float: right;}');
+		Factory::getDocument()->addStyleDeclaration('#toolbar-support{float: right;}');
 	}
 
 	/**

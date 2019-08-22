@@ -31,9 +31,8 @@
 				<field type="toolbar"  addfieldpath="/plugins/system/jyproextra"/>
 				<field type="note" label="PLG_SYSTEM_JYPROEXTRA_IMAGES"
 					   description="PLG_SYSTEM_JYPROEXTRA_IMAGES_DESC"/>
-				<field name="images_handler" type="radio"
-					   label="PLG_SYSTEM_JYPROEXTRA_IMAGES_HANDLER"
-					   description="PLG_SYSTEM_JYPROEXTRA_IMAGES_HANDLER_DESC"
+				<field name="images" type="radio"
+					   label="PLG_SYSTEM_JYPROEXTRA_ENABLE"
 					   class="btn-group btn-group-yesno"
 					   default="0">
 					<option value="1">JYES</option>
@@ -41,35 +40,21 @@
 				</field>
 				<field type="spacer" hr="true"/>
 
-				<field type="note" label="PLG_SYSTEM_JYPROEXTRA_SCRIPTS_REMOVE"
-					   description="PLG_SYSTEM_JYPROEXTRA_SCRIPTS_REMOVE_DESC"/>
-				<field name="scripts_remove_jquery" type="radio"
-					   label="PLG_SYSTEM_JYPROEXTRA_SCRIPTS_REMOVE_JQUERY"
-					   description="PLG_SYSTEM_JYPROEXTRA_SCRIPTS_REMOVE_JQUERY_DESC"
+				<field type="note" label="PLG_SYSTEM_JYPROEXTRA_CHILD"
+					   description="PLG_SYSTEM_JYPROEXTRA_CHILD_DESC"/>
+				<field name="child" type="radio"
+					   label="PLG_SYSTEM_JYPROEXTRA_ENABLE"
 					   class="btn-group btn-group-yesno"
-					   default="0">
+					   default="1">
 					<option value="1">JYES</option>
 					<option value="0">JNO</option>
 				</field>
-				<field name="scripts_remove_bootstrap" type="radio"
-					   label="PLG_SYSTEM_JYPROEXTRA_SCRIPTS_REMOVE_BOOTSTRAP"
-					   description="PLG_SYSTEM_JYPROEXTRA_SCRIPTS_REMOVE_BOOTSTRAP_DESC"
-					   class="btn-group btn-group-yesno"
-					   default="0">
-					<option value="1">JYES</option>
-					<option value="0">JNO</option>
-				</field>
-				<field name="scripts_remove_core" type="radio"
-					   label="PLG_SYSTEM_JYPROEXTRA_SCRIPTS_REMOVE_CORE"
-					   description="PLG_SYSTEM_JYPROEXTRA_SCRIPTS_REMOVE_CORE_DESC"
-					   class="btn-group btn-group-yesno"
-					   default="0">
-					<option value="1">JYES</option>
-					<option value="0">JNO</option>
-				</field>
-				<field name="scripts_remove_keepalive" type="radio"
-					   label="PLG_SYSTEM_JYPROEXTRA_SCRIPTS_REMOVE_KEEPALIVE"
-					   description="PLG_SYSTEM_JYPROEXTRA_SCRIPTS_REMOVE_KEEPALIVE_DESC"
+				<field type="spacer" hr="true"/>
+
+				<field type="note" label="PLG_SYSTEM_JYPROEXTRA_REMOVE_JS"
+					   description="PLG_SYSTEM_JYPROEXTRA_REMOVE_JS_DESC"/>
+				<field name="remove_js" type="radio"
+					   label="PLG_SYSTEM_JYPROEXTRA_ENABLE"
 					   class="btn-group btn-group-yesno"
 					   default="0">
 					<option value="1">JYES</option>
@@ -79,9 +64,8 @@
 
 				<field type="note" label="PLG_SYSTEM_JYPROEXTRA_PAGINATION"
 					   description="PLG_SYSTEM_JYPROEXTRA_PAGINATION_DESC"/>
-				<field name="pagination_all" type="radio"
-					   label="PLG_SYSTEM_JYPROEXTRA_PAGINATION_ALL"
-					   description="PLG_SYSTEM_JYPROEXTRA_PAGINATION_ALL_DESC"
+				<field name="pagination" type="radio"
+					   label="PLG_SYSTEM_JYPROEXTRA_ENABLE"
 					   class="btn-group btn-group-yesno"
 					   default="0">
 					<option value="1">JYES</option>

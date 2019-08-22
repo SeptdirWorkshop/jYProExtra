@@ -49,7 +49,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 */
 	public function onAfterInitialise()
 	{
-		if ($this->app->isClient('site'))
+		if ($this->app->isClient('site') && $this->params->get('child'))
 		{
 			$template = $this->app->getTemplate();
 			if ($template === 'yootheme')
@@ -133,17 +133,17 @@ class PlgSystemJYProExtra extends CMSPlugin
 			}
 
 			// Enable pagination for all components
-			if ($this->params->get('pagination_all')
+			if ($this->params->get('pagination')
 				&& !in_array($this->app->input->get('option'), array('com_content', 'com_finder', 'com_search', 'com_tags')))
 			{
-				$this->paginationAll();
+				$this->overridePagination();
 			}
 		}
 
 		// Load child languages in control panel
-		if ($this->app->isClient('administrator'))
+		if ($this->app->isClient('administrator') && $this->params->get('child'))
 		{
-			if ($child = Folder::folders(JPATH_SITE . '/templates', '^yootheme_', false))
+			if ($child = Folder::folders(Path::clean(JPATH_SITE . '/templates'), '^yootheme_', false))
 			{
 				$language = Factory::getLanguage();
 
@@ -156,15 +156,15 @@ class PlgSystemJYProExtra extends CMSPlugin
 	}
 
 	/**
-	 * Method to enable yootheme pagination on all components.
+	 * Method to override pagination for enabled on all components.
 	 *
 	 * @since  __DEPLOY_VERSION__
 	 */
-	protected function paginationAll()
+	protected function overridePagination()
 	{
 		// Create pagination_all file
 		$src     = Path::clean(JPATH_THEMES . '/yootheme/html/pagination.php');
-		$dest    = Path::clean(JPATH_THEMES . '/yootheme/html/pagination_all.php');
+		$dest    = Path::clean(JPATH_THEMES . '/yootheme/html/jyproextra-pagination.php');
 		$context = file_get_contents($src);
 		$context = preg_replace('#if(.?)*#', '', $context, 1);
 		$context = trim($context);
@@ -177,8 +177,8 @@ class PlgSystemJYProExtra extends CMSPlugin
 
 		// Override Pagination Class
 		$src     = Path::clean(JPATH_ROOT . '/libraries/src/Pagination/Pagination.php');
-		$dest    = Path::clean(__DIR__ . '/classes/PaginationAll.php');
-		$context = str_replace('pagination.php', 'pagination_all.php', file_get_contents($src));
+		$dest    = Path::clean(__DIR__ . '/classes/Pagination.php');
+		$context = str_replace('pagination.php', 'jyproextra-pagination.php', file_get_contents($src));
 		if (File::exists($dest))
 		{
 			File::delete($dest);
@@ -196,22 +196,25 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 */
 	public function onContentPrepareForm($form)
 	{
-		// Change fields type
-		$types = array(
-			'ModuleLayout'    => 'YooModuleLayout',
-			'ComponentLayout' => 'YooComponentLayout'
-		);
-		Form::addFieldPath(__DIR__ . '/fields');
-		foreach ($form->getFieldsets() as $fieldset)
+		// Change fields type for child theme
+		if ($this->params->get('child'))
 		{
-			foreach ($form->getFieldset($fieldset->name) as $field)
+			$types = array(
+				'ModuleLayout'    => 'YooModuleLayout',
+				'ComponentLayout' => 'YooComponentLayout'
+			);
+			Form::addFieldPath(__DIR__ . '/fields');
+			foreach ($form->getFieldsets() as $fieldset)
 			{
-				$type = $field->__get('type');
-				if (isset($types[$type]))
+				foreach ($form->getFieldset($fieldset->name) as $field)
 				{
-					$name  = $field->__get('fieldname');
-					$group = $field->__get('group');
-					$form->setFieldAttribute($name, 'type', $types[$type], $group);
+					$type = $field->__get('type');
+					if (isset($types[$type]))
+					{
+						$name  = $field->__get('fieldname');
+						$group = $field->__get('group');
+						$form->setFieldAttribute($name, 'type', $types[$type], $group);
+					}
 				}
 			}
 		}
@@ -379,17 +382,16 @@ class PlgSystemJYProExtra extends CMSPlugin
 			&& $this->app->input->get('format', 'html') == 'html' && !$this->app->input->get('customizer'))
 		{
 			$body = $this->app->getBody();
-			if ($this->params->get('images_handler', 0))
+
+			// Convert images
+			if ($this->params->get('images'))
 			{
-				$this->imagesHandler($body);
+				$this->convertImages($body);
 			}
 
-			if ($this->params->get('scripts_remove_jquery', 0)
-				|| $this->params->get('scripts_remove_bootstrap', 0)
-				|| $this->params->get('scripts_remove_core', 0)
-				|| $this->params->get('scripts_remove_keepalive', 0))
+			if ($this->params->get('remove_js'))
 			{
-				$this->cleanHead($body);
+				$this->removeJS($body);
 			}
 
 			$this->app->setBody($body);
@@ -397,13 +399,13 @@ class PlgSystemJYProExtra extends CMSPlugin
 	}
 
 	/**
-	 * Method for image processing.
+	 * Method to convert site images.
 	 *
-	 * @param   string  $body  Page html.
+	 * @param   string  $body  Current page html.
 	 *
-	 * @since  1.0.0
+	 * @since  __DEPLOY_VERSION__
 	 */
-	protected function imagesHandler(&$body = '')
+	protected function convertImages(&$body = '')
 	{
 		// Check template file exist
 		$src   = Path::clean(__DIR__ . '/templates/jyproextra-image.php');
@@ -481,67 +483,50 @@ class PlgSystemJYProExtra extends CMSPlugin
 	}
 
 	/**
-	 * Method for cleaning head.
+	 * Method for remove old js scripts from head.
 	 *
-	 * @param   string  $body  Page html.
+	 * @param   string  $body  Current page html.
 	 *
-	 * @since  1.0.0
+	 * @since       __DEPLOY_VERSION__
+	 *
+	 * @deprecated  Deprecated on Joomla 4.
 	 */
-	protected function cleanHead(&$body = '')
+	protected function removeJS(&$body = '')
 	{
-		$unsetScripts  = array();
-		$replaceScript = array();
-
-		// Remove jQuery
-		if ($this->params->get('scripts_remove_jquery', 0))
+		if (preg_match('|<head>(.*)</head>|si', $body, $matches))
 		{
-			$unsetScripts[] = '/media/jui/js/jquery';
-			$unsetScripts[] = '/media/jui/js/jquery-noconflict';
-			$unsetScripts[] = '/media/jui/js/jquery-migrate';
+			$search  = $matches[1];
+			$replace = $search;
 
-			$replaceScript[] = '~jQuery\(function\(\$\){.*?(\$\((?!document\).ready).*?\}\);).*?}\);~sim';
-			$replaceScript[] = '/jQuery\(function\(\$\)\{(.?)*\}\)\;/';
-		}
-
-		// Remove Bootstrap
-		if ($this->params->get('scripts_remove_bootstrap', 0))
-		{
-			$unsetScripts[] = '/media/jui/js/bootstrap';
-		}
-
-		// Remove Core
-		if ($this->params->get('scripts_remove_core', 0))
-		{
-			$unsetScripts[] = '/media/system/js/core';
-		}
-
-		// Remove Keepalive
-		if ($this->params->get('scripts_remove_keepalive', 0))
-		{
-			$unsetScripts[] = '/media/system/js/keepalive';
-		}
-
-		// Rerender head
-		if (!empty($unsetScripts) || !empty($replaceScript))
-		{
-			if (preg_match('|<head>(.*)</head>|si', $body, $matches))
+			// Remove js files
+			$files = array(
+				'/media/jui/js/jquery',
+				'/media/jui/js/jquery-noconflict',
+				'/media/jui/js/jquery-migrate',
+				'/media/jui/js/bootstrap',
+				'/media/system/js/core',
+				'/media/system/js/keepalive',
+			);
+			foreach ($files as $src)
 			{
-				$search  = $matches[1];
-				$replace = $search;
-				foreach ($unsetScripts as $src)
-				{
-					$replace = preg_replace('|<script(.?)*"' . $src . '\.(.?)*</script>|', '', $replace);
-				}
-
-				foreach ($replaceScript as $pattern)
-				{
-					$replace = preg_replace($pattern, '', $replace);
-				}
-
-				$replace = preg_replace('/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/', '', $replace);
-
-				$body = str_replace($search, $replace, $body);
+				$replace = preg_replace('|<script(.?)*"' . $src . '\.(.?)*</script>|', '', $replace);
 			}
+
+			// Remove inline java scripts
+			$patterns = array(
+				'~jQuery\(function\(\$\){.*?(\$\((?!document\).ready).*?\}\);).*?}\);~sim',
+				'/jQuery\(function\(\$\)\{(.?)*\}\)\;/',
+			);
+			foreach ($patterns as $pattern)
+			{
+				$replace = preg_replace($pattern, '', $replace);
+			}
+
+			// Remove empty lines
+			$replace = preg_replace('/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/', '', $replace);
+
+			// Replace body
+			$body = str_replace($search, $replace, $body);
 		}
 	}
 }

@@ -2,6 +2,9 @@
 <form>
 	<fields name="params">
 		<fieldset name="unset" label="PLG_SYSTEM_JYPROEXTRA_MODULES_UNSET">
+			<field type="note" label="PLG_SYSTEM_JYPROEXTRA_MODULES_UNSET_NOTE"
+				   description="PLG_SYSTEM_JYPROEXTRA_MODULES_UNSET_NOTE_DESC"
+				   class="alert alert-info"/>
 			<field name="unset_customizer" type="radio"
 				   label="PLG_SYSTEM_JYPROEXTRA_MODULES_UNSET_CUSTOMIZER"
 				   description="PLG_SYSTEM_JYPROEXTRA_MODULES_UNSET_CUSTOMIZER_DESC"
