@@ -1,6 +1,6 @@
 <?php
 /**
- * @package    Joomla YooThemePro Extra System Plugin
+ * @package    jYProExtra System Plugin
  * @version    __DEPLOY_VERSION__
  * @author     Septdir Workshop - www.septdir.com
  * @copyright  Copyright (c) 2018 - 2019 Septdir Workshop. All rights reserved.

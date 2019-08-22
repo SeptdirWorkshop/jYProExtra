@@ -1,6 +1,6 @@
 <?php
 /**
- * @package    Joomla YooThemePro Extra System Plugin
+ * @package    jYProExtra System Plugin
  * @version    __DEPLOY_VERSION__
  * @author     Septdir Workshop - www.septdir.com
  * @copyright  Copyright (c) 2018 - 2019 Septdir Workshop. All rights reserved.
@@ -15,6 +15,7 @@ use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Path;
 use Joomla\CMS\Installer\InstallerAdapter;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\Version;
 
 class PlgSystemJYProExtraInstallerScript
@@ -113,17 +114,22 @@ class PlgSystemJYProExtraInstallerScript
 	 */
 	protected function checkUpdateServer()
 	{
+
 		$db    = Factory::getDbo();
+		$contains   = array(
+			$db->quoteName('name') . ' = ' . $db->quote('Joomla YOOtheme Pro Extra'),
+			$db->quoteName('location') . ' = ' . $db->quote('https://www.septdir.com/marketplace/joomla/update?element=plg_system_jyproextra'),
+		);
 		$query = $db->getQuery(true)
 			->select(array('update_site_id'))
 			->from($db->quoteName('#__update_sites'))
-			->where($db->quoteName('name') . ' = ' . $db->quote('Joomla YooThemePro Extra'));
-		$old   = $db->setQuery($query)->loadObject();
+			->where(implode(' OR ', $contains));
+		$old = $db->setQuery($query)->loadObject();
 		if (!empty($old))
 		{
 			$new           = $old;
-			$new->name     = 'JYProExtra';
-			$new->location = 'https://www.septdir.com/marketplace/joomla/update?element=plg_system_jyproextra';
+			$new->name     = 'jYProExtra';
+			$new->location = 'https://www.septdir.com/solutions/joomla/update?element=plg_system_jyproextra';
 			$db->updateObject('#__update_sites', $new, array('update_site_id'));
 		}
 	}
@@ -150,6 +156,11 @@ class PlgSystemJYProExtraInstallerScript
 
 		// Update files
 		$this->updateFiles();
+
+		// Add donate message
+		$message = new FileLayout('donate_message');
+		$message->addIncludePath(__DIR__);
+		Factory::getApplication()->enqueueMessage($message->render(), '');
 
 		return true;
 	}
