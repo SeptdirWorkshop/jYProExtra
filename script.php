@@ -40,8 +40,7 @@ class PlgSystemJYProExtraInstallerScript
 	/**
 	 * Runs right before any installation action.
 	 *
-	 * @param   string            $type    Type of PostFlight action. Possible values are:
-	 * @param   InstallerAdapter  $parent  Parent object calling object.
+	 * @param   string  $type  Type of PostFlight action. Possible values are:
 	 *
 	 * @throws  Exception
 	 *
@@ -49,7 +48,7 @@ class PlgSystemJYProExtraInstallerScript
 	 *
 	 * @since  1.0.1
 	 */
-	function preflight($type, $parent)
+	function preflight($type)
 	{
 		// Check compatible
 		if (!$this->checkCompatible()) return false;
@@ -201,11 +200,9 @@ class PlgSystemJYProExtraInstallerScript
 	/**
 	 * This method is called after extension is uninstalled.
 	 *
-	 * @param   InstallerAdapter  $parent  Parent object calling object.
-	 *
 	 * @since  __DEPLOY_VERSION__
 	 */
-	public function uninstall($parent)
+	public function uninstall()
 	{
 		// Remove files
 		$this->removeFiles();
