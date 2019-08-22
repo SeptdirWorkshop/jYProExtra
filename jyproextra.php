@@ -409,7 +409,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 		$src   = Path::clean(__DIR__ . '/templates/jyproextra-image.php');
 		$dest  = Path::clean(JPATH_THEMES . '/yootheme/templates/jyproextra-image.php');
 		$exist = (!File::exists($dest)) ? File::copy($src, $dest) : true;
-		if ($exist) return;
+		if (!$exist) return;
 
 		// Replace images
 		if (preg_match_all('/<img[^>]+>/i', $body, $matches))
