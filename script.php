@@ -1,6 +1,6 @@
 <?php
 /**
- * @package    Joomla YooThemePro Extra System Plugin
+ * @package    jYProExtra System Plugin
  * @version    __DEPLOY_VERSION__
  * @author     Septdir Workshop - www.septdir.com
  * @copyright  Copyright (c) 2018 - 2019 Septdir Workshop. All rights reserved.
@@ -15,7 +15,10 @@ use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Path;
 use Joomla\CMS\Installer\InstallerAdapter;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\FileLayout;
+use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Version;
+use Joomla\Registry\Registry;
 
 class PlgSystemJYProExtraInstallerScript
 {
@@ -40,8 +43,7 @@ class PlgSystemJYProExtraInstallerScript
 	/**
 	 * Runs right before any installation action.
 	 *
-	 * @param   string            $type    Type of PostFlight action. Possible values are:
-	 * @param   InstallerAdapter  $parent  Parent object calling object.
+	 * @param   string  $type  Type of PostFlight action. Possible values are:
 	 *
 	 * @throws  Exception
 	 *
@@ -49,15 +51,18 @@ class PlgSystemJYProExtraInstallerScript
 	 *
 	 * @since  1.0.1
 	 */
-	function preflight($type, $parent)
+	function preflight($type)
 	{
 		// Check compatible
 		if (!$this->checkCompatible()) return false;
 
-		// Check update server
 		if ($type == 'update')
 		{
+			// Check update server
 			$this->checkUpdateServer();
+
+			// Check old config
+			$this->checkOldConfig();
 		}
 
 		return true;
@@ -114,18 +119,85 @@ class PlgSystemJYProExtraInstallerScript
 	 */
 	protected function checkUpdateServer()
 	{
-		$db    = Factory::getDbo();
-		$query = $db->getQuery(true)
+
+		$db       = Factory::getDbo();
+		$contains = array(
+			$db->quoteName('name') . ' = ' . $db->quote('Joomla YOOtheme Pro Extra'),
+			$db->quoteName('location') . ' = ' . $db->quote('https://www.septdir.com/marketplace/joomla/update?element=plg_system_jyproextra'),
+		);
+		$query    = $db->getQuery(true)
 			->select(array('update_site_id'))
 			->from($db->quoteName('#__update_sites'))
-			->where($db->quoteName('name') . ' = ' . $db->quote('Joomla YooThemePro Extra'));
-		$old   = $db->setQuery($query)->loadObject();
+			->where(implode(' OR ', $contains));
+		$old      = $db->setQuery($query)->loadObject();
 		if (!empty($old))
 		{
 			$new           = $old;
-			$new->name     = 'JYProExtra';
-			$new->location = 'https://www.septdir.com/marketplace/joomla/update?element=plg_system_jyproextra';
+			$new->name     = 'jYProExtra';
+			$new->location = 'https://www.septdir.com/solutions/joomla/update?element=plg_system_jyproextra';
 			$db->updateObject('#__update_sites', $new, array('update_site_id'));
+		}
+	}
+
+	/**
+	 * Method to check plugin params and change if need.
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected function checkOldConfig()
+	{
+		$plugin = PluginHelper::getPlugin('system', 'jyproextra');
+		$params = new Registry($plugin->params);
+		$update = false;
+
+		// Check images
+		if ($params->get('images_handler'))
+		{
+			$update = true;
+			unset($params['images_handler']);
+			$params->set('images', 1);
+		}
+
+		// Check child
+		if ($params->get('child_layouts')
+			|| $params->get('child_views')
+			|| $params->get('child_modules')
+			|| $params->get('child_languages'))
+		{
+			$update = true;
+			$params->set('child', 1);
+		}
+
+		// Check scripts
+		if ($params->get('scripts_remove_jquery')
+			|| $params->get('scripts_remove_bootstrap')
+			|| $params->get('scripts_remove_core')
+			|| $params->get('scripts_remove_keepalive'))
+		{
+			$update = true;
+			unset($params['scripts_remove_jquery']);
+			unset($params['scripts_remove_bootstrap']);
+			unset($params['scripts_remove_core']);
+			unset($params['scripts_remove_keepalive']);
+			$params->set('remove_js', 1);
+		}
+
+		// Check unset modules
+		if (!$params->exists('unset_modules'))
+		{
+			$update = true;
+			$params->set('unset_modules', 1);
+		}
+
+		// Update record
+		if ($update)
+		{
+			$update          = new stdClass();
+			$update->element = 'jyproextra';
+			$update->folder  = 'system';
+			$update->params  = $params->toString();
+
+			Factory::getDbo()->updateObject('#__extensions', $update, array('element', 'folder'));
 		}
 	}
 
@@ -143,14 +215,23 @@ class PlgSystemJYProExtraInstallerScript
 	 */
 	function postflight($type, $parent)
 	{
-		// Enable plugin
+		$app = Factory::getApplication();
 		if ($type == 'install')
 		{
+			// Enable plugin
 			$this->enablePlugin($parent);
+
+			// Add after install message
+			$app->enqueueMessage(Text::_('PLG_SYSTEM_JYPROEXTRA_AFTER_INSTALL'), 'notice');
 		}
 
 		// Update files
 		$this->updateFiles();
+
+		// Add donate message
+		$message = new FileLayout('donate_message');
+		$message->addIncludePath(__DIR__);
+		$app->enqueueMessage($message->render(), '');
 
 		return true;
 	}
@@ -201,11 +282,9 @@ class PlgSystemJYProExtraInstallerScript
 	/**
 	 * This method is called after extension is uninstalled.
 	 *
-	 * @param   InstallerAdapter  $parent  Parent object calling object.
-	 *
 	 * @since  __DEPLOY_VERSION__
 	 */
-	public function uninstall($parent)
+	public function uninstall()
 	{
 		// Remove files
 		$this->removeFiles();

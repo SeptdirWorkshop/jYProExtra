@@ -1,32 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
 	<fields name="params">
-		<fieldset name="unset" label="PLG_SYSTEM_JYPROEXTRA_MODULES_UNSET">
+		<fieldset name="unset" label="PLG_SYSTEM_JYPROEXTRA_MODULE_UNSET">
+			<field type="note" label="PLG_SYSTEM_JYPROEXTRA_UNSET_MODULES"
+				   description="PLG_SYSTEM_JYPROEXTRA_UNSET_MODULES_DESC"
+				   class="alert alert-info"/>
 			<field name="unset_customizer" type="radio"
-				   label="PLG_SYSTEM_JYPROEXTRA_MODULES_UNSET_CUSTOMIZER"
-				   description="PLG_SYSTEM_JYPROEXTRA_MODULES_UNSET_CUSTOMIZER_DESC"
+				   label="PLG_SYSTEM_JYPROEXTRA_MODULE_UNSET_CUSTOMIZER"
+				   description="PLG_SYSTEM_JYPROEXTRA_MODULE_UNSET_CUSTOMIZER_DESC"
 				   class="btn-group btn-group-yesno"
 				   default="0">
 				<option value="1">JYES</option>
 				<option value="0">JNO</option>
 			</field>
 			<field name="unset_empty" type="radio"
-				   label="PLG_SYSTEM_JYPROEXTRA_MODULES_UNSET_EMPTY"
-				   description="PLG_SYSTEM_JYPROEXTRA_MODULES_UNSET_EMPTY_DESC"
+				   label="PLG_SYSTEM_JYPROEXTRA_MODULE_UNSET_EMPTY"
+				   description="PLG_SYSTEM_JYPROEXTRA_MODULE_UNSET_EMPTY_DESC"
 				   class="btn-group btn-group-yesno"
 				   default="0">
 				<option value="1">JYES</option>
 				<option value="0">JNO</option>
 			</field>
 			<field name="unset_content" type="list"
-				   label="PLG_SYSTEM_JYPROEXTRA_MODULES_UNSET_CONTENT"
-				   description="PLG_SYSTEM_JYPROEXTRA_MODULES_UNSET_CONTENT_DESC"
+				   label="PLG_SYSTEM_JYPROEXTRA_MODULE_UNSET_CONTENT"
+				   description="PLG_SYSTEM_JYPROEXTRA_MODULE_UNSET_CONTENT_DESC"
 				   multiple="true">
-				<option value="article">PLG_SYSTEM_JYPROEXTRA_MODULES_UNSET_CONTENT_ARTICLE</option>
-				<option value="category">PLG_SYSTEM_JYPROEXTRA_MODULES_UNSET_CONTENT_CATEGORY</option>
-				<option value="categories">PLG_SYSTEM_JYPROEXTRA_MODULES_UNSET_CONTENT_CATEGORIES</option>
-				<option value="archive">PLG_SYSTEM_JYPROEXTRA_MODULES_UNSET_CONTENT_ARCHIVE</option>
-				<option value="featured">PLG_SYSTEM_JYPROEXTRA_MODULES_UNSET_CONTENT_FEATURED</option>
+				<option value="article">PLG_SYSTEM_JYPROEXTRA_MODULE_UNSET_CONTENT_ARTICLE</option>
+				<option value="category">PLG_SYSTEM_JYPROEXTRA_MODULE_UNSET_CONTENT_CATEGORY</option>
+				<option value="categories">PLG_SYSTEM_JYPROEXTRA_MODULE_UNSET_CONTENT_CATEGORIES</option>
+				<option value="archive">PLG_SYSTEM_JYPROEXTRA_MODULE_UNSET_CONTENT_ARCHIVE</option>
+				<option value="featured">PLG_SYSTEM_JYPROEXTRA_MODULE_UNSET_CONTENT_FEATURED</option>
 			</field>
 		</fieldset>
 	</fields>

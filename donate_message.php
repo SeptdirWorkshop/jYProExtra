@@ -10,16 +10,11 @@
 
 defined('_JEXEC') or die;
 
-/**
- * Templates variables.
- * -----------------
- *
- * @var  string|array $url   Image url parameters.
- * @var  array        $attrs Image attributes.
- */
+use Joomla\CMS\Language\Text;
 
-$attrs = (!empty($attrs)) ? $attrs : array();
-if (!empty($url))
-{
-	echo $this->image($url, $attrs);
-}
+?>
+<a href="https://www.septdir.com/donate#solution=jyproextra" class="btn btn-primary pull-right"
+   target="_blank">
+	<?php echo Text::_('PLG_SYSTEM_JYPROEXTRA_DONATE'); ?>
+</a>
+<?php echo Text::_('PLG_SYSTEM_JYPROEXTRA_DONATE_MESSAGE'); ?>

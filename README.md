@@ -18,7 +18,7 @@ Allows you to connect the language files of the child theme
 
 ### Images
 * **Handler**  
-Allows you to process images on the site through YooThemePro
+Allows you to process images on the site through YOOtheme Pro
 
 ### Scripts
 * **Delete jQuery**  
@@ -32,6 +32,6 @@ Removes the keepalive.js script from the head
 
 ### Modules (in modules manager)
 * **Unset in customizer**  
-Module will not be displayed in YooThemePro customizer
+Module will not be displayed in YOOtheme Pro customizer
 * **Unset empty**  
 Module will not be displayed if content is empty

@@ -1,6 +1,6 @@
 <?php
 /**
- * @package    Joomla YooThemePro Extra System Plugin
+ * @package    jYProExtra System Plugin
  * @version    __DEPLOY_VERSION__
  * @author     Septdir Workshop - www.septdir.com
  * @copyright  Copyright (c) 2018 - 2019 Septdir Workshop. All rights reserved.
@@ -83,11 +83,11 @@ class JFormFieldYooModuleLayout extends JFormFieldModulelayout
 			$lang->load($module . '.sys', $client->path, null, false, true)
 			|| $lang->load($module . '.sys', $client->path . '/modules/' . $module, null, false, true);
 
-			// Get the database object and a new query object.
+			// Get the database object and a new query object
 			$db    = JFactory::getDbo();
 			$query = $db->getQuery(true);
 
-			// Build the query.
+			// Build the query
 			$query->select('element, name')
 				->from('#__extensions as e')
 				->where('e.client_id = ' . (int) $clientId)
