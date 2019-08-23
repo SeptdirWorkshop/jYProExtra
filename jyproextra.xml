@@ -40,6 +40,28 @@
 				</field>
 				<field type="spacer" hr="true"/>
 
+				<field type="note" label="PLG_SYSTEM_JYPROEXTRA_INLINE"
+					   description="PLG_SYSTEM_JYPROEXTRA_INLINE_DESC"/>
+				<field name="inline" type="radio"
+					   label="PLG_SYSTEM_JYPROEXTRA_ENABLE"
+					   class="btn-group btn-group-yesno"
+					   default="1">
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
+				</field>
+				<field type="spacer" hr="true"/>
+
+				<field type="note" label="PLG_SYSTEM_JYPROEXTRA_UNSET_MODULES"
+					   description="PLG_SYSTEM_JYPROEXTRA_UNSET_MODULES_DESC"/>
+				<field name="unset_modules" type="radio"
+					   label="PLG_SYSTEM_JYPROEXTRA_ENABLE"
+					   class="btn-group btn-group-yesno"
+					   default="1">
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
+				</field>
+				<field type="spacer" hr="true"/>
+
 				<field type="note" label="PLG_SYSTEM_JYPROEXTRA_CHILD"
 					   description="PLG_SYSTEM_JYPROEXTRA_CHILD_DESC"/>
 				<field name="child" type="radio"

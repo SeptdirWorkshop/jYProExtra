@@ -43,13 +43,88 @@ class PlgSystemJYProExtra extends CMSPlugin
 	protected $autoloadLanguage = true;
 
 	/**
+	 * Image function enable.
+	 *
+	 * @var  boolean
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected $images = false;
+
+	/**
+	 * Inline files function enable.
+	 *
+	 * @var  boolean
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected $inline = true;
+
+	/**
+	 * Exclude Modules function enable.
+	 *
+	 * @var  boolean
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected $unset_modules = true;
+
+	/**
+	 * Child theme function enable.
+	 *
+	 * @var  boolean
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected $child = true;
+
+	/**
+	 * Removing JavaScripts function enable.
+	 *
+	 * @var  boolean
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected $remove_js = false;
+
+	/**
+	 * Pagination function enable.
+	 *
+	 * @var  boolean
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected $pagination = false;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param   object  &$subject  The object to observe
+	 * @param   array    $config   An optional associative array of configuration settings.
+	 *
+	 * @since   __DEPLOY_VERSION__
+	 */
+	public function __construct(&$subject, $config = array())
+	{
+		parent::__construct($subject, $config);
+
+		// Set functions status
+		$this->images        = (!empty($this->params->get('images', 0)));
+		$this->inline        = (!empty($this->params->get('inline', 1)));
+		$this->unset_modules = (!empty($this->params->get('unset_modules', 1)));
+		$this->child         = (!empty($this->params->get('child', 1)));
+		$this->remove_js     = (!empty($this->params->get('remove_js', 0)));
+		$this->pagination    = (!empty($this->params->get('pagination', 0)));
+	}
+
+	/**
 	 * Set child constant and override classes.
 	 *
 	 * @since  1.0.1
 	 */
 	public function onAfterInitialise()
 	{
-		if ($this->app->isClient('site') && $this->params->get('child'))
+		if ($this->child && $this->app->isClient('site'))
 		{
 			$template = $this->app->getTemplate();
 			if ($template === 'yootheme')
@@ -126,14 +201,14 @@ class PlgSystemJYProExtra extends CMSPlugin
 		if ($this->app->isClient('site'))
 		{
 			// Load child site languages
-			if (defined('YOOTHEME_CHILD'))
+			if ($this->child && defined('YOOTHEME_CHILD'))
 			{
 				$language = Factory::getLanguage();
 				$language->load('tpl_yootheme_' . YOOTHEME_CHILD, JPATH_SITE, $language->getTag(), true);
 			}
 
 			// Enable pagination for all components
-			if ($this->params->get('pagination')
+			if ($this->pagination
 				&& !in_array($this->app->input->get('option'), array('com_content', 'com_finder', 'com_search', 'com_tags')))
 			{
 				$this->overridePagination();
@@ -141,7 +216,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 		}
 
 		// Load child languages in control panel
-		if ($this->app->isClient('administrator') && $this->params->get('child'))
+		if ($this->child && $this->app->isClient('administrator'))
 		{
 			if ($child = Folder::folders(Path::clean(JPATH_SITE . '/templates'), '^yootheme_', false))
 			{
@@ -197,7 +272,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	public function onContentPrepareForm($form)
 	{
 		// Change fields type for child theme
-		if ($this->params->get('child'))
+		if ($this->child)
 		{
 			$types = array(
 				'ModuleLayout'    => 'YooModuleLayout',
@@ -220,7 +295,8 @@ class PlgSystemJYProExtra extends CMSPlugin
 		}
 
 		// Change modules form
-		if (in_array($form->getName(), array('com_modules.module', 'com_advancedmodules.module', 'com_config.modules')))
+		if ($this->unset_modules
+			&& in_array($form->getName(), array('com_modules.module', 'com_advancedmodules.module', 'com_config.modules')))
 		{
 			// Add params
 			Form::addFormPath(__DIR__ . '/forms');
@@ -237,7 +313,8 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 */
 	public function onAfterCleanModuleList(&$modules)
 	{
-		if ($this->app->isClient('site') && $this->app->getTemplate() === 'yootheme' && !empty($modules))
+		if ($this->unset_modules && !empty($modules) && $this->app->isClient('site')
+			&& $this->app->getTemplate() === 'yootheme')
 		{
 			$resetKeys  = false;
 			$customizer = (!empty($this->app->input->get('customizer')));
@@ -288,7 +365,8 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 */
 	public function onRenderModule(&$module)
 	{
-		if ($this->app->isClient('site') && $this->app->getTemplate() === 'yootheme' && !empty($module->params))
+		if ($this->unset_modules && !empty($module->params) && $this->app->isClient('site')
+			&& $this->app->getTemplate() === 'yootheme')
 		{
 			$params     = new Registry($module->params);
 			$customizer = (!empty($this->app->input->get('customizer')));
@@ -323,7 +401,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 */
 	public function onBeforeCompileHead()
 	{
-		if ($this->app->isClient('site') && $this->app->getTemplate() === 'yootheme')
+		if ($this->inline && $this->app->isClient('site') && $this->app->getTemplate() === 'yootheme')
 		{
 			$doc = Factory::getDocument();
 
@@ -332,7 +410,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 				Path::clean(JPATH_THEMES . '/yootheme/js/inline.min.js'),
 				Path::clean(JPATH_THEMES . '/yootheme/js/inline.js'),
 			);
-			if (defined('YOOTHEME_CHILD'))
+			if ($this->child && defined('YOOTHEME_CHILD'))
 			{
 				$pathsJS = array_merge(array(
 					Path::clean(JPATH_THEMES . '/yootheme_' . YOOTHEME_CHILD . '/js/inline.min.js'),
@@ -378,18 +456,19 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 */
 	public function onAfterRender()
 	{
-		if ($this->app->isClient('site') && $this->app->getTemplate() === 'yootheme'
-			&& $this->app->input->get('format', 'html') == 'html' && !$this->app->input->get('customizer'))
+		if (($this->images || $this->remove_js) && $this->app->isClient('site')
+			&& $this->app->getTemplate() === 'yootheme' && $this->app->input->get('format', 'html') == 'html'
+			&& !$this->app->input->get('customizer'))
 		{
 			$body = $this->app->getBody();
 
 			// Convert images
-			if ($this->params->get('images'))
+			if ($this->images)
 			{
 				$this->convertImages($body);
 			}
 
-			if ($this->params->get('remove_js'))
+			if ($this->remove_js)
 			{
 				$this->removeJS($body);
 			}
