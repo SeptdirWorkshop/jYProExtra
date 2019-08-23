@@ -56,10 +56,12 @@ class PlgSystemJYProExtraInstallerScript
 		// Check compatible
 		if (!$this->checkCompatible()) return false;
 
-		// Check update server
 		if ($type == 'update')
 		{
+			// Check update server
 			$this->checkUpdateServer();
+
+			// Check old config
 			$this->checkOldConfig();
 		}
 
@@ -181,11 +183,12 @@ class PlgSystemJYProExtraInstallerScript
 		}
 
 		// Check unset modules
-		if (!$params->exists('unset_modules')) {
+		if (!$params->exists('unset_modules'))
+		{
 			$update = true;
 			$params->set('unset_modules', 1);
 		}
-		
+
 		// Update record
 		if ($update)
 		{
@@ -212,10 +215,14 @@ class PlgSystemJYProExtraInstallerScript
 	 */
 	function postflight($type, $parent)
 	{
-		// Enable plugin
+		$app = Factory::getApplication();
 		if ($type == 'install')
 		{
+			// Enable plugin
 			$this->enablePlugin($parent);
+
+			// Add after install message
+			$app->enqueueMessage(Text::_('PLG_SYSTEM_JYPROEXTRA_AFTER_INSTALL'), 'notice');
 		}
 
 		// Update files
@@ -224,7 +231,7 @@ class PlgSystemJYProExtraInstallerScript
 		// Add donate message
 		$message = new FileLayout('donate_message');
 		$message->addIncludePath(__DIR__);
-		Factory::getApplication()->enqueueMessage($message->render(), '');
+		$app->enqueueMessage($message->render(), '');
 
 		return true;
 	}
