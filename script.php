@@ -180,6 +180,12 @@ class PlgSystemJYProExtraInstallerScript
 			$params->set('remove_js', 1);
 		}
 
+		// Check unset modules
+		if (!$params->exists('unset_modules')) {
+			$update = true;
+			$params->set('unset_modules', 1);
+		}
+		
 		// Update record
 		if ($update)
 		{

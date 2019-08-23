@@ -28,7 +28,7 @@
 	<config>
 		<fields name="params">
 			<fieldset name="basic">
-				<field type="toolbar"  addfieldpath="/plugins/system/jyproextra"/>
+				<field type="toolbar" addfieldpath="/plugins/system/jyproextra"/>
 				<field type="note" label="PLG_SYSTEM_JYPROEXTRA_IMAGES"
 					   description="PLG_SYSTEM_JYPROEXTRA_IMAGES_DESC"/>
 				<field name="images" type="radio"
@@ -45,7 +45,7 @@
 				<field name="inline" type="radio"
 					   label="PLG_SYSTEM_JYPROEXTRA_ENABLE"
 					   class="btn-group btn-group-yesno"
-					   default="1">
+					   default="0">
 					<option value="1">JYES</option>
 					<option value="0">JNO</option>
 				</field>
@@ -56,7 +56,7 @@
 				<field name="unset_modules" type="radio"
 					   label="PLG_SYSTEM_JYPROEXTRA_ENABLE"
 					   class="btn-group btn-group-yesno"
-					   default="1">
+					   default="0">
 					<option value="1">JYES</option>
 					<option value="0">JNO</option>
 				</field>
@@ -67,7 +67,7 @@
 				<field name="child" type="radio"
 					   label="PLG_SYSTEM_JYPROEXTRA_ENABLE"
 					   class="btn-group btn-group-yesno"
-					   default="1">
+					   default="0">
 					<option value="1">JYES</option>
 					<option value="0">JNO</option>
 				</field>

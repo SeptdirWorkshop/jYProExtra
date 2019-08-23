@@ -58,7 +58,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  __DEPLOY_VERSION__
 	 */
-	protected $inline = true;
+	protected $inline = false;
 
 	/**
 	 * Exclude Modules function enable.
@@ -67,7 +67,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  __DEPLOY_VERSION__
 	 */
-	protected $unset_modules = true;
+	protected $unset_modules = false;
 
 	/**
 	 * Child theme function enable.
@@ -76,7 +76,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  __DEPLOY_VERSION__
 	 */
-	protected $child = true;
+	protected $child = false;
 
 	/**
 	 * Removing JavaScripts function enable.
@@ -109,12 +109,12 @@ class PlgSystemJYProExtra extends CMSPlugin
 		parent::__construct($subject, $config);
 
 		// Set functions status
-		$this->images        = (!empty($this->params->get('images', 0)));
-		$this->inline        = (!empty($this->params->get('inline', 1)));
-		$this->unset_modules = (!empty($this->params->get('unset_modules', 1)));
-		$this->child         = (!empty($this->params->get('child', 1)));
-		$this->remove_js     = (!empty($this->params->get('remove_js', 0)));
-		$this->pagination    = (!empty($this->params->get('pagination', 0)));
+		$this->images        = ($this->params->get('images')) ? true : false;
+		$this->inline        = ($this->params->get('inline')) ? true : false;
+		$this->unset_modules = ($this->params->get('unset_modules')) ? true : false;
+		$this->child         = ($this->params->get('child')) ? true : false;
+		$this->remove_js     = ($this->params->get('remove_js')) ? true : false;
+		$this->pagination    = ($this->params->get('pagination')) ? true : false;
 	}
 
 	/**
@@ -583,8 +583,6 @@ class PlgSystemJYProExtra extends CMSPlugin
 				'/media/jui/js/jquery-noconflict',
 				'/media/jui/js/jquery-migrate',
 				'/media/jui/js/bootstrap',
-				'/media/system/js/core',
-				'/media/system/js/keepalive',
 			);
 			foreach ($files as $src)
 			{
