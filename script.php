@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    jYProExtra System Plugin
- * @version    __DEPLOY_VERSION__
+ * @version    1.2.0
  * @author     Septdir Workshop - www.septdir.com
  * @copyright  Copyright (c) 2018 - 2019 Septdir Workshop. All rights reserved.
  * @license    GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -142,7 +142,7 @@ class PlgSystemJYProExtraInstallerScript
 	/**
 	 * Method to check plugin params and change if need.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.2.0
 	 */
 	protected function checkOldConfig()
 	{
@@ -282,7 +282,7 @@ class PlgSystemJYProExtraInstallerScript
 	/**
 	 * This method is called after extension is uninstalled.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.2.0
 	 */
 	public function uninstall()
 	{
@@ -293,7 +293,7 @@ class PlgSystemJYProExtraInstallerScript
 	/**
 	 * Method to remove files.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.2.0
 	 */
 	protected function removeFiles()
 	{

@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    jYProExtra System Plugin
- * @version    __DEPLOY_VERSION__
+ * @version    1.2.0
  * @author     Septdir Workshop - www.septdir.com
  * @copyright  Copyright (c) 2018 - 2019 Septdir Workshop. All rights reserved.
  * @license    GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -29,7 +29,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @var  CMSApplication
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.2.0
 	 */
 	protected $app = null;
 
@@ -47,7 +47,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @var  boolean
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.2.0
 	 */
 	protected $images = false;
 
@@ -56,7 +56,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @var  boolean
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.2.0
 	 */
 	protected $inline = false;
 
@@ -65,7 +65,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @var  boolean
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.2.0
 	 */
 	protected $unset_modules = false;
 
@@ -74,7 +74,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @var  boolean
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.2.0
 	 */
 	protected $child = false;
 
@@ -83,7 +83,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @var  boolean
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.2.0
 	 */
 	protected $remove_js = false;
 
@@ -92,7 +92,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @var  boolean
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.2.0
 	 */
 	protected $pagination = false;
 
@@ -102,7 +102,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 * @param   object  &$subject  The object to observe
 	 * @param   array    $config   An optional associative array of configuration settings.
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   1.2.0
 	 */
 	public function __construct(&$subject, $config = array())
 	{
@@ -233,7 +233,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	/**
 	 * Method to override pagination for enabled on all components.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.2.0
 	 */
 	protected function overridePagination()
 	{
@@ -397,7 +397,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	/**
 	 * Method to include inline files contents to head.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.2.0
 	 */
 	public function onBeforeCompileHead()
 	{
@@ -482,7 +482,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @param   string  $body  Current page html.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.2.0
 	 */
 	protected function convertImages(&$body = '')
 	{
@@ -566,7 +566,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @param   string  $body  Current page html.
 	 *
-	 * @since       __DEPLOY_VERSION__
+	 * @since       1.2.0
 	 *
 	 * @deprecated  Deprecated on Joomla 4.
 	 */

@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    jYProExtra System Plugin
- * @version    __DEPLOY_VERSION__
+ * @version    1.2.0
  * @author     Septdir Workshop - www.septdir.com
  * @copyright  Copyright (c) 2018 - 2019 Septdir Workshop. All rights reserved.
  * @license    GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -28,7 +28,7 @@ class JFormFieldYooComponentlayout extends JFormFieldComponentlayout
 	 *
 	 * @var  string
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.2.0
 	 */
 	protected $type = 'ComponentLayout';
 
@@ -37,7 +37,7 @@ class JFormFieldYooComponentlayout extends JFormFieldComponentlayout
 	 *
 	 * @return  string  The field input.
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   1.2.0
 	 */
 	protected function getInput()
 	{

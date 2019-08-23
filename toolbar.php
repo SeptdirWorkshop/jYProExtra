@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    jYProExtra System Plugin
- * @version    __DEPLOY_VERSION__
+ * @version    1.2.0
  * @author     Septdir Workshop - www.septdir.com
  * @copyright  Copyright (c) 2018 - 2019 Septdir Workshop. All rights reserved.
  * @license    GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -23,7 +23,7 @@ class JFormFieldToolbar extends FormField
 	 *
 	 * @var string
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.2.0
 	 */
 	protected $type = 'toolbar';
 
@@ -32,7 +32,7 @@ class JFormFieldToolbar extends FormField
 	 *
 	 * @throws  Exception
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   1.2.0
 	 */
 	protected function getInput()
 	{
@@ -61,7 +61,7 @@ class JFormFieldToolbar extends FormField
 	 *
 	 * @return  string Buttons markup string.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.2.0
 	 */
 	protected function getButton($link = null, $text = null, $icon = null)
 	{
