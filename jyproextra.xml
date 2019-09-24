@@ -32,9 +32,9 @@
 		<folder>donate</folder>
 	</layouts>
 	<config>
-		<fields name="params">
+		<fields name="params" addfieldpath="/plugins/system/jyproextra/fields">
 			<fieldset name="basic">
-				<field type="toolbar" addfieldpath="/plugins/system/jyproextra/fields"/>
+				<field type="toolbar"/>
 				<field type="note" label="PLG_SYSTEM_JYPROEXTRA_IMAGES"
 					   description="PLG_SYSTEM_JYPROEXTRA_IMAGES_DESC"/>
 				<field name="images" type="radio"
@@ -100,6 +100,13 @@
 					<option value="0">JNO</option>
 				</field>
 				<field type="spacer" hr="true"/>
+			</fieldset>
+			<fieldset name="library" label="PLG_SYSTEM_JYPROEXTRA_LIBRARY">
+				<field type="note" label="PLG_SYSTEM_JYPROEXTRA_LIBRARY"
+					   description="PLG_SYSTEM_JYPROEXTRA_LIBRARY_DESC"/>
+				<field name="library_export" type="libraryexport"
+					   label="PLG_SYSTEM_JYPROEXTRA_LIBRARY_EXPORT"
+					   description="PLG_SYSTEM_JYPROEXTRA_LIBRARY_EXPORT_DESC"/>
 			</fieldset>
 		</fields>
 	</config>

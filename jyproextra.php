@@ -18,6 +18,7 @@ use Joomla\CMS\Filesystem\Path;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Helper\ModuleHelper;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
@@ -32,6 +33,15 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 * @since  1.2.0
 	 */
 	protected $app = null;
+
+	/**
+	 * Loads the database object.
+	 *
+	 * @var  JDatabaseDriver
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected $db = null;
 
 	/**
 	 * Affects constructor behavior.
@@ -605,5 +615,100 @@ class PlgSystemJYProExtra extends CMSPlugin
 			// Replace body
 			$body = str_replace($search, $replace, $body);
 		}
+	}
+
+	/**
+	 * Method to ajax functions.
+	 *
+	 * @throws  Exception
+	 *
+	 * @return mixed Function result.
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	public function onAjaxJYProExtra()
+	{
+		$action = $this->app->input->get('action');
+		if (empty($action) || !method_exists($this, $action))
+		{
+			throw new Exception(Text::_('PLG_SYSTEM_JYPROEXTRA_ERROR_AJAX_METHOD_NOT_FOUND'), 500);
+		}
+
+		return $this->$action();
+	}
+
+	/**
+	 * Method to export YOOtheme Pro library items.
+	 *
+	 * @throws  Exception
+	 *
+	 * @return boolean True on success, False on failure.
+	 *
+	 * @since __DEPLOY_VERSION__
+	 */
+	protected function libraryExport()
+	{
+		$keys = explode(',', $this->app->input->get('keys', '', 'string'));
+		$keys = array_filter(array_map('trim', $keys), function ($element) {
+			return !empty($element);
+		});
+
+
+		// Get items
+		$items = array();
+		$db    = $this->db;
+		$query = $db->getQuery(true)
+			->select(array('e.custom_data'))
+			->from($db->quoteName('#__extensions', 'e'))
+			->where($db->quoteName('e.type') . ' = ' . $db->quote('plugin'))
+			->where($db->quoteName('e.element') . ' = ' . $db->quote('yootheme'))
+			->where($db->quoteName('e.folder') . ' = ' . $db->quote('system'));
+		if ($custom_data = $db->setQuery($query)->loadResult())
+		{
+			$custom_data = json_decode($custom_data, true);
+
+			if (!empty($custom_data['library']))
+			{
+				foreach ($custom_data['library'] as $key => $item)
+				{
+					if (empty($keys) || in_array($key, $keys))
+					{
+						$items[$key] = $item;
+					}
+				}
+			}
+		}
+		if (empty($items))
+		{
+			throw new Exception(Text::_('PLG_SYSTEM_JYPROEXTRA_ERROR_LIBRARY_ITEMS_NOT_FOUND'), 404);
+		}
+
+		// Prepare result
+		$check    = 'jyproextra_library_export';
+		$host     = Uri::getInstance()->toString(array('host'));
+		$date     = Factory::getDate()->toSql();
+		$filename = $check . '_' . $host . '_' . $date . '.json';
+		$result   = array(
+			'check' => $check,
+			'host'  => $host,
+			'date'  => $date,
+			'items' => $items
+		);
+
+		// Set headers
+		$app = $this->app;
+		ob_end_clean();
+		$app->clearHeaders();
+		$app->setHeader('Content-Type', 'application/json', true);
+		$app->setHeader('Content-Disposition', 'attachment; filename=' . $filename . ';', true);
+		$app->sendHeaders();
+
+		// Read result
+		echo json_encode($result);
+
+		// Close application
+		$app->close();
+
+		return true;
 	}
 }
