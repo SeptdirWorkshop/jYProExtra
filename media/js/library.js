@@ -36,10 +36,7 @@ document.addEventListener('DOMContentLoaded', function () {
 							return;
 						}
 						if (response.success) {
-							Joomla.renderMessages({"success": [response.data[0]]});
-							setTimeout(function () {
-								window.location.reload();
-							}, 1500);
+							window.location.reload();
 						} else {
 							Joomla.renderMessages({"error": [response.message]});
 							console.error(response.message);

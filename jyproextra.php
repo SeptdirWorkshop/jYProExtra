@@ -312,6 +312,14 @@ class PlgSystemJYProExtra extends CMSPlugin
 			Form::addFormPath(__DIR__ . '/forms');
 			$form->loadFile('module');
 		}
+
+		// Set success message
+		if ($successMessage = $this->app->getUserState('jyproextra_success_message'))
+		{
+			$this->app->enqueueMessage($successMessage);
+			$this->app->setUserState('jyproextra_success_message', false);
+		}
+
 	}
 
 	/**
@@ -686,7 +694,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 		$check    = 'jyproextra_library_export';
 		$host     = Uri::getInstance()->toString(array('host'));
 		$date     = Factory::getDate()->toSql();
-		$filename = $check . '_' . $host . '_' .  Factory::getDate()->toUnix() . '.json';
+		$filename = $check . '_' . $host . '_' . Factory::getDate()->toUnix() . '.json';
 		$result   = array(
 			'check' => $check,
 			'host'  => $host,
@@ -805,7 +813,9 @@ class PlgSystemJYProExtra extends CMSPlugin
 		}
 
 		// Set message
-		return Text::_('PLG_SYSTEM_JYPROEXTRA_LIBRARY_IMPORT_SUCCESS');
+		$this->app->setUserState('jyproextra_success_message', Text::_('PLG_SYSTEM_JYPROEXTRA_LIBRARY_IMPORT_SUCCESS'));
+
+		return true;
 	}
 
 	/**
