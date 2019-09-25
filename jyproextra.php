@@ -686,7 +686,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 		$check    = 'jyproextra_library_export';
 		$host     = Uri::getInstance()->toString(array('host'));
 		$date     = Factory::getDate()->toSql();
-		$filename = $check . '_' . $host . '_' . $date . '.json';
+		$filename = $check . '_' . $host . '_' .  Factory::getDate()->toUnix() . '.json';
 		$result   = array(
 			'check' => $check,
 			'host'  => $host,
