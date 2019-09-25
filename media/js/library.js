@@ -8,6 +8,50 @@
  */
 
 document.addEventListener('DOMContentLoaded', function () {
+	// Import
+	document.querySelectorAll('[library-import="container"]').forEach(function (container) {
+		let url = container.getAttribute('data-url'),
+			button = container.querySelector('[library-import="button"]'),
+			field = container.querySelector('input[type="file"]');
+
+		if (button) {
+			button.addEventListener('click', function () {
+				let request = new XMLHttpRequest(),
+					requestUrl = url,
+					formData = new FormData();
+				Array.from(field.files).forEach(function (file) {
+					formData.append('files[]', file);
+				});
+
+				request.open('POST', requestUrl);
+				request.send(formData);
+				request.onreadystatechange = function () {
+					if (this.readyState === 4 && this.status === 200) {
+						let response = false;
+						try {
+							response = JSON.parse(this.response);
+						} catch (e) {
+							response = false;
+							Joomla.renderMessages({"error": [e.message]});
+							return;
+						}
+						if (response.success) {
+							Joomla.renderMessages({"success": [response.data[0]]});
+							setTimeout(function () {
+								window.location.reload();
+							}, 1500);
+						} else {
+							Joomla.renderMessages({"error": [response.message]});
+							console.error(response.message);
+						}
+					} else if (this.readyState === 4 && this.status !== 200) {
+						Joomla.renderMessages({"error": [request.message]});
+					}
+				};
+			});
+		}
+	});
+
 	// Export
 	document.querySelectorAll('[library-export="container"]').forEach(function (container) {
 		let url = container.getAttribute('data-url'),

@@ -104,6 +104,9 @@
 			<fieldset name="library" label="PLG_SYSTEM_JYPROEXTRA_LIBRARY">
 				<field type="note" label="PLG_SYSTEM_JYPROEXTRA_LIBRARY"
 					   description="PLG_SYSTEM_JYPROEXTRA_LIBRARY_DESC"/>
+				<field name="library_import" type="libraryimport"
+					   label="PLG_SYSTEM_JYPROEXTRA_LIBRARY_IMPORT"
+					   description="PLG_SYSTEM_JYPROEXTRA_LIBRARY_IMPORT_DESC"/>
 				<field name="library_export" type="libraryexport"
 					   label="PLG_SYSTEM_JYPROEXTRA_LIBRARY_EXPORT"
 					   description="PLG_SYSTEM_JYPROEXTRA_LIBRARY_EXPORT_DESC"/>

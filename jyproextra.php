@@ -653,7 +653,6 @@ class PlgSystemJYProExtra extends CMSPlugin
 			return !empty($element);
 		});
 
-
 		// Get items
 		$items = array();
 		$db    = $this->db;
@@ -710,5 +709,126 @@ class PlgSystemJYProExtra extends CMSPlugin
 		$app->close();
 
 		return true;
+	}
+
+	/**
+	 * Method to import YOOtheme Pro library items.
+	 *
+	 * @throws  Exception
+	 *
+	 * @return boolean True on success, False on failure.
+	 *
+	 * @since __DEPLOY_VERSION__
+	 */
+	protected function libraryImport()
+	{
+		// Get file
+		$files = $this->app->input->files->get('files', array());
+		$file  = (!empty($files[0])) ? $files[0] : false;
+		if (!$file || $file['type'] !== 'application/json')
+		{
+			throw new Exception(Text::_('PLG_SYSTEM_JYPROEXTRA_ERROR_FILE_NOT_FOUND'), 404);
+		}
+		if (!$context = file_get_contents($file['tmp_name']))
+		{
+			throw new Exception(Text::_('PLG_SYSTEM_JYPROEXTRA_ERROR_FILE_NOT_FOUND'), 404);
+		}
+		if (!$json = @json_decode($context, true))
+		{
+			throw new Exception(Text::_('PLG_SYSTEM_JYPROEXTRA_ERROR_FILE_NOT_FOUND'), 404);
+		}
+		if (empty($json['check']) || $json['check'] !== 'jyproextra_library_export' || empty($json['items']))
+		{
+			throw new Exception(Text::_('PLG_SYSTEM_JYPROEXTRA_ERROR_FILE_NOT_FOUND'), 404);
+		}
+
+		// Get current
+		$keys  = array();
+		$names = array();
+		$items = array();
+		$db    = $this->db;
+		$query = $db->getQuery(true)
+			->select(array('e.extension_id', 'e.custom_data'))
+			->from($db->quoteName('#__extensions', 'e'))
+			->where($db->quoteName('e.type') . ' = ' . $db->quote('plugin'))
+			->where($db->quoteName('e.element') . ' = ' . $db->quote('yootheme'))
+			->where($db->quoteName('e.folder') . ' = ' . $db->quote('system'));
+		if (!$plugin = $db->setQuery($query)->loadObject())
+		{
+			throw new Exception(Text::_('PLG_SYSTEM_JYPROEXTRA_ERROR_YOOTHEME_NOT_FOUND'), 404);
+		}
+		if ($custom_data = $plugin->custom_data)
+		{
+			$custom_data = json_decode($custom_data, true);
+
+			if (!empty($custom_data['library']))
+			{
+				foreach ($custom_data['library'] as $key => $item)
+				{
+					$keys[]      = $key;
+					$names[]     = $item['name'];
+					$items[$key] = $item;
+				}
+			}
+		}
+
+		// Add new items
+		foreach ($json['items'] as $key => $item)
+		{
+			// Check key
+			while (in_array($key, $keys))
+			{
+				$key = $this->generateLibraryKey();
+			}
+
+			// Check name
+			$name = $item['name'];
+			$i    = 1;
+			while (in_array($name, $names))
+			{
+				$i++;
+				$name = $item['name'] . ' (' . $i . ')';
+			}
+			$item['name'] = $name;
+
+			// Add to items
+			$items[$key] = $item;
+		}
+
+		// Update plugin
+		$plugin->custom_data            = ($custom_data) ? $custom_data : array();
+		$plugin->custom_data['library'] = $items;
+		$plugin->custom_data            = json_encode($plugin->custom_data);
+		if (!$db->updateObject('#__extensions', $plugin, array('extension_id')))
+		{
+			throw new Exception(Text::_('PLG_SYSTEM_JYPROEXTRA_LIBRARY_IMPORT_FAILURE'), 500);
+		}
+
+		// Set message
+		return Text::_('PLG_SYSTEM_JYPROEXTRA_LIBRARY_IMPORT_SUCCESS');
+	}
+
+	/**
+	 * Method to generate random library key.
+	 *
+	 * @param   int  $length  Key length.
+	 *
+	 * @return  string  Library key.
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected function generateLibraryKey($length = 8)
+	{
+		$secret = '';
+		$chars  = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'r', 's',
+			't', 'u', 'v', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
+			'P', 'R', 'S', 'T', 'U', 'V', 'X', 'Y', 'Z', 0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
+		for ($i = 0; $i < $length; $i++)
+		{
+			$key    = rand(0, count($chars) - 1);
+			$secret .= $chars[$key];
+		}
+
+		return $secret;
 	}
 }
