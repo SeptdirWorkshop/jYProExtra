@@ -11,6 +11,7 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Application\CMSApplication;
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Folder;
@@ -19,6 +20,7 @@ use Joomla\CMS\Form\Form;
 use Joomla\CMS\Helper\ModuleHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
@@ -107,6 +109,15 @@ class PlgSystemJYProExtra extends CMSPlugin
 	protected $pagination = false;
 
 	/**
+	 * Toolbar function enable.
+	 *
+	 * @var  boolean
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected $toolbar = false;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param   object  &$subject  The object to observe
@@ -125,10 +136,11 @@ class PlgSystemJYProExtra extends CMSPlugin
 		$this->child         = ($this->params->get('child')) ? true : false;
 		$this->remove_js     = ($this->params->get('remove_js')) ? true : false;
 		$this->pagination    = ($this->params->get('pagination')) ? true : false;
+		$this->toolbar       = true;
 	}
 
 	/**
-	 * Set child constant and override classes.
+	 * Set child constant, override classes and set admin cookie.
 	 *
 	 * @since  1.0.1
 	 */
@@ -157,6 +169,17 @@ class PlgSystemJYProExtra extends CMSPlugin
 					$this->overrideClass('ModuleHelper');
 				}
 			}
+		}
+
+		// Set admin user_id cookie
+		if ($this->app->isClient('administrator') && $this->toolbar)
+		{
+			$this->app->input->cookie->set('jyproextra_admin',
+				Factory::getUser()->id,
+				(new Date('now + 1 days'))->toUnix(),
+				$this->app->get('cookie_path', '/'),
+				$this->app->get('cookie_domain'),
+				$this->app->isSSLConnection());
 		}
 	}
 
@@ -474,7 +497,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 */
 	public function onAfterRender()
 	{
-		if (($this->images || $this->remove_js) && $this->app->isClient('site')
+		if (($this->images || $this->remove_js || $this->toolbar) && $this->app->isClient('site')
 			&& $this->app->getTemplate() === 'yootheme' && $this->app->input->get('format', 'html') == 'html'
 			&& !$this->app->input->get('customizer'))
 		{
@@ -489,6 +512,11 @@ class PlgSystemJYProExtra extends CMSPlugin
 			if ($this->remove_js)
 			{
 				$this->removeJS($body);
+			}
+
+			if ($this->toolbar)
+			{
+				$this->addFrontToolbar($body);
 			}
 
 			$this->app->setBody($body);
@@ -622,6 +650,36 @@ class PlgSystemJYProExtra extends CMSPlugin
 
 			// Replace body
 			$body = str_replace($search, $replace, $body);
+		}
+	}
+
+	/**
+	 * Method to add YOOtheme toolbar.
+	 *
+	 * @param   string  $body  Current page html.
+	 *
+	 * @since       __DEPLOY_VERSION__
+	 */
+	protected function addFrontToolbar(&$body = '')
+	{
+		if ($userID = (int) $this->app->input->cookie->get('jyproextra_admin'))
+		{
+			if (Factory::getUser($userID)->authorise('core.login.admin'))
+			{
+				$uri         = Uri::getInstance();
+				$current     = urlencode($uri->toString());
+				$root        = $uri->toString(array('scheme', 'host', 'port')) . '/administrator/index.php?p=customizer&option=com_ajax';
+				$displayData = array(
+					'customizer' => $root . '&site=' . $current . '&return=' . $current,
+					'builder'    => ($this->app->input->get('option') === 'com_content'
+						&& $this->app->input->get('view') === 'article') ?
+						$root . '&section=builder&site=' . $current . '&return=' . $current : false,
+					'position'   => $this->params->get('toolbar', 'center-right'),
+				);
+
+				$toolbar = LayoutHelper::render('plugins.system.jyproextra.toolbar.yootheme', $displayData);
+				$body    = str_replace('</body>', $toolbar . '</body>', $body);
+			}
 		}
 	}
 
