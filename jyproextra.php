@@ -497,6 +497,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 */
 	public function onAfterRender()
 	{
+		$body = false;
 		if (($this->images || $this->remove_js || $this->toolbar) && $this->app->isClient('site')
 			&& $this->app->getTemplate() === 'yootheme' && $this->app->input->get('format', 'html') == 'html'
 			&& !$this->app->input->get('customizer'))
@@ -521,6 +522,11 @@ class PlgSystemJYProExtra extends CMSPlugin
 
 			$this->app->setBody($body);
 		}
+		if ($this->app->isClient('site'))
+		{
+			$body = (!$body) ? $this->app->getBody() : $body;
+			$this->addBreadcrumbs($body);
+		}
 	}
 
 	/**
@@ -533,10 +539,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	protected function convertImages(&$body = '')
 	{
 		// Check template file exist
-		$src   = Path::clean(__DIR__ . '/templates/jyproextra-image.php');
-		$dest  = Path::clean(JPATH_THEMES . '/yootheme/templates/jyproextra-image.php');
-		$exist = (!File::exists($dest)) ? File::copy($src, $dest) : true;
-		if (!$exist) return;
+		if (!!File::exists(Path::clean(JPATH_THEMES . '/yootheme/templates/jyproextra-image.php'))) return;
 
 		// Replace images
 		if (preg_match_all('/<img[^>]+>/i', $body, $matches))
@@ -680,6 +683,32 @@ class PlgSystemJYProExtra extends CMSPlugin
 				$toolbar = LayoutHelper::render('plugins.system.jyproextra.toolbar.yootheme', $displayData);
 				$body    = str_replace('</body>', $toolbar . '</body>', $body);
 			}
+		}
+	}
+
+	/**
+	 * Method to add breadcrumbs.
+	 *
+	 * @param   string  $body  Current page html.
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected function addBreadcrumbs($body = '')
+	{
+		// Replace shortcode
+		if (preg_match('/{jyproextra_joomla_breadcrumbs}/i', $body))
+		{
+			$module            = new stdClass();
+			$module->id        = 'tm-jyproextra-breadcrumbs';
+			$module->name      = 'yoo_breadcrumbs';
+			$module->title     = '';
+			$module->showtitle = 0;
+			$module->position  = '';
+			$module->params    = '{}';
+			$module->module    = 'mod_breadcrumbs';
+
+			$body = str_replace('{jyproextra_joomla_breadcrumbs}', ModuleHelper::renderModule($module), $body);
+			$this->app->setBody($body);
 		}
 	}
 
