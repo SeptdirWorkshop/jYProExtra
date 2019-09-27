@@ -18,5 +18,5 @@ $el = $this->el('div', [
 ?>
 
 <?= $el($props, $attrs) ?>
-	{jyproextra_}
+	{jyproextra_joomla_breadcrumbs}
 </div>
