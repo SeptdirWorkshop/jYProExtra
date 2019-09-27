@@ -44,6 +44,26 @@ class PlgSystemJYProExtraInstallerScript
 	protected $minimumJoomla = '3.9.0';
 
 	/**
+	 * Minimum PHP version required to install the extension.
+	 *
+	 * @var  array
+	 *
+	 * @since  1.0.0
+	 */
+	protected $files = array(
+		array(
+			'src'  => __DIR__ . '/templates/jyproextra-image.php',
+			'dest' => JPATH_ROOT . '/templates/yootheme/templates/jyproextra-image.php',
+			'type' => 'file',
+		),
+		array(
+			'src'  => __DIR__ . '/elements/joomla_breadcrumbs',
+			'dest' => JPATH_ROOT . '/templates/yootheme/vendor/yootheme/builder-joomla/elements/joomla_breadcrumbs',
+			'type' => 'folder',
+		)
+	);
+
+	/**
 	 * Runs right before any installation action.
 	 *
 	 * @param   string  $type  Type of PostFlight action. Possible values are:
@@ -230,8 +250,8 @@ class PlgSystemJYProExtraInstallerScript
 			$app->enqueueMessage(Text::_('PLG_SYSTEM_JYPROEXTRA_AFTER_INSTALL'), 'notice');
 		}
 
-		// Update files
-		$this->updateFiles();
+		// Copy external files
+		$this->copyFiles($parent->getParent());
 
 		// Add donate message
 		$app->enqueueMessage(LayoutHelper::render('plugins.system.jyproextra.donate.message'), '');
@@ -269,6 +289,7 @@ class PlgSystemJYProExtraInstallerScript
 		$copyFiles = array();
 		foreach ($element->children() as $file)
 		{
+			$path         = array();
 			$path['src']  = Path::clean($source . '/' . $file);
 			$path['dest'] = Path::clean($destination . '/' . $file);
 
@@ -292,26 +313,36 @@ class PlgSystemJYProExtraInstallerScript
 	}
 
 	/**
-	 * Method to update files.
+	 * Method to copy external files.
 	 *
-	 * @since  1.0.0
+	 * @param   Installer  $installer  Installer calling object.
+	 *
+	 * @return  bool True on success, False on failure.
+	 *
+	 * @since  __DEPLOY_VERSION__
 	 */
-	protected function updateFiles()
+	protected function copyFiles($installer)
 	{
-		$files = array(
-			__DIR__ . '/templates/jyproextra-image.php' => JPATH_ROOT . '/templates/yootheme/templates/jyproextra-image.php',
-		);
-
-		foreach ($files as $src => $dest)
+		$copyFiles = array();
+		foreach ($this->files as $path)
 		{
-			$src  = Path::clean($src);
-			$dest = Path::clean($dest);
-			if (File::exists($dest))
+			$path['src']  = Path::clean($path['src']);
+			$path['dest'] = Path::clean($path['dest']);
+			if (basename($path['dest']) !== $path['dest'])
 			{
-				File::delete($dest);
-				File::copy($src, $dest);
+				$newdir = dirname($path['dest']);
+				if (!Folder::create($newdir))
+				{
+					Log::add(Text::sprintf('JLIB_INSTALLER_ERROR_CREATE_DIRECTORY', $newdir), Log::WARNING, 'jerror');
+
+					return false;
+				}
 			}
+
+			$copyFiles[] = $path;
 		}
+
+		return $installer->copyFiles($copyFiles);
 	}
 
 	/**
@@ -405,22 +436,22 @@ class PlgSystemJYProExtraInstallerScript
 	}
 
 	/**
-	 * Method to remove files.
+	 * Method to remove external files.
 	 *
 	 * @since  1.2.0
 	 */
 	protected function removeFiles()
 	{
-		$files = array(
-			JPATH_ROOT . '/templates/yootheme/templates/jyproextra-image.php',
-			JPATH_ROOT . '/templates/yootheme/html/pagination_all.php',
-		);
-		foreach ($files as $file)
+		foreach ($this->files as $path)
 		{
-			$file = Path::clean($file);
-			if (File::exists($file))
+			$path['dest'] = Path::clean($path['dest']);
+			if ($path['type'] === 'file' && File::exists($path['dest']))
 			{
-				File::delete($file);
+				File::delete($path['dest']);
+			}
+			elseif ($path['type'] === 'folder' && Folder::exists($path['dest']))
+			{
+				Folder::delete($path['dest']);
 			}
 		}
 	}
