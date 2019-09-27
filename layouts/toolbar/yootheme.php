@@ -10,6 +10,8 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Language\Text;
+
 extract($displayData);
 
 /**
@@ -39,18 +41,22 @@ elseif (preg_match('#bootom#', $position))
 {
 	$pos = 'top';
 }
+
+$center = (preg_match('#-center#', $position))
 ?>
-<div class="uk-position-fixed uk-position-small uk-position-<?php echo $position; ?>">
-	<div>
-		<a href="<?php echo $customizer; ?>" class="uk-icon-button uk-text-danger"
-		   uk-tooltip="<?php echo ($pos) ? 'pos:' . $pos : ''; ?>" title="Customizer" uk-icon="icon:cog; ratio: 1.2">
-		</a>
-	</div>
+<div class="uk-position-fixed uk-position-small uk-position-<?php echo $position; ?> <?php echo ($center) ? 'uk-flex' : ''; ?>">
 	<?php if ($builder) : ?>
-		<div class="uk-margin-small-top">
+		<div class="uk-margin-small-<?php echo ($center) ? 'right' : 'bottom'; ?>">
 			<a href="<?php echo $builder; ?>" class="uk-icon-button uk-text-danger"
-			   uk-tooltip="<?php echo ($pos) ? 'pos:' . $pos : ''; ?>" title="Builder" uk-icon="icon:nut; ratio: 1.2">
+			   uk-icon="icon:pencil; ratio: 1.2" uk-tooltip="<?php echo ($pos) ? 'pos:' . $pos : ''; ?>"
+			   title="<?php echo Text::_('PLG_SYSTEM_JYPROEXTRA_TOOLBAR_BUILDER'); ?>">
 			</a>
 		</div>
 	<?php endif; ?>
+	<div>
+		<a href="<?php echo $customizer; ?>" class="uk-icon-button uk-text-danger"
+		   uk-icon="icon:settings; ratio: 1.2" uk-tooltip="<?php echo ($pos) ? 'pos:' . $pos : ''; ?>"
+		   title="<?php echo Text::_('PLG_SYSTEM_JYPROEXTRA_TOOLBAR_CUSTOMIZER'); ?>">
+		</a>
+	</div>
 </div>

@@ -136,7 +136,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 		$this->child         = ($this->params->get('child')) ? true : false;
 		$this->remove_js     = ($this->params->get('remove_js')) ? true : false;
 		$this->pagination    = ($this->params->get('pagination')) ? true : false;
-		$this->toolbar       = true;
+		$this->toolbar       = ($this->params->get('toolbar')) ? true : false;
 	}
 
 	/**
