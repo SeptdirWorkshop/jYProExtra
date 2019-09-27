@@ -100,6 +100,23 @@
 					<option value="0">JNO</option>
 				</field>
 				<field type="spacer" hr="true"/>
+
+				<field type="note" label="PLG_SYSTEM_JYPROEXTRA_TOOLBAR"
+					   description="PLG_SYSTEM_JYPROEXTRA_TOOLBAR_DESC"/>
+				<field name="toolbar" type="list"
+					   label="PLG_SYSTEM_JYPROEXTRA_TOOLBAR_POSITION"
+					   default="">
+					<option value="">JHIDE</option>
+					<option value="top-left">Top Left</option>
+					<option value="top-center">Top Center</option>
+					<option value="top-right">Top Right</option>
+					<option value="center-left">Center Left</option>
+					<option value="center-right">Center Right</option>
+					<option value="bottom-left">Bottom Left</option>
+					<option value="bottom-center">Bottom Center</option>
+					<option value="bottom-right">Bottom Right</option>
+				</field>
+				<field type="spacer" hr="true"/>
 			</fieldset>
 			<fieldset name="library" label="PLG_SYSTEM_JYPROEXTRA_LIBRARY">
 				<field type="note" label="PLG_SYSTEM_JYPROEXTRA_LIBRARY"
