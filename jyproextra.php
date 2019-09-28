@@ -510,22 +510,26 @@ class PlgSystemJYProExtra extends CMSPlugin
 				$this->convertImages($body);
 			}
 
+			// Remove old javascripts
 			if ($this->remove_js)
 			{
 				$this->removeJS($body);
 			}
 
+			// Add YOOtheme toolbar
 			if ($this->toolbar)
 			{
-				$this->addFrontToolbar($body);
+				$this->addYOOthemeToolbar($body);
 			}
 
 			$this->app->setBody($body);
 		}
+
+		// Replace breadcrumbs shortcode
 		if ($this->app->isClient('site'))
 		{
 			$body = (!$body) ? $this->app->getBody() : $body;
-			$this->addBreadcrumbs($body);
+			$this->replaceBreadcrumbsShortcode($body);
 		}
 	}
 
@@ -539,7 +543,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	protected function convertImages(&$body = '')
 	{
 		// Check template file exist
-		if (!!File::exists(Path::clean(JPATH_THEMES . '/yootheme/templates/jyproextra-image.php'))) return;
+		if (!File::exists(Path::clean(JPATH_THEMES . '/yootheme/templates/jyproextra-image.php'))) return;
 
 		// Replace images
 		if (preg_match_all('/<img[^>]+>/i', $body, $matches))
@@ -663,7 +667,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since       __DEPLOY_VERSION__
 	 */
-	protected function addFrontToolbar(&$body = '')
+	protected function addYOOthemeToolbar(&$body = '')
 	{
 		if ($userID = (int) $this->app->input->cookie->get('jyproextra_admin'))
 		{
@@ -693,9 +697,8 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  __DEPLOY_VERSION__
 	 */
-	protected function addBreadcrumbs($body = '')
+	protected function replaceBreadcrumbsShortcode($body = '')
 	{
-		// Replace shortcode
 		if (preg_match('/{jyproextra_joomla_breadcrumbs}/i', $body))
 		{
 			$module            = new stdClass();
