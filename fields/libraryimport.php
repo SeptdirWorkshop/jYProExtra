@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    jYProExtra System Plugin
- * @version    __DEPLOY_VERSION__
+ * @version    1.3.0
  * @author     Septdir Workshop - www.septdir.com
  * @copyright  Copyright (c) 2018 - 2019 Septdir Workshop. All rights reserved.
  * @license    GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -21,7 +21,7 @@ class JFormFieldLibraryImport extends JFormFieldFile
 	 *
 	 * @var  string
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   1.3.0
 	 */
 	protected $type = 'libraryImport';
 
@@ -30,7 +30,7 @@ class JFormFieldLibraryImport extends JFormFieldFile
 	 *
 	 * @var  string
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.3.0
 	 */
 	protected $layout = 'plugins.system.jyproextra.fields.library.import';
 
@@ -39,7 +39,7 @@ class JFormFieldLibraryImport extends JFormFieldFile
 	 *
 	 * @return  string  The field input markup.
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   1.3.0
 	 */
 	protected function getInput()
 	{

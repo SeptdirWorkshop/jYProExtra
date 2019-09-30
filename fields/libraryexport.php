@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    jYProExtra System Plugin
- * @version    __DEPLOY_VERSION__
+ * @version    1.3.0
  * @author     Septdir Workshop - www.septdir.com
  * @copyright  Copyright (c) 2018 - 2019 Septdir Workshop. All rights reserved.
  * @license    GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -22,7 +22,7 @@ class JFormFieldLibraryExport extends JFormFieldCheckboxes
 	 *
 	 * @var  string
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   1.3.0
 	 */
 	protected $type = 'libraryExport';
 
@@ -31,7 +31,7 @@ class JFormFieldLibraryExport extends JFormFieldCheckboxes
 	 *
 	 * @var  array
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.3.0
 	 */
 	protected $_options = null;
 
@@ -40,7 +40,7 @@ class JFormFieldLibraryExport extends JFormFieldCheckboxes
 	 *
 	 * @var  string
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.3.0
 	 */
 	protected $layout = 'plugins.system.jyproextra.fields.library.export';
 
@@ -51,7 +51,7 @@ class JFormFieldLibraryExport extends JFormFieldCheckboxes
 	 *
 	 * @return  array  The field option objects.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.3.0
 	 */
 	protected function getOptions()
 	{

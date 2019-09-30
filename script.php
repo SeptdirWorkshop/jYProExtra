@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    jYProExtra System Plugin
- * @version    __DEPLOY_VERSION__
+ * @version    1.3.0
  * @author     Septdir Workshop - www.septdir.com
  * @copyright  Copyright (c) 2018 - 2019 Septdir Workshop. All rights reserved.
  * @license    GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -267,7 +267,7 @@ class PlgSystemJYProExtraInstallerScript
 	 *
 	 * @return  boolean  True on success.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.3.0
 	 */
 	public function parseLayouts(SimpleXMLElement $element, $installer)
 	{
@@ -319,7 +319,7 @@ class PlgSystemJYProExtraInstallerScript
 	 *
 	 * @return  bool True on success, False on failure.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.3.0
 	 */
 	protected function copyFiles($installer)
 	{
@@ -388,7 +388,7 @@ class PlgSystemJYProExtraInstallerScript
 	 *
 	 * @return  boolean  True on success.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.3.0
 	 */
 	protected function removeLayouts(SimpleXMLElement $element)
 	{

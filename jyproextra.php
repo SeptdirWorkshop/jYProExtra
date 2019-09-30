@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    jYProExtra System Plugin
- * @version    __DEPLOY_VERSION__
+ * @version    1.3.0
  * @author     Septdir Workshop - www.septdir.com
  * @copyright  Copyright (c) 2018 - 2019 Septdir Workshop. All rights reserved.
  * @license    GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -41,7 +41,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @var  JDatabaseDriver
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.3.0
 	 */
 	protected $db = null;
 
@@ -113,7 +113,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @var  boolean
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.3.0
 	 */
 	protected $toolbar = false;
 
@@ -665,7 +665,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @param   string  $body  Current page html.
 	 *
-	 * @since       __DEPLOY_VERSION__
+	 * @since       1.3.0
 	 */
 	protected function addYOOthemeToolbar(&$body = '')
 	{
@@ -695,7 +695,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @param   string  $body  Current page html.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.3.0
 	 */
 	protected function replaceBreadcrumbsShortcode($body = '')
 	{
@@ -722,7 +722,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @return mixed Function result.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.3.0
 	 */
 	public function onAjaxJYProExtra()
 	{
@@ -742,7 +742,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @return boolean True on success, False on failure.
 	 *
-	 * @since __DEPLOY_VERSION__
+	 * @since 1.3.0
 	 */
 	protected function libraryExport()
 	{
@@ -816,7 +816,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @return boolean True on success, False on failure.
 	 *
-	 * @since __DEPLOY_VERSION__
+	 * @since 1.3.0
 	 */
 	protected function libraryImport()
 	{
@@ -915,7 +915,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @return  string  Library key.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.3.0
 	 */
 	protected function generateLibraryKey($length = 8)
 	{
