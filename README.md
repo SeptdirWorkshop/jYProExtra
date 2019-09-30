@@ -21,3 +21,13 @@ This function allows you to remove obsolete JavaScript (jQuery, bootstrap) from 
 
 ### Pagination
 This function allows you to display YOOtheme pagination in all components.
+
+### Toolbar
+This function allows you to display on the frontend YOOtheme Pro Builder and Customizer buttons for administrators.
+
+### Library
+Chis function allows you to import and export saved YOOtheme Pro layouts.
+
+### Elements
+Custom elements for YOOtheme Pro builder
+* J! Breadcrumbs
