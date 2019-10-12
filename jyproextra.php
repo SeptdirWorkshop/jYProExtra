@@ -676,7 +676,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 			{
 				$uri         = Uri::getInstance();
 				$current     = urlencode($uri->toString());
-				$root        = $uri->toString(array('scheme', 'host', 'port')) . '/administrator/index.php?p=customizer&option=com_ajax';
+				$root        = Uri::root() . 'administrator/index.php?p=customizer&option=com_ajax';
 				$displayData = array(
 					'customizer' => $root . '&site=' . $current . '&return=' . $current,
 					'builder'    => ($this->app->input->get('option') === 'com_content'
