@@ -44,13 +44,13 @@ class PlgSystemJYProExtraInstallerScript
 	protected $minimumJoomla = '3.9.0';
 
 	/**
-	 * Minimum PHP version required to install the extension.
+	 * YOOtheme external files.
 	 *
 	 * @var  array
 	 *
-	 * @since  1.0.0
+	 * @since  __DEPLOY_VERSION__
 	 */
-	protected $files = array(
+	protected $yoothemeFiles = array(
 		array(
 			'src'  => __DIR__ . '/templates/jyproextra-image.php',
 			'dest' => JPATH_ROOT . '/templates/yootheme/templates/jyproextra-image.php',
@@ -250,8 +250,8 @@ class PlgSystemJYProExtraInstallerScript
 			$app->enqueueMessage(Text::_('PLG_SYSTEM_JYPROEXTRA_AFTER_INSTALL'), 'notice');
 		}
 
-		// Copy external files
-		$this->copyFiles($parent->getParent());
+		// Copy YOOtheme external files
+		$this->copyYOOthemeFiles($parent->getParent());
 
 		// Add donate message
 		$app->enqueueMessage(LayoutHelper::render('plugins.system.jyproextra.donate.message'), '');
@@ -313,18 +313,18 @@ class PlgSystemJYProExtraInstallerScript
 	}
 
 	/**
-	 * Method to copy external files.
+	 * Method to copy YOOtheme external files.
 	 *
 	 * @param   Installer  $installer  Installer calling object.
 	 *
 	 * @return  bool True on success, False on failure.
 	 *
-	 * @since  1.3.0
+	 * @since  __DEPLOY_VERSION__
 	 */
-	protected function copyFiles($installer)
+	public function copyYOOthemeFiles($installer)
 	{
 		$copyFiles = array();
-		foreach ($this->files as $path)
+		foreach ($this->yoothemeFiles as $path)
 		{
 			$path['src']  = Path::clean($path['src']);
 			$path['dest'] = Path::clean($path['dest']);
@@ -377,8 +377,8 @@ class PlgSystemJYProExtraInstallerScript
 		// Remove layouts
 		$this->removeLayouts($parent->getParent()->getManifest()->layouts);
 
-		// Remove files
-		$this->removeFiles();
+		// Remove YOOtheme external files
+		$this->removeYOOthemeFiles();
 	}
 
 	/**
@@ -436,13 +436,13 @@ class PlgSystemJYProExtraInstallerScript
 	}
 
 	/**
-	 * Method to remove external files.
+	 * Method to remove YOOtheme external files.
 	 *
-	 * @since  1.2.0
+	 * @since  __DEPLOY_VERSION__
 	 */
-	protected function removeFiles()
+	protected function removeYOOthemeFiles()
 	{
-		foreach ($this->files as $path)
+		foreach ($this->yoothemeFiles as $path)
 		{
 			$path['dest'] = Path::clean($path['dest']);
 			if ($path['type'] === 'file' && File::exists($path['dest']))

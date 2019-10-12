@@ -19,6 +19,7 @@ use Joomla\CMS\Filesystem\Path;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Helper\ModuleHelper;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Installer\Installer;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Plugin\CMSPlugin;
@@ -930,5 +931,48 @@ class PlgSystemJYProExtra extends CMSPlugin
 		}
 
 		return $secret;
+	}
+
+	/**
+	 * Method to copy YOOtheme external files after install extension.
+	 *
+	 * @param   Installer  $installer  Installer object.
+	 * @param   integer    $eid        Extension Identifier.
+	 *
+	 * @since   __DEPLOY_VERSION__
+	 */
+	public function onExtensionAfterInstall($installer, $eid)
+	{
+		if ($eid) $this->copyYOOthemeFiles($installer);
+	}
+
+	/**
+	 * Method to copy YOOtheme external files after update extension.
+	 *
+	 * @param   Installer  $installer  Installer object.
+	 * @param   integer    $eid        Extension Identifier.
+	 *
+	 * @since   __DEPLOY_VERSION__
+	 */
+	public function onExtensionAfterUpdate($installer, $eid)
+	{
+		if ($eid) $this->copyYOOthemeFiles($installer);
+	}
+
+	/**
+	 * Method to copy YOOtheme external files.
+	 *
+	 * @param   Installer  $installer  Installer object.
+	 *
+	 * @since   __DEPLOY_VERSION__
+	 */
+	protected function copyYOOthemeFiles($installer)
+	{
+		$manifest = $installer->getManifest();
+		if ((string) $manifest->attributes()['type'] === 'package' && (string) $manifest->packagename === 'yootheme')
+		{
+			JLoader::register('PlgSystemJYProExtraInstallerScript', Path::clean(__DIR__ . '/script.php'));
+			(new PlgSystemJYProExtraInstallerScript())->copyYOOthemeFiles($installer);
+		}
 	}
 }
