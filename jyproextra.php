@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    jYProExtra System Plugin
- * @version    __DEPLOY_VERSION__
+ * @version    1.3.1
  * @author     Septdir Workshop - www.septdir.com
  * @copyright  Copyright (c) 2018 - 2019 Septdir Workshop. All rights reserved.
  * @license    GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -939,7 +939,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 * @param   Installer  $installer  Installer object.
 	 * @param   integer    $eid        Extension Identifier.
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   1.3.1
 	 */
 	public function onExtensionAfterInstall($installer, $eid)
 	{
@@ -952,7 +952,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 * @param   Installer  $installer  Installer object.
 	 * @param   integer    $eid        Extension Identifier.
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   1.3.1
 	 */
 	public function onExtensionAfterUpdate($installer, $eid)
 	{
@@ -964,7 +964,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @param   Installer  $installer  Installer object.
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   1.3.1
 	 */
 	protected function copyYOOthemeFiles($installer)
 	{

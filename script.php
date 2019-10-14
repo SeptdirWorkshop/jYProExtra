@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    jYProExtra System Plugin
- * @version    __DEPLOY_VERSION__
+ * @version    1.3.1
  * @author     Septdir Workshop - www.septdir.com
  * @copyright  Copyright (c) 2018 - 2019 Septdir Workshop. All rights reserved.
  * @license    GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -48,7 +48,7 @@ class PlgSystemJYProExtraInstallerScript
 	 *
 	 * @var  array
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.3.1
 	 */
 	protected $yoothemeFiles = array(
 		array(
@@ -319,7 +319,7 @@ class PlgSystemJYProExtraInstallerScript
 	 *
 	 * @return  bool True on success, False on failure.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.3.1
 	 */
 	public function copyYOOthemeFiles($installer)
 	{
@@ -438,7 +438,7 @@ class PlgSystemJYProExtraInstallerScript
 	/**
 	 * Method to remove YOOtheme external files.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.3.1
 	 */
 	protected function removeYOOthemeFiles()
 	{
