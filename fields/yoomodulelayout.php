@@ -19,7 +19,7 @@ use Joomla\CMS\Form\FormHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
-FormHelper::loadFieldClass('modulelayout');
+FormHelper::loadFieldClass('ModuleLayout');
 
 class JFormFieldYooModuleLayout extends JFormFieldModulelayout
 {

@@ -23,7 +23,6 @@
 		<folder>forms</folder>
 		<folder>templates</folder>
 		<filename plugin="jyproextra">jyproextra.php</filename>
-		<filename>toolbar.php</filename>
 	</files>
 	<media destination="plg_system_jyproextra" folder="media">
 		<folder>js</folder>
@@ -36,7 +35,7 @@
 	<config>
 		<fields name="params" addfieldpath="/plugins/system/jyproextra/fields">
 			<fieldset name="basic">
-				<field type="toolbar" addfieldpath="/plugins/system/jyproextra"/>
+				<field type="toolbar"/>
 				<field type="note" label="PLG_SYSTEM_JYPROEXTRA_IMAGES"
 					   description="PLG_SYSTEM_JYPROEXTRA_IMAGES_DESC"/>
 				<field name="images" type="radio"

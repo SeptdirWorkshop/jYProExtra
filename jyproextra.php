@@ -309,10 +309,10 @@ class PlgSystemJYProExtra extends CMSPlugin
 		if ($this->child)
 		{
 			$types = array(
+				'ComponentLayout' => 'YooComponentLayout',
+				'FieldLayout'     => 'YooFieldLayout',
 				'ModuleLayout'    => 'YooModuleLayout',
-				'ComponentLayout' => 'YooComponentLayout'
 			);
-			Form::addFieldPath(__DIR__ . '/fields');
 			foreach ($form->getFieldsets() as $fieldset)
 			{
 				foreach ($form->getFieldset($fieldset->name) as $field)
@@ -323,6 +323,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 						$name  = $field->__get('fieldname');
 						$group = $field->__get('group');
 						$form->setFieldAttribute($name, 'type', $types[$type], $group);
+						$form->setFieldAttribute($name, 'addfieldpath', '/plugins/system/jyproextra/fields', $group);
 					}
 				}
 			}

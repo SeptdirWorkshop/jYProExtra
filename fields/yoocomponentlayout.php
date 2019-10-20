@@ -8,7 +8,7 @@
  * @link       https://www.septdir.com/
  */
 
-defined('JPATH_PLATFORM') or die;
+defined('_JEXEC') or die;
 
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
@@ -19,9 +19,9 @@ use Joomla\CMS\Form\FormHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
-FormHelper::loadFieldClass('componentlayout');
+FormHelper::loadFieldClass('ComponentLayout');
 
-class JFormFieldYooComponentlayout extends JFormFieldComponentlayout
+class JFormFieldYooComponentLayout extends JFormFieldComponentlayout
 {
 	/**
 	 * The form field type.
@@ -30,7 +30,7 @@ class JFormFieldYooComponentlayout extends JFormFieldComponentlayout
 	 *
 	 * @since  1.2.0
 	 */
-	protected $type = 'ComponentLayout';
+	protected $type = 'YOOComponentLayout';
 
 	/**
 	 * Method to get the field input for module layouts.
