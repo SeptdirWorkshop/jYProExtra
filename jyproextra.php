@@ -299,11 +299,12 @@ class PlgSystemJYProExtra extends CMSPlugin
 	/**
 	 * Change fields types and add fields.
 	 *
-	 * @param   Form  $form  The form to be altered.
+	 * @param   Form   $form  The form to be altered.
+	 * @param   mixed  $data  The associated data for the form.
 	 *
 	 * @since  1.0.0
 	 */
-	public function onContentPrepareForm($form)
+	public function onContentPrepareForm($form, $data)
 	{
 		// Change fields type for child theme
 		if ($this->child)
@@ -336,6 +337,13 @@ class PlgSystemJYProExtra extends CMSPlugin
 			// Add params
 			Form::addFormPath(__DIR__ . '/forms');
 			$form->loadFile('module');
+
+			// Remove unset customizer & unset empty in builder module
+			if ((new Registry($data))->get('module') == 'mod_yootheme_builder')
+			{
+				$form->removeField('unset_customizer', 'params');
+				$form->removeField('unset_empty', 'params');
+			}
 		}
 
 		// Set success message
@@ -344,7 +352,6 @@ class PlgSystemJYProExtra extends CMSPlugin
 			$this->app->enqueueMessage($successMessage);
 			$this->app->setUserState('jyproextra_success_message', false);
 		}
-
 	}
 
 	/**
