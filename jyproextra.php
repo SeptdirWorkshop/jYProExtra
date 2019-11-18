@@ -468,11 +468,11 @@ class PlgSystemJYProExtra extends CMSPlugin
 				Path::clean(JPATH_THEMES . '/yootheme/js/inline.min.js'),
 				Path::clean(JPATH_THEMES . '/yootheme/js/inline.js'),
 			);
-			if ($this->child && defined('YOOTHEME_CHILD'))
+			if ($child = (new Registry($this->app->getTemplate(true)->params->get('config')))->get('child_theme'))
 			{
 				$pathsJS = array_merge(array(
-					Path::clean(JPATH_THEMES . '/yootheme_' . YOOTHEME_CHILD . '/js/inline.min.js'),
-					Path::clean(JPATH_THEMES . '/yootheme_' . YOOTHEME_CHILD . '/js/inline.js'),
+					Path::clean(JPATH_THEMES . '/yootheme_' . $child . '/js/inline.min.js'),
+					Path::clean(JPATH_THEMES . '/yootheme_' . $child . '/js/inline.js'),
 				), $pathsJS);
 			}
 			foreach ($pathsJS as $path)
