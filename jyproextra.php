@@ -359,14 +359,18 @@ class PlgSystemJYProExtra extends CMSPlugin
 		if ($this->unset_modules && !empty($modules) && $this->app->isClient('site')
 			&& $this->app->getTemplate() === 'yootheme')
 		{
-			$resetKeys  = false;
-			$customizer = (!empty($this->app->input->get('customizer')));
-			$component  = $this->app->input->get('option');
-			$view       = $this->app->input->get('view');
+			$resetKeys   = false;
+			$customizer  = (!empty($this->app->input->get('customizer')));
+			$component   = $this->app->input->get('option');
+			$view        = $this->app->input->get('view');
+			$layout      = $this->app->input->get('layout');
+			$unsetView   = ($view) ? $component . '.' . $view : false;
+			$unsetLayout = ($unsetView && $layout) ? $unsetView . ':' . $layout : false;
 
 			foreach ($modules as $key => $module)
 			{
-				$params = new Registry($module->params);
+				$params          = new Registry($module->params);
+				$unsetComponents = $params->get('unset_components');
 
 				// Unset in YOOtheme Pro customizer
 				if ($params->get('unset_customizer') && $customizer)
@@ -375,9 +379,9 @@ class PlgSystemJYProExtra extends CMSPlugin
 					unset($modules[$key]);
 				}
 
-				// Unset in com_content views
-				elseif ($component == 'com_content' && $params->get('unset_content')
-					&& in_array($view, $params->get('unset_content')))
+				// Unset in components views
+				elseif ($unsetComponents && (($unsetView && in_array($unsetView, $unsetComponents))
+						|| ($unsetLayout && in_array($unsetLayout, $unsetComponents))))
 				{
 					$resetKeys = true;
 					unset($modules[$key]);
@@ -411,10 +415,14 @@ class PlgSystemJYProExtra extends CMSPlugin
 		if ($this->unset_modules && !empty($module->params) && $this->app->isClient('site')
 			&& $this->app->getTemplate() === 'yootheme')
 		{
-			$params     = new Registry($module->params);
-			$customizer = (!empty($this->app->input->get('customizer')));
-			$component  = $this->app->input->get('option');
-			$view       = $this->app->input->get('view');
+			$params          = new Registry($module->params);
+			$customizer      = (!empty($this->app->input->get('customizer')));
+			$component       = $this->app->input->get('option');
+			$view            = $this->app->input->get('view');
+			$layout          = $this->app->input->get('layout');
+			$unsetView       = ($view) ? $component . '.' . $view : false;
+			$unsetLayout     = ($unsetView && $layout) ? $unsetView . ':' . $layout : false;
+			$unsetComponents = $params->get('unset_components');
 
 			// Unset in YOOtheme Pro customizer
 			if ($params->get('unset_customizer') && $customizer)
@@ -422,9 +430,9 @@ class PlgSystemJYProExtra extends CMSPlugin
 				$module = null;
 			}
 
-			// Unset in com_content views
-			elseif ($component == 'com_content' && $params->get('unset_content')
-				&& in_array($view, $params->get('unset_content')))
+			// Unset in components views
+			elseif ($unsetComponents && (($unsetView && in_array($unsetView, $unsetComponents))
+					|| ($unsetLayout && in_array($unsetLayout, $unsetComponents))))
 			{
 				$module = null;
 			}
@@ -667,7 +675,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @param   string  $body  Current page html.
 	 *
-	 * @since       1.3.0
+	 * @since  1.3.0
 	 */
 	protected function addYOOthemeToolbar(&$body = '')
 	{

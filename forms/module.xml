@@ -21,18 +21,12 @@
 				<option value="1">JYES</option>
 				<option value="0">JNO</option>
 			</field>
-			<field type="spacer" hr="true"/>
-			<field type="note" label="PLG_SYSTEM_JYPROEXTRA_MODULE_UNSET_COMPONENTS"
-				   description="PLG_SYSTEM_JYPROEXTRA_MODULE_UNSET_COMPONENTS_DESC"/>
-			<field name="unset_content" type="list"
-				   label="PLG_SYSTEM_JYPROEXTRA_MODULE_UNSET_CONTENT"
-				   description="PLG_SYSTEM_JYPROEXTRA_MODULE_UNSET_CONTENT_DESC"
-				   multiple="true">
-				<option value="article">PLG_SYSTEM_JYPROEXTRA_MODULE_UNSET_CONTENT_ARTICLE</option>
-				<option value="category">PLG_SYSTEM_JYPROEXTRA_MODULE_UNSET_CONTENT_CATEGORY</option>
-				<option value="categories">PLG_SYSTEM_JYPROEXTRA_MODULE_UNSET_CONTENT_CATEGORIES</option>
-				<option value="archive">PLG_SYSTEM_JYPROEXTRA_MODULE_UNSET_CONTENT_ARCHIVE</option>
-				<option value="featured">PLG_SYSTEM_JYPROEXTRA_MODULE_UNSET_CONTENT_FEATURED</option>
+			<field name="unset_components" type="unsetcomponents" addfieldpath="/plugins/system/jyproextra/fields"
+				   label="PLG_SYSTEM_JYPROEXTRA_MODULE_UNSET_COMPONENTS"
+				   description="PLG_SYSTEM_JYPROEXTRA_MODULE_UNSET_COMPONENTS_DESC"
+				   multiple="true"
+				   class="input-xxlarge">
+				<option value="com_users.profile:edit"/>
 			</field>
 		</fieldset>
 	</fields>

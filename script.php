@@ -86,6 +86,9 @@ class PlgSystemJYProExtraInstallerScript
 
 			// Check old config
 			$this->checkOldConfig();
+
+			// Update modules content excludes params
+			$this->updateModulesContentExcludes();
 		}
 
 		return true;
@@ -220,6 +223,39 @@ class PlgSystemJYProExtraInstallerScript
 			$update->params  = $params->toString();
 
 			Factory::getDbo()->updateObject('#__extensions', $update, array('element', 'folder'));
+		}
+	}
+
+	/**
+	 * Method to check modules content exclude params and change if need.
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected function updateModulesContentExcludes()
+	{
+		$db    = Factory::getDbo();
+		$query = $db->getQuery(true)
+			->select(array('id', 'params'))
+			->from($db->quoteName('#__modules'))
+			->where($db->quoteName('params') . ' LIKE ' . $db->quote('%"unset_content":["%'));
+		if ($modules = $db->setQuery($query)->loadObjectList())
+		{
+			foreach ($modules as $module)
+			{
+				$module->params   = new Registry($module->params);
+				$unset_content    = $module->params->get('unset_content');
+				$unset_components = $module->params->get('unset_components', array());
+				foreach ($unset_content as $view)
+				{
+					$unset_components[] = 'com_content.' . $view;
+				}
+
+				$module->params->set('unset_components', array_unique($unset_components));
+				$module->params->remove('unset_content');
+				$module->params = (string) $module->params;
+
+				$db->updateObject('#__modules', $module, array('id'));
+			}
 		}
 	}
 
