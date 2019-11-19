@@ -117,6 +117,10 @@
 					<option value="bottom-center">Bottom Center</option>
 					<option value="bottom-right">Bottom Right</option>
 				</field>
+				<field name="toolbar_hide_users" type="toolbarhideusers"
+					   label="PLG_SYSTEM_JYPROEXTRA_TOOLBAR_HIDE_USERS"
+					   multiple="true"
+					   showo="toolbar!:"/>
 				<field type="spacer" hr="true"/>
 			</fieldset>
 			<fieldset name="library" label="PLG_SYSTEM_JYPROEXTRA_LIBRARY">

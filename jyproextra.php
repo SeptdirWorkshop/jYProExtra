@@ -688,7 +688,8 @@ class PlgSystemJYProExtra extends CMSPlugin
 	{
 		if ($userID = (int) $this->app->input->cookie->get('jyproextra_admin'))
 		{
-			if (Factory::getUser($userID)->authorise('core.login.admin'))
+			if (Factory::getUser($userID)->authorise('core.login.admin')
+				&& !in_array($userID, $this->params->get('toolbar_hide_users', array())))
 			{
 				$uri         = Uri::getInstance();
 				$current     = urlencode($uri->toString());
