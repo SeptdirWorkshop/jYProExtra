@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    jYProExtra System Plugin
- * @version    __DEPLOY_VERSION__
+ * @version    1.4.0
  * @author     Septdir Workshop - www.septdir.com
  * @copyright  Copyright (c) 2018 - 2019 Septdir Workshop. All rights reserved.
  * @license    GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -229,7 +229,7 @@ class PlgSystemJYProExtraInstallerScript
 	/**
 	 * Method to check modules content exclude params and change if need.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.4.0
 	 */
 	protected function updateModulesContentExcludes()
 	{
