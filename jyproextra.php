@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    jYProExtra System Plugin
- * @version    __DEPLOY_VERSION__
+ * @version    1.4.0
  * @author     Septdir Workshop - www.septdir.com
  * @copyright  Copyright (c) 2018 - 2019 Septdir Workshop. All rights reserved.
  * @license    GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -371,8 +371,10 @@ class PlgSystemJYProExtra extends CMSPlugin
 			$component   = $this->app->input->get('option');
 			$view        = $this->app->input->get('view');
 			$layout      = $this->app->input->get('layout');
+			$controller	 = $this->app->input->get('controller');
 			$unsetView   = ($view) ? $component . '.' . $view : false;
 			$unsetLayout = ($unsetView && $layout) ? $unsetView . ':' . $layout : false;
+			$unsetController = ($controller) ? $component . '.' . $controller : false;
 
 			foreach ($modules as $key => $module)
 			{
@@ -388,7 +390,8 @@ class PlgSystemJYProExtra extends CMSPlugin
 
 				// Unset in components views
 				elseif ($unsetComponents && (($unsetView && in_array($unsetView, $unsetComponents))
-						|| ($unsetLayout && in_array($unsetLayout, $unsetComponents))))
+						|| ($unsetLayout && in_array($unsetLayout, $unsetComponents))
+						|| ($unsetController && in_array($unsetController, $unsetComponents)) ))
 				{
 					$resetKeys = true;
 					unset($modules[$key]);
