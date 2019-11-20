@@ -350,10 +350,10 @@ class PlgSystemJYProExtra extends CMSPlugin
             $component = $this->app->input->get('option');
             $view = $this->app->input->get('view');
             $layout = $this->app->input->get('layout');
-            $controller = $this->app->input->get('controller');
+            $controller = $this->app->input->get('controller', $this->app->input->get('ctrl'));
             $unsetView = ($view) ? $component . '.' . $view : false;
             $unsetLayout = ($unsetView && $layout) ? $unsetView . ':' . $layout : false;
-            $unsetController = ($controller) ? $component . '.' . $controller : false;
+            $unsetController =  (!$view && !$layout && $controller) ? $component . '.' . $controller : false;
 
             foreach ($modules as $key => $module) {
                 $params = new Registry($module->params);
@@ -399,8 +399,10 @@ class PlgSystemJYProExtra extends CMSPlugin
             $component = $this->app->input->get('option');
             $view = $this->app->input->get('view');
             $layout = $this->app->input->get('layout');
+            $controller = $this->app->input->get('controller', $this->app->input->get('ctrl'));
             $unsetView = ($view) ? $component . '.' . $view : false;
             $unsetLayout = ($unsetView && $layout) ? $unsetView . ':' . $layout : false;
+            $unsetController =  (!$view && !$layout && $controller) ? $component . '.' . $controller : false;
             $unsetComponents = $params->get('unset_components');
 
             // Unset in YOOtheme Pro customizer
@@ -408,7 +410,8 @@ class PlgSystemJYProExtra extends CMSPlugin
                 $module = null;
             } // Unset in components views
             elseif ($unsetComponents && (($unsetView && in_array($unsetView, $unsetComponents))
-                    || ($unsetLayout && in_array($unsetLayout, $unsetComponents)))) {
+                    || ($unsetLayout && in_array($unsetLayout, $unsetComponents))
+                    || ($unsetController && in_array($unsetController, $unsetComponents)))) {
                 $module = null;
             } // Unset empty content modules
             elseif ($params->get('unset_empty') && empty(trim($module->content))) {
