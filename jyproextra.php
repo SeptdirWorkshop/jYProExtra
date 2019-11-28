@@ -366,13 +366,15 @@ class PlgSystemJYProExtra extends CMSPlugin
 		if ($this->unset_modules && !empty($modules) && $this->app->isClient('site')
 			&& $this->app->getTemplate() === 'yootheme')
 		{
-			$resetKeys   = false;
-			$customizer  = (!empty($this->app->input->get('customizer')));
-			$component   = $this->app->input->get('option');
-			$view        = $this->app->input->get('view');
-			$layout      = $this->app->input->get('layout');
-			$unsetView   = ($view) ? $component . '.' . $view : false;
-			$unsetLayout = ($unsetView && $layout) ? $unsetView . ':' . $layout : false;
+			$resetKeys       = false;
+			$customizer      = (!empty($this->app->input->get('customizer')));
+			$component       = $this->app->input->get('option');
+			$view            = $this->app->input->get('view');
+			$layout          = $this->app->input->get('layout');
+			$controller      = $this->app->input->get('controller', $this->app->input->get('ctrl'));
+			$unsetView       = ($view) ? $component . '.' . $view : false;
+			$unsetLayout     = ($unsetView && $layout) ? $unsetView . ':' . $layout : false;
+			$unsetController = (!$view && $controller) ? $component . '.' . $controller : false;
 
 			foreach ($modules as $key => $module)
 			{
@@ -388,7 +390,8 @@ class PlgSystemJYProExtra extends CMSPlugin
 
 				// Unset in components views
 				elseif ($unsetComponents && (($unsetView && in_array($unsetView, $unsetComponents))
-						|| ($unsetLayout && in_array($unsetLayout, $unsetComponents))))
+						|| ($unsetLayout && in_array($unsetLayout, $unsetComponents))
+						|| ($unsetController && in_array($unsetController, $unsetComponents))))
 				{
 					$resetKeys = true;
 					unset($modules[$key]);
@@ -427,8 +430,10 @@ class PlgSystemJYProExtra extends CMSPlugin
 			$component       = $this->app->input->get('option');
 			$view            = $this->app->input->get('view');
 			$layout          = $this->app->input->get('layout');
+			$controller      = $this->app->input->get('controller', $this->app->input->get('ctrl'));
 			$unsetView       = ($view) ? $component . '.' . $view : false;
 			$unsetLayout     = ($unsetView && $layout) ? $unsetView . ':' . $layout : false;
+			$unsetController = (!$view && $controller) ? $component . '.' . $controller : false;
 			$unsetComponents = $params->get('unset_components');
 
 			// Unset in YOOtheme Pro customizer
@@ -439,7 +444,9 @@ class PlgSystemJYProExtra extends CMSPlugin
 
 			// Unset in components views
 			elseif ($unsetComponents && (($unsetView && in_array($unsetView, $unsetComponents))
-					|| ($unsetLayout && in_array($unsetLayout, $unsetComponents))))
+					|| ($unsetLayout && in_array($unsetLayout, $unsetComponents))
+					|| ($unsetController && in_array($unsetController, $unsetComponents))
+				))
 			{
 				$module = null;
 			}
