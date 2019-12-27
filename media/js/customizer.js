@@ -10,7 +10,6 @@
 function jYProExtraModal(requestUrl) {
 	let request = new XMLHttpRequest(),
 		formData = new FormData();
-
 	request.open('POST', requestUrl);
 	request.send(formData);
 	request.onreadystatechange = function () {
@@ -48,9 +47,13 @@ function jYProExtraModal(requestUrl) {
 				});
 
 				// Iframe actions
-				let iframeSave = false;
+				let iframeSave = false,
+					iframeLibraryImport = false;
 				iframe.addEventListener('load', function () {
-					let saveButton = iframe.contentWindow.document.body.querySelector('#applyBtn');
+					let iframeBody = iframe.contentWindow.document.body;
+
+					// Save params
+					let saveButton = iframeBody.querySelector('#applyBtn');
 					if (saveButton) {
 						modal.querySelector('button[type="button"]').addEventListener('click', function (event) {
 							event.preventDefault();
@@ -62,6 +65,18 @@ function jYProExtraModal(requestUrl) {
 						let preview = document.querySelector('iframe[name="preview-1"]');
 						preview.contentWindow.location = preview.contentWindow.location;
 						iframeSave = false;
+					}
+
+					// Import layouts
+					let libraryImportButton = iframeBody.querySelector('[library-import="button"]');
+					if (libraryImportButton) {
+						libraryImportButton.addEventListener('click', function (event) {
+							iframeLibraryImport = true;
+						});
+					}
+					if (iframeLibraryImport && iframeBody.querySelector('.alert.alert-success')) {
+						UIkit.notification(iframe.getAttribute('data-import-message'), {status: 'success'});
+						iframeLibraryImport = false;
 					}
 				});
 

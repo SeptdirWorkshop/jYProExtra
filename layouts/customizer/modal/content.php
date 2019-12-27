@@ -22,7 +22,9 @@ $src = 'index.php?option=com_plugins&task=plugin.edit&tmpl=component&layout=moda
 			<h2 class="uk-modal-title"><?php echo Text::_('PLG_SYSTEM_JYPROEXTRA_MODAL_HEADER'); ?></h2>
 		</div>
 		<div uk-overflow-auto>
-			<iframe data-src="<?php echo $src; ?>" style="height: 500px; width: 100%;" uk-responsive></iframe>
+			<iframe data-src="<?php echo $src; ?>"
+					data-import-message="<?php echo Text::_('PLG_SYSTEM_JYPROEXTRA_LIBRARY_IMPORT_SUCCESS_MODAL'); ?>"
+					uk-responsive style="height: 500px; width: 100%;"></iframe>
 		</div>
 		<div class="uk-modal-footer uk-text-right">
 			<button class="uk-button uk-button-text uk-margin-small-right uk-modal-close">
