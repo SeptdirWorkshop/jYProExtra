@@ -28,6 +28,7 @@
 		<folder>js</folder>
 	</media>
 	<layouts destination="plugins/system/jyproextra" folder="layouts">
+		<folder>customizer</folder>
 		<folder>fields</folder>
 		<folder>toolbar</folder>
 		<folder>donate</folder>

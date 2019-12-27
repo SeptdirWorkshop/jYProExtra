@@ -460,58 +460,91 @@ class PlgSystemJYProExtra extends CMSPlugin
 	}
 
 	/**
-	 * Method to include inline files contents to head.
+	 * Method to include inline files contents to head and add scripts to customizer.
 	 *
 	 * @since  1.2.0
 	 */
 	public function onBeforeCompileHead()
 	{
+		// Include inline files contents
 		if ($this->inline && $this->app->isClient('site') && $this->app->getTemplate() === 'yootheme')
 		{
-			$doc = Factory::getDocument();
+			$this->includeInlineFiles();
+		}
 
-			// JavaScripts
-			$pathsJS = array(
-				Path::clean(JPATH_THEMES . '/yootheme/js/inline.min.js'),
-				Path::clean(JPATH_THEMES . '/yootheme/js/inline.js'),
-			);
-			if ($child = (new Registry($this->app->getTemplate(true)->params->get('config')))->get('child_theme'))
-			{
-				$pathsJS = array_merge(array(
-					Path::clean(JPATH_THEMES . '/yootheme_' . $child . '/js/inline.min.js'),
-					Path::clean(JPATH_THEMES . '/yootheme_' . $child . '/js/inline.js'),
-				), $pathsJS);
-			}
-			foreach ($pathsJS as $path)
-			{
-				if (file_exists($path))
-				{
-					$doc->addScriptDeclaration(file_get_contents($path));
-					break;
-				}
-			}
+		// Add scripts to customizer
+		if ($this->app->isClient('administrator') && $this->app->input->get('option') === 'com_ajax'
+			&& $this->app->input->get('p') === 'customizer')
+		{
+			$this->addCustomizerScripts();
+		}
+	}
 
-			// Stylesheets
-			$pathsJS = array(
-				Path::clean(JPATH_THEMES . '/yootheme/css/inline.min.css'),
-				Path::clean(JPATH_THEMES . '/yootheme/css/inline.css'),
-			);
-			if (defined('YOOTHEME_CHILD'))
+	/**
+	 * Method to include inline files contents to head.
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected function includeInlineFiles()
+	{
+		$doc = Factory::getDocument();
+
+		// JavaScripts
+		$pathsJS = array(
+			Path::clean(JPATH_THEMES . '/yootheme/js/inline.min.js'),
+			Path::clean(JPATH_THEMES . '/yootheme/js/inline.js'),
+		);
+		if ($child = (new Registry($this->app->getTemplate(true)->params->get('config')))->get('child_theme'))
+		{
+			$pathsJS = array_merge(array(
+				Path::clean(JPATH_THEMES . '/yootheme_' . $child . '/js/inline.min.js'),
+				Path::clean(JPATH_THEMES . '/yootheme_' . $child . '/js/inline.js'),
+			), $pathsJS);
+		}
+		foreach ($pathsJS as $path)
+		{
+			if (file_exists($path))
 			{
-				$pathsJS = array_merge(array(
-					Path::clean(JPATH_THEMES . '/yootheme_' . YOOTHEME_CHILD . '/css/inline.min.css'),
-					Path::clean(JPATH_THEMES . '/yootheme_' . YOOTHEME_CHILD . '/css/inline.css'),
-				), $pathsJS);
-			}
-			foreach ($pathsJS as $path)
-			{
-				if (file_exists($path))
-				{
-					$doc->addStyleDeclaration(file_get_contents($path));
-					break;
-				}
+				$doc->addScriptDeclaration(file_get_contents($path));
+				break;
 			}
 		}
+
+		// Stylesheets
+		$pathsJS = array(
+			Path::clean(JPATH_THEMES . '/yootheme/css/inline.min.css'),
+			Path::clean(JPATH_THEMES . '/yootheme/css/inline.css'),
+		);
+		if (defined('YOOTHEME_CHILD'))
+		{
+			$pathsJS = array_merge(array(
+				Path::clean(JPATH_THEMES . '/yootheme_' . YOOTHEME_CHILD . '/css/inline.min.css'),
+				Path::clean(JPATH_THEMES . '/yootheme_' . YOOTHEME_CHILD . '/css/inline.css'),
+			), $pathsJS);
+		}
+		foreach ($pathsJS as $path)
+		{
+			if (file_exists($path))
+			{
+				$doc->addStyleDeclaration(file_get_contents($path));
+				break;
+			}
+		}
+	}
+
+	/**
+	 * Method to add scripts to customizer.
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected function addCustomizerScripts()
+	{
+		// Add modal.
+		$link = 'index.php?option=com_ajax&plugin=jyproextra&group=system&action=jYProExtraModal&format=json';
+		HTMLHelper::script('plg_system_jyproextra/customizer.js', array('version' => 'auto', 'relative' => true));
+		Factory::getDocument()->addScriptDeclaration(
+			"document.addEventListener('DOMContentLoaded', function () {jYProExtraModal('" . $link . "')});"
+		);
 	}
 
 	/**
@@ -931,6 +964,29 @@ class PlgSystemJYProExtra extends CMSPlugin
 		$this->app->setUserState('jyproextra_success_message', Text::_('PLG_SYSTEM_JYPROEXTRA_LIBRARY_IMPORT_SUCCESS'));
 
 		return true;
+	}
+
+	/**
+	 * Method to get plugin modal markup.
+	 *
+	 * @throws  Exception
+	 *
+	 * @return  object Modal markup on success, Exception on failure.
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected function jYProExtraModal()
+	{
+		if (!Factory::getUser()->authorise('core.edit', 'com_plugins'))
+		{
+			throw new Exception(Text::_('JLIB_APPLICATION_ERROR_EDIT_NOT_PERMITTED'), 403);
+		}
+
+		$return          = new stdClass();
+		$return->button  = LayoutHelper::render('plugins.system.jyproextra.customizer.modal.button');
+		$return->content = LayoutHelper::render('plugins.system.jyproextra.customizer.modal.content');
+
+		return $return;
 	}
 
 	/**
