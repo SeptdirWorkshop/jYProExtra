@@ -13,8 +13,12 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Language\Text;
 
 ?>
-<a href="https://www.septdir.com/donate#solution=jyproextra" class="btn btn-primary pull-right"
-   target="_blank">
-	<?php echo Text::_('PLG_SYSTEM_JYPROEXTRA_DONATE'); ?>
-</a>
-<?php echo Text::_('PLG_SYSTEM_JYPROEXTRA_DONATE_MESSAGE'); ?>
+<p>
+	<?php echo Text::_('PLG_SYSTEM_JYPROEXTRA_DONATE_MESSAGE'); ?>
+</p>
+<div>
+	<a href="https://www.septdir.com/donate#solution=jyproextra" class="btn btn-primary"
+	   target="_blank">
+		<?php echo Text::_('PLG_SYSTEM_JYPROEXTRA_DONATE'); ?>
+	</a>
+</div>
