@@ -27,7 +27,7 @@ function jYProExtraModal(requestUrl) {
 				// Add modal
 				let content = document.createElement('div');
 				content.innerHTML = response.data[0].content;
-				document.querySelector('body').appendChild(content.firstChild);
+				document.querySelector('body .uk-noconflict').appendChild(content.firstChild);
 
 				// Add button
 				let header = document.querySelector('.yo-sidebar-header .yo-sidebar-close'),
