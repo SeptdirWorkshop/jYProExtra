@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    jYProExtra System Plugin
- * @version    __DEPLOY_VERSION__
+ * @version    1.4.1
  * @author     Septdir Workshop - www.septdir.com
  * @copyright  Copyright (c) 2018 - 2019 Septdir Workshop. All rights reserved.
  * @license    GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -483,7 +483,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	/**
 	 * Method to include inline files contents to head.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.4.1
 	 */
 	protected function includeInlineFiles()
 	{
@@ -535,7 +535,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	/**
 	 * Method to add scripts to customizer.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.4.1
 	 */
 	protected function addCustomizerScripts()
 	{
@@ -973,7 +973,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @return  object Modal markup on success, Exception on failure.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.4.1
 	 */
 	protected function jYProExtraModal()
 	{
