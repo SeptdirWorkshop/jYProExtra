@@ -7,6 +7,7 @@
  * @link       https://www.septdir.com/
  */
 
+// Add modal plugin settings
 function jYProExtraModal(requestUrl) {
 	let request = new XMLHttpRequest(),
 		formData = new FormData();
@@ -91,3 +92,14 @@ function jYProExtraModal(requestUrl) {
 		}
 	};
 }
+
+// Remove toolbar from preview
+document.addEventListener('DOMContentLoaded', function () {
+	let preview = document.querySelector('iframe[name="preview-1"]');
+	preview.addEventListener('load', function () {
+		let toolbar = preview.contentWindow.document.body.querySelector('#jYProExtraToolbar');
+		if (toolbar) {
+			toolbar.remove();
+		}
+	});
+});

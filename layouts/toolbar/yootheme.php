@@ -44,7 +44,7 @@ elseif (preg_match('#bootom#', $position))
 
 $center = (preg_match('#-center#', $position))
 ?>
-<div class="uk-position-fixed uk-position-small uk-position-<?php echo $position; ?> <?php echo ($center) ? 'uk-flex' : ''; ?>">
+<div id="jYProExtraToolbar" class="uk-position-fixed uk-position-small uk-position-<?php echo $position; ?> <?php echo ($center) ? 'uk-flex' : ''; ?>">
 	<?php if ($builder) : ?>
 		<div class="uk-margin-small-<?php echo ($center) ? 'right' : 'bottom'; ?>">
 			<a href="<?php echo $builder; ?>" class="uk-icon-button uk-text-danger"
