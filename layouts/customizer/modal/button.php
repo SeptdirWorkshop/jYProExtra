@@ -13,6 +13,8 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Language\Text;
 
 ?>
-<a href="#jYProExtraModal" class="uk-button uk-button-secondary uk-button-small" uk-toggle>
-	<?php echo Text::_('PLG_SYSTEM_JYPROEXTRA_MODAL'); ?>
-</a>
+<div class="yo-sidebar-jproextra">
+	<a href="#jYProExtraModal" class="uk-button uk-button-secondary uk-button-small" uk-toggle>
+		<?php echo Text::_('PLG_SYSTEM_JYPROEXTRA_MODAL'); ?>
+	</a>
+</div>

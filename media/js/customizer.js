@@ -30,11 +30,14 @@ function jYProExtraModal(requestUrl) {
 				document.querySelector('body .uk-noconflict').appendChild(content.firstChild);
 
 				// Add button
-				let header = document.querySelector('.yo-sidebar-header .yo-sidebar-close'),
-					button = document.createElement('div');
+				let button = document.createElement('div');
 				button.innerHTML = response.data[0].button;
-				header.classList.add('uk-flex-between');
-				header.appendChild(button.firstChild);
+				document.querySelector('body .uk-noconflict .yo-sidebar').appendChild(button.firstChild);
+
+				// Add style
+				let style = document.createElement('div');
+				style.innerHTML = response.data[0].style;
+				document.querySelector('head').appendChild(style.firstChild);
 
 				// Modal actions
 				let modal = document.querySelector('#jYProExtraModal'),

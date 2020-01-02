@@ -985,6 +985,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 		$return          = new stdClass();
 		$return->button  = LayoutHelper::render('plugins.system.jyproextra.customizer.modal.button');
 		$return->content = LayoutHelper::render('plugins.system.jyproextra.customizer.modal.content');
+		$return->style   = LayoutHelper::render('plugins.system.jyproextra.customizer.modal.style');
 
 		return $return;
 	}
