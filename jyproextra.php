@@ -533,18 +533,20 @@ class PlgSystemJYProExtra extends CMSPlugin
 	}
 
 	/**
-	 * Method to add scripts to customizer.
+	 * Method to add and run scripts to customizer.
 	 *
 	 * @since  1.4.1
 	 */
 	protected function addCustomizerScripts()
 	{
-		// Add modal.
+		// Add modal
 		$link = 'index.php?option=com_ajax&plugin=jyproextra&group=system&action=jYProExtraModal&format=json';
 		HTMLHelper::script('plg_system_jyproextra/customizer.js', array('version' => 'auto', 'relative' => true));
-		Factory::getDocument()->addScriptDeclaration(
-			"document.addEventListener('DOMContentLoaded', function () {jYProExtraModal('" . $link . "')});"
-		);
+		Factory::getDocument()->addScriptDeclaration("jYProExtraModal('" . $link . "');");
+
+
+		// Remove toolbar from preview
+		Factory::getDocument()->addScriptDeclaration("jYProExtraRemoveToolbar();");
 	}
 
 	/**
