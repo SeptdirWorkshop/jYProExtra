@@ -119,6 +119,15 @@ class PlgSystemJYProExtra extends CMSPlugin
 	protected $toolbar = false;
 
 	/**
+	 * Is visitor authorized in control panel.
+	 *
+	 * @var  boolean
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected $isAuthorizedAdmin = null;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param   object  &$subject  The object to observe
@@ -397,6 +406,13 @@ class PlgSystemJYProExtra extends CMSPlugin
 					unset($modules[$key]);
 				}
 
+				// Unset administrator
+				elseif ($params->get('unset_administrator') && $this->isAuthorizedAdmin())
+				{
+					$resetKeys = true;
+					unset($modules[$key]);
+				}
+
 				// Unset empty content modules
 				elseif ($params->get('unset_empty') && empty(trim(ModuleHelper::renderModule($module))))
 				{
@@ -451,12 +467,72 @@ class PlgSystemJYProExtra extends CMSPlugin
 				$module = null;
 			}
 
+			// Unset administrator
+			elseif ($params->get('unset_administrator') && $this->isAuthorizedAdmin())
+			{
+				$module = null;
+			}
+
 			// Unset empty content modules
 			elseif ($params->get('unset_empty') && empty(trim($module->content)))
 			{
 				$module = null;
 			}
 		}
+	}
+
+	/**
+	 * Method to check  is visitor authorized in control panel.
+	 *
+	 * @return  bool True if authorized administrator, False if is not.
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected function isAuthorizedAdmin()
+	{
+		if ($this->isAuthorizedAdmin === null)
+		{
+			$db    = $this->db;
+			$admin = false;
+
+			// Check on site
+			if ($this->app->isClient('site'))
+			{
+				// Get sessions
+				$sessions = array();
+				foreach ($this->app->input->cookie->getArray() as $key => $value)
+				{
+					if (strlen($key) === 32 && strlen($value) === 32)
+					{
+						$sessions[] = $db->quote(trim($value));
+					}
+				}
+
+				// Find administrator session
+				if (!empty($sessions))
+				{
+					$query = $db->getQuery(true)
+						->select('userid')
+						->from($db->quoteName('#__session'))
+						->where($db->quoteName('session_id') . ' IN (' . implode(',', $sessions) . ')')
+						->where('time > '
+							. Factory::getDate('- ' . Factory::getConfig()->get('lifetime', 15) . 'minute')->toUnix())
+						->where('client_id = 1')
+						->where('guest = 0');
+					$admin = (!empty($db->setQuery($query)->loadResult()));
+				}
+			}
+
+			// Check on control panel
+			elseif ($this->app->isClient('administrator') && !Factory::getUser()->guest)
+			{
+				$admin = true;
+			}
+
+			$this->isAuthorizedAdmin = $admin;
+		}
+
+		return $this->isAuthorizedAdmin;
 	}
 
 	/**

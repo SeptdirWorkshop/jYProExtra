@@ -2,12 +2,21 @@
 <form>
 	<fields name="params">
 		<fieldset name="unset" label="PLG_SYSTEM_JYPROEXTRA_MODULE_UNSET">
-			<field type="note" label="PLG_SYSTEM_JYPROEXTRA_UNSET_MODULES"
+			<field name="unset_note" type="note"
+				   label="PLG_SYSTEM_JYPROEXTRA_UNSET_MODULES"
 				   description="PLG_SYSTEM_JYPROEXTRA_UNSET_MODULES_DESC"
 				   class="alert alert-info"/>
 			<field name="unset_customizer" type="radio"
 				   label="PLG_SYSTEM_JYPROEXTRA_MODULE_UNSET_CUSTOMIZER"
 				   description="PLG_SYSTEM_JYPROEXTRA_MODULE_UNSET_CUSTOMIZER_DESC"
+				   class="btn-group btn-group-yesno"
+				   default="0">
+				<option value="1">JYES</option>
+				<option value="0">JNO</option>
+			</field>
+			<field name="unset_administrator" type="radio"
+				   label="PLG_SYSTEM_JYPROEXTRA_MODULE_UNSET_ADMINISTRATOR"
+				   description="PLG_SYSTEM_JYPROEXTRA_MODULE_UNSET_ADMINISTRATOR_DESC"
 				   class="btn-group btn-group-yesno"
 				   default="0">
 				<option value="1">JYES</option>
