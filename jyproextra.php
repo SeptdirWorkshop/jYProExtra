@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    jYProExtra System Plugin
- * @version    __DEPLOY_VERSION__
+ * @version    1.5.0
  * @author     Septdir Workshop - www.septdir.com
  * @copyright  Copyright (c) 2018 - 2020 Septdir Workshop. All rights reserved.
  * @license    GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -123,7 +123,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @var  boolean
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.5.0
 	 */
 	protected $webp_cache = false;
 
@@ -132,7 +132,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @var  boolean
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.5.0
 	 */
 	protected $remove_update_css = false;
 
@@ -141,7 +141,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @var  boolean
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.5.0
 	 */
 	protected $_isAuthorizedAdmin = null;
 
@@ -812,7 +812,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @param   string  $body  Current page html.
 	 *
-	 * @since     __DEPLOY_VERSION__
+	 * @since     1.5.0
 	 */
 	protected function removeUpdateCss(&$body = '')
 	{
@@ -1141,7 +1141,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @return  bool True if authorized administrator, False if is not.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.5.0
 	 */
 	protected function isAuthorizedAdmin()
 	{

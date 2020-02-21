@@ -14,7 +14,7 @@ class BaseController extends BaseControllerCore
 	 *
 	 * @return  \JControllerLegacy  A \JControllerLegacy object to support chaining.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.5.0
 	 */
 	public function display($cachable = false, $urlparams = array())
 	{
