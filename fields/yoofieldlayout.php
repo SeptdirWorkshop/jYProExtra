@@ -35,7 +35,7 @@ class JFormFieldYOOFieldLayout extends JFormFieldFieldLayout
 	 *
 	 * @return  string   The field input.
 	 *
-	 * @since   1.4.0
+	 * @since  1.4.0
 	 */
 	protected function getInput()
 	{

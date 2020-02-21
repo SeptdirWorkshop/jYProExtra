@@ -31,7 +31,7 @@ class JFormFieldToolbar extends FormField
 	 *
 	 * @throws  Exception
 	 *
-	 * @since   1.2.0
+	 * @since  1.2.0
 	 */
 	protected function getInput()
 	{

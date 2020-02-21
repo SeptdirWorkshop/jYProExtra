@@ -386,7 +386,7 @@ class PlgSystemJYProExtraInstallerScript
 	 *
 	 * @param   InstallerAdapter  $parent  Parent object calling object.
 	 *
-	 * @since   1.0.0
+	 * @since  1.0.0
 	 */
 	protected function enablePlugin($parent)
 	{

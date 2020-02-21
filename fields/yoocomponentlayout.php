@@ -37,7 +37,7 @@ class JFormFieldYooComponentLayout extends JFormFieldComponentlayout
 	 *
 	 * @return  string  The field input.
 	 *
-	 * @since   1.2.0
+	 * @since  1.2.0
 	 */
 	protected function getInput()
 	{

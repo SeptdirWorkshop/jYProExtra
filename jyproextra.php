@@ -128,6 +128,15 @@ class PlgSystemJYProExtra extends CMSPlugin
 	protected $webp_cache = false;
 
 	/**
+	 * Remove YOOtheme Pro update stylesheet function enable.
+	 *
+	 * @var  boolean
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected $remove_update_css = false;
+
+	/**
 	 * Is visitor authorized in control panel.
 	 *
 	 * @var  boolean
@@ -142,21 +151,22 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 * @param   object  &$subject  The object to observe
 	 * @param   array    $config   An optional associative array of configuration settings.
 	 *
-	 * @since   1.2.0
+	 * @since  1.2.0
 	 */
 	public function __construct(&$subject, $config = array())
 	{
 		parent::__construct($subject, $config);
 
 		// Set functions status
-		$this->images        = ($this->params->get('images')) ? true : false;
-		$this->inline        = ($this->params->get('inline')) ? true : false;
-		$this->unset_modules = ($this->params->get('unset_modules')) ? true : false;
-		$this->child         = ($this->params->get('child')) ? true : false;
-		$this->remove_js     = ($this->params->get('remove_js')) ? true : false;
-		$this->pagination    = ($this->params->get('pagination')) ? true : false;
-		$this->toolbar       = ($this->params->get('toolbar')) ? true : false;
-		$this->webp_cache    = ($this->params->get('webp_cache')) ? true : false;
+		$this->images            = ($this->params->get('images')) ? true : false;
+		$this->inline            = ($this->params->get('inline')) ? true : false;
+		$this->unset_modules     = ($this->params->get('unset_modules')) ? true : false;
+		$this->child             = ($this->params->get('child')) ? true : false;
+		$this->remove_js         = ($this->params->get('remove_js')) ? true : false;
+		$this->pagination        = ($this->params->get('pagination')) ? true : false;
+		$this->toolbar           = ($this->params->get('toolbar')) ? true : false;
+		$this->webp_cache        = ($this->params->get('webp_cache')) ? true : false;
+		$this->remove_update_css = ($this->params->get('remove_update_css')) ? true : false;
 	}
 
 	/**
@@ -592,12 +602,12 @@ class PlgSystemJYProExtra extends CMSPlugin
 	/**
 	 * Method to handle image and rerender head.
 	 *
-	 * @since   1.0.0
+	 * @since  1.0.0
 	 */
 	public function onAfterRender()
 	{
 		$body = false;
-		if (($this->images || $this->remove_js || $this->toolbar) && $this->app->isClient('site')
+		if (($this->images || $this->remove_js || $this->toolbar || $this->remove_update_css) && $this->app->isClient('site')
 			&& $this->app->getTemplate() === 'yootheme' && $this->app->input->get('format', 'html') == 'html'
 			&& !$this->app->input->get('customizer'))
 		{
@@ -619,6 +629,13 @@ class PlgSystemJYProExtra extends CMSPlugin
 			if ($this->toolbar)
 			{
 				$this->addYOOthemeToolbar($body);
+			}
+
+			// Remove YOOtheme Pro update stylesheet
+			if ($this->remove_update_css)
+			{
+				$this->removeUpdateCss($body);
+				//$this->removeJS($body);
 			}
 
 			$this->app->setBody($body);
@@ -791,6 +808,26 @@ class PlgSystemJYProExtra extends CMSPlugin
 	}
 
 	/**
+	 * Method for remove YOOtheme Pro update stylesheet from head.
+	 *
+	 * @param   string  $body  Current page html.
+	 *
+	 * @since     __DEPLOY_VERSION__
+	 */
+	protected function removeUpdateCss(&$body = '')
+	{
+		if (preg_match('|<head>(.*)</head>|si', $body, $matches))
+		{
+			// Remove file
+			$search  = $matches[1];
+			$replace = preg_replace('|<link(.?)*theme\.update\.css(.?)*/>|', '', $search);
+
+			// Replace body
+			$body = str_replace($search, $replace, $body);
+		}
+	}
+
+	/**
 	 * Method to add breadcrumbs.
 	 *
 	 * @param   string  $body  Current page html.
@@ -842,7 +879,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @return boolean True on success, False on failure.
 	 *
-	 * @since 1.3.0
+	 * @since  1.3.0
 	 */
 	protected function libraryExport()
 	{
@@ -916,7 +953,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @return boolean True on success, False on failure.
 	 *
-	 * @since 1.3.0
+	 * @since  1.3.0
 	 */
 	protected function libraryImport()
 	{
@@ -1062,7 +1099,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 * @param   Installer  $installer  Installer object.
 	 * @param   integer    $eid        Extension Identifier.
 	 *
-	 * @since   1.3.1
+	 * @since  1.3.1
 	 */
 	public function onExtensionAfterInstall($installer, $eid)
 	{
@@ -1075,7 +1112,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 * @param   Installer  $installer  Installer object.
 	 * @param   integer    $eid        Extension Identifier.
 	 *
-	 * @since   1.3.1
+	 * @since  1.3.1
 	 */
 	public function onExtensionAfterUpdate($installer, $eid)
 	{
@@ -1087,7 +1124,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @param   Installer  $installer  Installer object.
 	 *
-	 * @since   1.3.1
+	 * @since  1.3.1
 	 */
 	protected function copyYOOthemeFiles($installer)
 	{

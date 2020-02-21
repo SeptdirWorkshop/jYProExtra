@@ -21,7 +21,7 @@ class JFormFieldLibraryImport extends JFormFieldFile
 	 *
 	 * @var  string
 	 *
-	 * @since   1.3.0
+	 * @since  1.3.0
 	 */
 	protected $type = 'libraryImport';
 
@@ -39,7 +39,7 @@ class JFormFieldLibraryImport extends JFormFieldFile
 	 *
 	 * @return  string  The field input markup.
 	 *
-	 * @since   1.3.0
+	 * @since  1.3.0
 	 */
 	protected function getInput()
 	{

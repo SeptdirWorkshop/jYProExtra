@@ -9,14 +9,14 @@
  */
 
 $el = $this->el('div', [
-    'class' => [
-        'uk-panel {@!style}',
-        'uk-card uk-card-body uk-{style}',
-    ],
+	'class' => [
+		'uk-panel {@!style}',
+		'uk-card uk-card-body uk-{style}',
+	],
 
 ]);
 ?>
 
 <?= $el($props, $attrs) ?>
-	{jyproextra_joomla_breadcrumbs}
+{jyproextra_joomla_breadcrumbs}
 </div>

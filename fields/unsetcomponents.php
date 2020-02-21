@@ -124,8 +124,8 @@ class JFormFieldUnsetComponents extends JFormFieldList
 					{
 						$viewValue    = $componentValue . '.' . $view;
 						$viewConstant = $componentConstant . '_' . $view;
-						$viewText = $componentText . ': ';
-						$viewText .= ($language->hasKey($viewConstant)) ? Text::_($viewConstant) : ucfirst($view);
+						$viewText     = $componentText . ': ';
+						$viewText     .= ($language->hasKey($viewConstant)) ? Text::_($viewConstant) : ucfirst($view);
 
 						$option        = new stdClass();
 						$option->value = $viewValue;

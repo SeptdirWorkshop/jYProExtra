@@ -22,7 +22,7 @@ class JFormFieldLibraryExport extends JFormFieldCheckboxes
 	 *
 	 * @var  string
 	 *
-	 * @since   1.3.0
+	 * @since  1.3.0
 	 */
 	protected $type = 'libraryExport';
 

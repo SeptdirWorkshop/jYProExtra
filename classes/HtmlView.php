@@ -54,7 +54,7 @@ class HtmlView extends HtmlViewCore
 	 *
 	 * @return  string  Previous value.
 	 *
-	 * @since   1.2.0
+	 * @since  1.2.0
 	 */
 	public function setLayout($layout)
 	{
@@ -64,6 +64,6 @@ class HtmlView extends HtmlViewCore
 			$layout = 'yootheme:' . $matches[2];
 		}
 
-		return  parent::setLayout($layout);
+		return parent::setLayout($layout);
 	}
 }
