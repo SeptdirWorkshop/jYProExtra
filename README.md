@@ -7,6 +7,9 @@
 ### Images
 This function allows you to use YOOtheme Pro image enhancement (webP, lazy load) on the entire site.
 
+###WebP Caching
+This function adapts Joomla caching for browsers with and without webP support.
+
 ### Inline files
 This function allows you to include the contents of the`js/inline.js` and `css/inline.css` files from a template or child theme in `<head>`.
 
@@ -18,6 +21,9 @@ This function allows you to use standard template functions (layout overrides (c
 
 ### Remove JavaScript
 This function allows you to remove obsolete JavaScript (jQuery, bootstrap) from `<head>`.
+
+### Remove YOOtheme Pro update stylesheet
+This function allows you to remove the `theme.update.css` file from `<head>`.
 
 ### Pagination
 This function allows you to display YOOtheme pagination in all components.
