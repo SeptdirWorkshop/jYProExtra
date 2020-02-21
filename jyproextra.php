@@ -371,7 +371,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 			$component       = $this->app->input->get('option');
 			$view            = $this->app->input->get('view');
 			$layout          = $this->app->input->get('layout');
-			$controller      = $this->app->input->get('controller', $this->app->input->get('ctrl'));
+			$controller      = $this->app->input->get('controller', $this->app->input->get('ctrl', $this->app->input->get('task')));
 			$unsetView       = ($view) ? $component . '.' . $view : false;
 			$unsetLayout     = ($unsetView && $layout) ? $unsetView . ':' . $layout : false;
 			$unsetController = (!$view && $controller) ? $component . '.' . $controller : false;
@@ -430,7 +430,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 			$component       = $this->app->input->get('option');
 			$view            = $this->app->input->get('view');
 			$layout          = $this->app->input->get('layout');
-			$controller      = $this->app->input->get('controller', $this->app->input->get('ctrl'));
+			$controller      = $this->app->input->get('controller', $this->app->input->get('ctrl', $this->app->input->get('task')));
 			$unsetView       = ($view) ? $component . '.' . $view : false;
 			$unsetLayout     = ($unsetView && $layout) ? $unsetView . ':' . $layout : false;
 			$unsetController = (!$view && $controller) ? $component . '.' . $controller : false;
