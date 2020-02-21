@@ -123,6 +123,17 @@
 					   multiple="true"
 					   showon="toolbar!:"/>
 				<field type="spacer" hr="true"/>
+
+				<field type="note" label="PLG_SYSTEM_JYPROEXTRA_WEBP_CACHE"
+					   description="PLG_SYSTEM_JYPROEXTRA_WEBP_CACHE_DESC"/>
+				<field name="webp_cache" type="radio"
+					   label="PLG_SYSTEM_JYPROEXTRA_ENABLE"
+					   class="btn-group btn-group-yesno"
+					   default="0">
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
+				</field>
+				<field type="spacer" hr="true"/>
 			</fieldset>
 			<fieldset name="library" label="PLG_SYSTEM_JYPROEXTRA_LIBRARY">
 				<field type="note" label="PLG_SYSTEM_JYPROEXTRA_LIBRARY"

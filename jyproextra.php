@@ -119,13 +119,22 @@ class PlgSystemJYProExtra extends CMSPlugin
 	protected $toolbar = false;
 
 	/**
+	 * WebP cache function enable.
+	 *
+	 * @var  boolean
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected $webp_cache = false;
+
+	/**
 	 * Is visitor authorized in control panel.
 	 *
 	 * @var  boolean
 	 *
 	 * @since  __DEPLOY_VERSION__
 	 */
-	protected $isAuthorizedAdmin = null;
+	protected $_isAuthorizedAdmin = null;
 
 	/**
 	 * Constructor.
@@ -147,6 +156,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 		$this->remove_js     = ($this->params->get('remove_js')) ? true : false;
 		$this->pagination    = ($this->params->get('pagination')) ? true : false;
 		$this->toolbar       = ($this->params->get('toolbar')) ? true : false;
+		$this->webp_cache    = ($this->params->get('webp_cache')) ? true : false;
 	}
 
 	/**
@@ -181,6 +191,13 @@ class PlgSystemJYProExtra extends CMSPlugin
 			}
 		}
 
+
+		// Override BaseController class
+		if ($this->app->isClient('site') && $this->webp_cache)
+		{
+			$this->overrideClass('BaseController');
+		}
+
 		// Set admin user_id cookie
 		if ($this->app->isClient('administrator') && $this->toolbar)
 		{
@@ -203,9 +220,10 @@ class PlgSystemJYProExtra extends CMSPlugin
 	protected function overrideClass($class = null)
 	{
 		$classes = array(
-			'FileLayout'   => JPATH_ROOT . '/libraries/src/Layout/FileLayout.php',
-			'HtmlView'     => JPATH_ROOT . '/libraries/src/MVC/View/HtmlView.php',
-			'ModuleHelper' => JPATH_ROOT . '/libraries/src/Helper/ModuleHelper.php',
+			'FileLayout'     => JPATH_ROOT . '/libraries/src/Layout/FileLayout.php',
+			'HtmlView'       => JPATH_ROOT . '/libraries/src/MVC/View/HtmlView.php',
+			'ModuleHelper'   => JPATH_ROOT . '/libraries/src/Helper/ModuleHelper.php',
+			'BaseController' => JPATH_ROOT . '/libraries/src/MVC/Controller/BaseController.php',
 		);
 
 		if (!empty($classes[$class]) && !class_exists($class))
@@ -479,60 +497,6 @@ class PlgSystemJYProExtra extends CMSPlugin
 				$module = null;
 			}
 		}
-	}
-
-	/**
-	 * Method to check  is visitor authorized in control panel.
-	 *
-	 * @return  bool True if authorized administrator, False if is not.
-	 *
-	 * @since  __DEPLOY_VERSION__
-	 */
-	protected function isAuthorizedAdmin()
-	{
-		if ($this->isAuthorizedAdmin === null)
-		{
-			$db    = $this->db;
-			$admin = false;
-
-			// Check on site
-			if ($this->app->isClient('site'))
-			{
-				// Get sessions
-				$sessions = array();
-				foreach ($this->app->input->cookie->getArray() as $key => $value)
-				{
-					if (strlen($key) === 32 && strlen($value) === 32)
-					{
-						$sessions[] = $db->quote(trim($value));
-					}
-				}
-
-				// Find administrator session
-				if (!empty($sessions))
-				{
-					$query = $db->getQuery(true)
-						->select('userid')
-						->from($db->quoteName('#__session'))
-						->where($db->quoteName('session_id') . ' IN (' . implode(',', $sessions) . ')')
-						->where('time > '
-							. Factory::getDate('- ' . Factory::getConfig()->get('lifetime', 15) . 'minute')->toUnix())
-						->where('client_id = 1')
-						->where('guest = 0');
-					$admin = (!empty($db->setQuery($query)->loadResult()));
-				}
-			}
-
-			// Check on control panel
-			elseif ($this->app->isClient('administrator') && !Factory::getUser()->guest)
-			{
-				$admin = true;
-			}
-
-			$this->isAuthorizedAdmin = $admin;
-		}
-
-		return $this->isAuthorizedAdmin;
 	}
 
 	/**
@@ -1133,5 +1097,59 @@ class PlgSystemJYProExtra extends CMSPlugin
 			JLoader::register('PlgSystemJYProExtraInstallerScript', Path::clean(__DIR__ . '/script.php'));
 			(new PlgSystemJYProExtraInstallerScript())->copyYOOthemeFiles($installer);
 		}
+	}
+
+	/**
+	 * Method to check  is visitor authorized in control panel.
+	 *
+	 * @return  bool True if authorized administrator, False if is not.
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected function isAuthorizedAdmin()
+	{
+		if ($this->_isAuthorizedAdmin === null)
+		{
+			$db    = $this->db;
+			$admin = false;
+
+			// Check on site
+			if ($this->app->isClient('site'))
+			{
+				// Get sessions
+				$sessions = array();
+				foreach ($this->app->input->cookie->getArray() as $key => $value)
+				{
+					if (strlen($key) === 32 && strlen($value) === 32)
+					{
+						$sessions[] = $db->quote(trim($value));
+					}
+				}
+
+				// Find administrator session
+				if (!empty($sessions))
+				{
+					$query = $db->getQuery(true)
+						->select('userid')
+						->from($db->quoteName('#__session'))
+						->where($db->quoteName('session_id') . ' IN (' . implode(',', $sessions) . ')')
+						->where('time > '
+							. Factory::getDate('- ' . Factory::getConfig()->get('lifetime', 15) . 'minute')->toUnix())
+						->where('client_id = 1')
+						->where('guest = 0');
+					$admin = (!empty($db->setQuery($query)->loadResult()));
+				}
+			}
+
+			// Check on control panel
+			elseif ($this->app->isClient('administrator') && !Factory::getUser()->guest)
+			{
+				$admin = true;
+			}
+
+			$this->_isAuthorizedAdmin = $admin;
+		}
+
+		return $this->_isAuthorizedAdmin;
 	}
 }
