@@ -7,7 +7,7 @@
 ### Images
 This function allows you to use YOOtheme Pro image enhancement (webP, lazy load) on the entire site.
 
-###WebP Caching
+### WebP Caching
 This function adapts Joomla caching for browsers with and without webP support.
 
 ### Inline files
