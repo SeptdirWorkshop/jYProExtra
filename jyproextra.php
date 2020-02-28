@@ -1132,7 +1132,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 		if ((string) $manifest->attributes()['type'] === 'package' && (string) $manifest->packagename === 'yootheme')
 		{
 			JLoader::register('PlgSystemJYProExtraInstallerScript', Path::clean(__DIR__ . '/script.php'));
-			(new PlgSystemJYProExtraInstallerScript())->copyYOOthemeFiles($installer);
+			(new PlgSystemJYProExtraInstallerScript())->copyYOOthemeFiles(new Installer());
 		}
 	}
 

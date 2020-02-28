@@ -52,12 +52,12 @@ class PlgSystemJYProExtraInstallerScript
 	 */
 	protected $yoothemeFiles = array(
 		array(
-			'src'  => __DIR__ . '/templates/jyproextra-image.php',
+			'src'  => JPATH_ROOT . '/plugins/system/jyproextra/templates/jyproextra-image.php',
 			'dest' => JPATH_ROOT . '/templates/yootheme/templates/jyproextra-image.php',
 			'type' => 'file',
 		),
 		array(
-			'src'  => __DIR__ . '/elements/joomla_breadcrumbs',
+			'src'  => JPATH_ROOT . '/plugins/system/jyproextra/elements/joomla_breadcrumbs',
 			'dest' => JPATH_ROOT . '/templates/yootheme/vendor/yootheme/builder-joomla/elements/joomla_breadcrumbs',
 			'type' => 'folder',
 		)
