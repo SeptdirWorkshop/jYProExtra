@@ -635,7 +635,6 @@ class PlgSystemJYProExtra extends CMSPlugin
 			if ($this->remove_update_css)
 			{
 				$this->removeUpdateCss($body);
-				//$this->removeJS($body);
 			}
 
 			$this->app->setBody($body);
@@ -665,6 +664,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 		if (preg_match_all('/<img[^>]+>/i', $body, $matches))
 		{
 			$images = (!empty($matches[0])) ? $matches[0] : array();
+			$view   = YOOtheme\app(YOOtheme\View::class);
 			foreach ($images as $image)
 			{
 				$skip = false;
@@ -717,7 +717,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 						}
 
 						// Render new image
-						$newImage = HTMLHelper::_('render', 'jyproextra-image', array(
+						$newImage = $view('~theme/templates/jyproextra-image', array(
 							'url'   => array($src, 'thumbnail' => $thumbnail, 'srcset' => true),
 							'attrs' => $attrs,
 						));
