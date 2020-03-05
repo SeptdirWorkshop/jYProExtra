@@ -664,7 +664,8 @@ class PlgSystemJYProExtra extends CMSPlugin
 		if (preg_match_all('/<img[^>]+>/i', $body, $matches))
 		{
 			$images = (!empty($matches[0])) ? $matches[0] : array();
-			$view   = YOOtheme\app(YOOtheme\View::class);
+			$view   = (function_exists('YOOtheme\app')) ? YOOtheme\app(YOOtheme\View::class) : false;
+
 			foreach ($images as $image)
 			{
 				$skip = false;
@@ -717,10 +718,12 @@ class PlgSystemJYProExtra extends CMSPlugin
 						}
 
 						// Render new image
-						$newImage = $view('~theme/templates/jyproextra-image', array(
+						$data     = array(
 							'url'   => array($src, 'thumbnail' => $thumbnail, 'srcset' => true),
 							'attrs' => $attrs,
-						));
+						);
+						$newImage = ($view) ? $view('~theme/templates/jyproextra-image', $data)
+							: HTMLHelper::_('render', 'jyproextra-image', $data);
 
 						// Replace image
 						$body = str_replace($image, $newImage, $body);
