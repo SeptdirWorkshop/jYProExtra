@@ -635,7 +635,6 @@ class PlgSystemJYProExtra extends CMSPlugin
 			if ($this->remove_update_css)
 			{
 				$this->removeUpdateCss($body);
-				//$this->removeJS($body);
 			}
 
 			$this->app->setBody($body);
@@ -665,6 +664,8 @@ class PlgSystemJYProExtra extends CMSPlugin
 		if (preg_match_all('/<img[^>]+>/i', $body, $matches))
 		{
 			$images = (!empty($matches[0])) ? $matches[0] : array();
+			$view   = (function_exists('YOOtheme\app')) ? YOOtheme\app(YOOtheme\View::class) : false;
+
 			foreach ($images as $image)
 			{
 				$skip = false;
@@ -717,10 +718,12 @@ class PlgSystemJYProExtra extends CMSPlugin
 						}
 
 						// Render new image
-						$newImage = HTMLHelper::_('render', 'jyproextra-image', array(
+						$data     = array(
 							'url'   => array($src, 'thumbnail' => $thumbnail, 'srcset' => true),
 							'attrs' => $attrs,
-						));
+						);
+						$newImage = ($view) ? $view('~theme/templates/jyproextra-image', $data)
+							: HTMLHelper::_('render', 'jyproextra-image', $data);
 
 						// Replace image
 						$body = str_replace($image, $newImage, $body);
@@ -1132,7 +1135,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 		if ((string) $manifest->attributes()['type'] === 'package' && (string) $manifest->packagename === 'yootheme')
 		{
 			JLoader::register('PlgSystemJYProExtraInstallerScript', Path::clean(__DIR__ . '/script.php'));
-			(new PlgSystemJYProExtraInstallerScript())->copyYOOthemeFiles($installer);
+			(new PlgSystemJYProExtraInstallerScript())->copyYOOthemeFiles(new Installer());
 		}
 	}
 
