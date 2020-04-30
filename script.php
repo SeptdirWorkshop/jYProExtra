@@ -378,7 +378,7 @@ class PlgSystemJYProExtraInstallerScript
 			$copyFiles[] = $path;
 		}
 
-		return $installer->copyFiles($copyFiles);
+		return $installer->copyFiles($copyFiles, true);
 	}
 
 	/**
