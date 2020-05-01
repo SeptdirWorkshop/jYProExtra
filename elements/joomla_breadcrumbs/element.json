@@ -2,6 +2,7 @@
 	"@import": "./element.php",
 	"name": "joomla_breadcrumbs",
 	"title": "J! Breadcrumbs",
+	"group": "jYProExtra",
 	"icon": "${url:images/icon.svg}",
 	"iconSmall": "${url:images/iconSmall.svg}",
 	"element": true,
