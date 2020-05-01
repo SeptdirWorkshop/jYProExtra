@@ -21,7 +21,7 @@
 		<folder>elements</folder>
 		<folder>fields</folder>
 		<folder>forms</folder>
-		<folder>helper</folder>
+		<folder>helpers</folder>
 		<folder>templates</folder>
 		<filename plugin="jyproextra">jyproextra.php</filename>
 	</files>
