@@ -101,6 +101,22 @@
 					<option value="1">JYES</option>
 					<option value="0">JNO</option>
 				</field>
+				<field name="remove_js_jquery" type="radio"
+					   label="PLG_SYSTEM_JYPROEXTRA_REMOVE_JS_JQUERY"
+					   class="btn-group btn-group-yesno"
+					   default="1"
+					   showon="remove_js:1">
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
+				</field>
+				<field name="remove_js_bootstrap" type="radio"
+					   label="PLG_SYSTEM_JYPROEXTRA_REMOVE_JS_BOOTSTRAP"
+					   class="btn-group btn-group-yesno"
+					   default="1"
+					   showon="remove_js:1">
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
+				</field>
 				<field type="spacer" hr="true"/>
 
 				<field type="note" label="PLG_SYSTEM_JYPROEXTRA_REMOVE_UPDATE_CSS"

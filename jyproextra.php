@@ -794,26 +794,36 @@ class PlgSystemJYProExtra extends CMSPlugin
 	{
 		if (preg_match('|<head>(.*)</head>|si', $body, $matches))
 		{
-			$search  = $matches[1];
-			$replace = $search;
+			$search   = $matches[1];
+			$replace  = $search;
+			$files    = array();
+			$patterns = array();
+
+			// Remove jQuery
+			if ($this->params->get('remove_js_jquery', 1))
+			{
+				$files[] = '/media/jui/js/jquery';
+				$files[] = '/media/jui/js/jquery-noconflict';
+				$files[] = '/media/jui/js/jquery-migrate';
+
+				$patterns[] = '~jQuery\(function\(\$\){.*?(\$\((?!document\).ready).*?\}\);).*?}\);~sim';
+				$patterns[] = "/jQuery\(.*?\)\.on\([0-9a-zA-Z\'\,\s\(\)\{\.\;\r\n\=\>\<=?]{0,}\}\)\;/";
+				$patterns[] = '/jQuery\(function\(\$\)\{(.?)*\}\)\;/';
+			}
+
+			// Remove Bootstrap
+			if ($this->params->get('remove_js_bootstrap', 1))
+			{
+				$files[] = '/media/jui/js/bootstrap';
+			}
 
 			// Remove js files
-			$files = array(
-				'/media/jui/js/jquery',
-				'/media/jui/js/jquery-noconflict',
-				'/media/jui/js/jquery-migrate',
-				'/media/jui/js/bootstrap',
-			);
 			foreach ($files as $src)
 			{
 				$replace = preg_replace('|<script(.?)*"' . $src . '\.(.?)*</script>|', '', $replace);
 			}
 
 			// Remove inline java scripts
-			$patterns = array(
-				'~jQuery\(function\(\$\){.*?(\$\((?!document\).ready).*?\}\);).*?}\);~sim',
-				'/jQuery\(function\(\$\)\{(.?)*\}\)\;/',
-			);
 			foreach ($patterns as $pattern)
 			{
 				$replace = preg_replace($pattern, '', $replace);
