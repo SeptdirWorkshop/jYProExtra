@@ -20,6 +20,7 @@ extract($displayData);
  *
  * @var  string       $customizer YOOtheme customizer link.
  * @var  string|false $builder    YOOtheme builder link.
+ * @var  string|false $admin      Item in control panel link.
  * @var  string       $position   Toolbar position.
  *
  */
@@ -49,8 +50,16 @@ $center = (preg_match('#-center#', $position))
 	<?php if ($builder) : ?>
 		<div class="uk-margin-small-<?php echo ($center) ? 'right' : 'bottom'; ?>">
 			<a href="<?php echo $builder; ?>" class="uk-icon-button uk-text-danger"
-			   uk-icon="icon:pencil; ratio: 1.2" uk-tooltip="<?php echo ($pos) ? 'pos:' . $pos : ''; ?>"
+			   uk-icon="icon:uikit; ratio: 1.2" uk-tooltip="<?php echo ($pos) ? 'pos:' . $pos : ''; ?>"
 			   title="<?php echo Text::_('PLG_SYSTEM_JYPROEXTRA_TOOLBAR_BUILDER'); ?>">
+			</a>
+		</div>
+	<?php endif; ?>
+	<?php if ($admin) : ?>
+		<div class="uk-margin-small-<?php echo ($center) ? 'right' : 'bottom'; ?>">
+			<a href="<?php echo $admin; ?>" class="uk-icon-button uk-text-danger" target="_blank"
+			   uk-icon="icon:joomla; ratio: 1.2" uk-tooltip="<?php echo ($pos) ? 'pos:' . $pos : ''; ?>"
+			   title="<?php echo Text::_('PLG_SYSTEM_JYPROEXTRA_TOOLBAR_ADMIN'); ?>">
 			</a>
 		</div>
 	<?php endif; ?>

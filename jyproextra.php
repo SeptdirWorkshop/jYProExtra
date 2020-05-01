@@ -795,14 +795,27 @@ class PlgSystemJYProExtra extends CMSPlugin
 			{
 				$uri         = Uri::getInstance();
 				$current     = urlencode($uri->toString());
-				$root        = Uri::root() . 'administrator/index.php?p=customizer&option=com_ajax';
+				$admin       = Uri::root() . 'administrator/';
+				$yootheme    = $admin . '/index.php?p=customizer&option=com_ajax';
 				$displayData = array(
-					'customizer' => $root . '&site=' . $current . '&return=' . $current,
-					'builder'    => ($this->app->input->get('option') === 'com_content'
-						&& $this->app->input->get('view') === 'article') ?
-						$root . '&section=builder&site=' . $current . '&return=' . $current : false,
+					'customizer' => $yootheme . '&site=' . $current . '&return=' . $current,
+					'builder'    => false,
+					'admin'      => false,
 					'position'   => $this->params->get('toolbar', 'center-right'),
 				);
+				if ($this->app->input->get('option') === 'com_content'
+					&& $this->app->input->get('view') === 'article')
+				{
+					$displayData['builder'] = $yootheme . '&section=builder&site=' . $current . '&return=' . $current;
+					$displayData['admin']   = $admin . 'index.php?option=com_content&task=article.edit&id='
+						. $this->app->input->get('id');
+				}
+				if ($this->app->input->get('option') === 'com_content'
+					&& $this->app->input->get('view') === 'category')
+				{
+					$displayData['admin']   = $admin . 'index.php?option=com_categories&task=category.edit&extension=com_content&id='
+						. $this->app->input->get('id');
+				}
 
 				$toolbar = LayoutHelper::render('plugins.system.jyproextra.toolbar.yootheme', $displayData);
 				$body    = str_replace('</body>', $toolbar . '</body>', $body);

@@ -29,7 +29,7 @@ This function allows you to remove the `theme.update.css` file from `<head>`.
 This function allows you to display YOOtheme pagination in all components.
 
 ### Toolbar
-This function allows you to display on the frontend YOOtheme Pro Builder and Customizer buttons for administrators.
+This function allows you to display on the frontend Edit and Settings buttons for administrators.
 
 ### Library
 This function allows you to import and export saved YOOtheme Pro layouts.
