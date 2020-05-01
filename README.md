@@ -31,6 +31,9 @@ This function allows you to display YOOtheme pagination in all components.
 ### Toolbar
 This function allows you to display on the frontend Edit and Settings buttons for administrators.
 
+### View on site
+This function allows you to display the `View on site` buttons in the category and article editing forms.
+
 ### Library
 This function allows you to import and export saved YOOtheme Pro layouts.
 

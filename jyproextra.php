@@ -23,6 +23,8 @@ use Joomla\CMS\Installer\Installer;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Plugin\CMSPlugin;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 
@@ -137,6 +139,15 @@ class PlgSystemJYProExtra extends CMSPlugin
 	protected $remove_update_css = false;
 
 	/**
+	 * Preview function enable.
+	 *
+	 * @var  boolean
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected $preview = false;
+
+	/**
 	 * Is visitor authorized in control panel.
 	 *
 	 * @var  boolean
@@ -167,6 +178,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 		$this->toolbar           = ($this->params->get('toolbar')) ? true : false;
 		$this->webp_cache        = ($this->params->get('webp_cache')) ? true : false;
 		$this->remove_update_css = ($this->params->get('remove_update_css')) ? true : false;
+		$this->preview           = ($this->params->get('preview')) ? true : false;
 	}
 
 	/**
@@ -334,7 +346,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	}
 
 	/**
-	 * Change fields types and add fields.
+	 * Change fields types, add fields and add preview toolbar.
 	 *
 	 * @param   Form   $form  The form to be altered.
 	 * @param   mixed  $data  The associated data for the form.
@@ -380,6 +392,42 @@ class PlgSystemJYProExtra extends CMSPlugin
 			{
 				$form->removeField('unset_customizer', 'params');
 				$form->removeField('unset_empty', 'params');
+			}
+		}
+
+		// Add preview buttons
+		if ($this->preview && $this->app->isClient('administrator') && is_object($data))
+		{
+			$preview = false;
+			if ($form->getName() === 'com_content.article' && !empty($data->id))
+			{
+				$preview = 'index.php?option=com_content&view=article&id=' . $data->id . ':' . $data->alias . '&catid=' . $data->catid;
+				if (!empty($data->language) && $data->language !== '*')
+				{
+					$preview .= '&lang=' . $data->language;
+				}
+			}
+
+			if ($form->getName() === 'com_categories.categorycom_content' && !empty($data->id))
+			{
+				$preview = 'index.php?option=com_content&view=category&id=' . $data->id . ':' . $data->alias;
+				if (!empty($data->language) && $data->language !== '*')
+				{
+					$preview .= '&lang=' . $data->language;
+				}
+			}
+
+			if ($preview)
+			{
+				$toolbar = Toolbar::getInstance('toolbar');
+				Factory::getDocument()->addStyleDeclaration('#toolbar-jyproextra_preview{float:right}');
+				$link = Uri::root() . 'index.php?option=com_ajax&plugin=jyproextra&group=system&action=sitePreview&preview='
+					. base64_encode($preview) . '&format=raw';
+				$toolbar->appendButton('Custom', LayoutHelper::render('plugins.system.jyproextra.toolbar.link', array(
+					'link' => $link,
+					'text' => 'PLG_SYSTEM_JYPROEXTRA_PREVIEW_BUTTON',
+					'icon' => 'enter'
+				)), 'jyproextra_preview');
 			}
 		}
 
@@ -813,7 +861,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 				if ($this->app->input->get('option') === 'com_content'
 					&& $this->app->input->get('view') === 'category')
 				{
-					$displayData['admin']   = $admin . 'index.php?option=com_categories&task=category.edit&extension=com_content&id='
+					$displayData['admin'] = $admin . 'index.php?option=com_categories&task=category.edit&extension=com_content&id='
 						. $this->app->input->get('id');
 				}
 
@@ -1083,6 +1131,25 @@ class PlgSystemJYProExtra extends CMSPlugin
 		$return->style   = LayoutHelper::render('plugins.system.jyproextra.customizer.modal.style');
 
 		return $return;
+	}
+
+	/**
+	 * Method to redirect to site preview.
+	 *
+	 * @throws  Exception
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected function sitePreview()
+	{
+		if ($preview = $this->app->input->getBase64('preview'))
+		{
+			$this->app->redirect(Route::_(base64_decode($preview), false), 301);
+		}
+		else
+		{
+			throw new Exception(Text::_('PLG_SYSTEM_JYPROEXTRA_ERROR_PREVIEW_NOT_FOUND'), 404);
+		}
 	}
 
 	/**
