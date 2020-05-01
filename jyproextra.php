@@ -813,6 +813,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 			{
 				$this->params->set('remove_js_jquery', 0);
 				$this->params->set('remove_js_bootstrap', 1);
+				$this->params->set('remove_js_chosen', 1);
 			}
 
 			// Remove jQuery
@@ -843,6 +844,16 @@ class PlgSystemJYProExtra extends CMSPlugin
 					$extends       = array('alert', 'button', 'carousel', 'collapse', 'dropdown', 'modal', 'tooltip', 'popover', 'scrollspy', 'tab', 'typeahead', 'affix');
 					$jQueryExtends = array_merge($jQueryExtends, $extends);
 				}
+
+				// Remove chosen
+				if ($this->params->get('remove_js_chosen', 1))
+				{
+					$files[] = '/media/jui/js/chosen';
+					$files[] = '/media/jui/js/ajax-chosen';
+
+					$jQueryExtends[] = 'chosen';
+					$jQueryExtends[] = 'ajaxChosen ';
+				}
 			}
 
 			// Remove js files
@@ -863,7 +874,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 				$script = '	<script>';
 				foreach ($jQueryExtends as $i => $name)
 				{
-					$script .= 'jQuery.fn.' . $name . ' = function (){console.log("' . $name . ' not available")};';
+					$script .= 'jQuery.fn.' . $name . ' = function (){console.log("jQuery ' . $name . ' not available")};';
 				}
 				$script .= '</script>';
 
