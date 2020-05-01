@@ -823,6 +823,8 @@ class PlgSystemJYProExtra extends CMSPlugin
 				$files[] = '/media/jui/js/jquery-noconflict';
 				$files[] = '/media/jui/js/jquery-migrate';
 				$files[] = '/media/jui/js/bootstrap';
+				$files[] = '/media/jui/js/chosen';
+				$files[] = '/media/jui/js/ajax-chosen';
 
 				$handler = '<script>'
 					. 'var jYProExtraNojQueryHandler = {apply: function (target, thisArg, args) {'
