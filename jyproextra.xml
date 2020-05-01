@@ -21,6 +21,7 @@
 		<folder>elements</folder>
 		<folder>fields</folder>
 		<folder>forms</folder>
+		<folder>helper</folder>
 		<folder>templates</folder>
 		<filename plugin="jyproextra">jyproextra.php</filename>
 	</files>
@@ -113,7 +114,7 @@
 					   label="PLG_SYSTEM_JYPROEXTRA_REMOVE_JS_BOOTSTRAP"
 					   class="btn-group btn-group-yesno"
 					   default="1"
-					   showon="remove_js:1">
+					   showon="remove_js:1[AND]remove_js_jquery:0">
 					<option value="1">JYES</option>
 					<option value="0">JNO</option>
 				</field>

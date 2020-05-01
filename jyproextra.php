@@ -786,18 +786,34 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @param   string  $body  Current page html.
 	 *
-	 * @since       1.2.0
-	 *
-	 * @deprecated  Deprecated on Joomla 4.
+	 * @since  1.2.0
 	 */
 	protected function removeJS(&$body = '')
 	{
 		if (preg_match('|<head>(.*)</head>|si', $body, $matches))
 		{
-			$search   = $matches[1];
-			$replace  = $search;
-			$files    = array();
-			$patterns = array();
+			$search        = $matches[1];
+			$replace       = $search;
+			$files         = array();
+			$patterns      = array();
+			$jQueryExtends = array();
+
+			// Check browser remove jQuery support
+			JLoader::register('jYProExtraHelperBrowser', __DIR__ . '/helpers/browser.php');
+			$supported = jYProExtraHelperBrowser::supported('proxy', array(
+				'Chrome'       => 49,
+				'Firefox'      => 18,
+				'Opera'        => 36,
+				'Edge'         => 12,
+				'YaBrowser'    => 1,
+				'YandexSearch' => 1,
+				'Android'      => 81
+			));
+			if (!$supported && $this->params->set('remove_js_jquery', 1))
+			{
+				$this->params->set('remove_js_jquery', 0);
+				$this->params->set('remove_js_bootstrap', 1);
+			}
 
 			// Remove jQuery
 			if ($this->params->get('remove_js_jquery', 1))
@@ -805,16 +821,28 @@ class PlgSystemJYProExtra extends CMSPlugin
 				$files[] = '/media/jui/js/jquery';
 				$files[] = '/media/jui/js/jquery-noconflict';
 				$files[] = '/media/jui/js/jquery-migrate';
-
-				$patterns[] = '~jQuery\(function\(\$\){.*?(\$\((?!document\).ready).*?\}\);).*?}\);~sim';
-				$patterns[] = "/jQuery\(.*?\)\.on\([0-9a-zA-Z\'\,\s\(\)\{\.\;\r\n\=\>\<=?]{0,}\}\)\;/";
-				$patterns[] = '/jQuery\(function\(\$\)\{(.?)*\}\)\;/';
-			}
-
-			// Remove Bootstrap
-			if ($this->params->get('remove_js_bootstrap', 1))
-			{
 				$files[] = '/media/jui/js/bootstrap';
+
+				$handler = '<script>'
+					. 'var jYProExtraNojQueryHandler = {apply: function (target, thisArg, args) {'
+					. 'return new Proxy(function() {}, jYProExtraNojQueryHandler);},'
+					. 'get: function (target, propKey, receiver) {'
+					. 'return new Proxy(function() {}, jYProExtraNojQueryHandler);}};'
+					. 'const $ = jQuery = new Proxy(function() {}, jYProExtraNojQueryHandler);'
+					. '</script>';
+
+				$replace = preg_replace('#<script#', $handler . PHP_EOL . '<script', $replace, 1);
+			}
+			else
+			{
+				// Remove Bootstrap
+				if ($this->params->get('remove_js_bootstrap', 1))
+				{
+					$files[] = '/media/jui/js/bootstrap';
+
+					$extends       = array('alert', 'button', 'carousel', 'collapse', 'dropdown', 'modal', 'tooltip', 'popover', 'scrollspy', 'tab', 'typeahead', 'affix');
+					$jQueryExtends = array_merge($jQueryExtends, $extends);
+				}
 			}
 
 			// Remove js files
@@ -829,8 +857,21 @@ class PlgSystemJYProExtra extends CMSPlugin
 				$replace = preg_replace($pattern, '', $replace);
 			}
 
+			// Add jQuery extends
+			if ($jQueryExtends)
+			{
+				$script = '	<script>';
+				foreach ($jQueryExtends as $i => $name)
+				{
+					$script .= 'jQuery.fn.' . $name . ' = function (){console.log("' . $name . ' not available")};';
+				}
+				$script .= '</script>';
+
+				$replace .= PHP_EOL . $script . PHP_EOL;
+			}
+
 			// Remove empty lines
-			$replace = preg_replace('/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/', '', $replace);
+			$replace = preg_replace('#(<\/.*?>)(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+#', '${1}' . PHP_EOL, $replace);
 
 			// Replace body
 			$body = str_replace($search, $replace, $body);
@@ -886,7 +927,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @param   string  $body  Current page html.
 	 *
-	 * @since     1.5.0
+	 * @since  1.5.0
 	 */
 	protected function removeUpdateCss(&$body = '')
 	{
