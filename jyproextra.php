@@ -807,7 +807,8 @@ class PlgSystemJYProExtra extends CMSPlugin
 				'Edge'         => 12,
 				'YaBrowser'    => 1,
 				'YandexSearch' => 1,
-				'Android'      => 81
+				'Android'      => 81,
+				'Safari'       => 10
 			));
 			if (!$supported && $this->params->set('remove_js_jquery', 1))
 			{
