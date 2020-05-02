@@ -794,8 +794,8 @@ class PlgSystemJYProExtra extends CMSPlugin
 		{
 			$search        = $matches[1];
 			$replace       = $search;
-			$files         = array();
-			$patterns      = array();
+			$scripts       = array();
+			$links         = array();
 			$jQueryExtends = array();
 
 			// Check browser remove jQuery support
@@ -820,12 +820,14 @@ class PlgSystemJYProExtra extends CMSPlugin
 			// Remove jQuery
 			if ($this->params->get('remove_js_jquery', 1))
 			{
-				$files[] = '/media/jui/js/jquery';
-				$files[] = '/media/jui/js/jquery-noconflict';
-				$files[] = '/media/jui/js/jquery-migrate';
-				$files[] = '/media/jui/js/bootstrap';
-				$files[] = '/media/jui/js/chosen';
-				$files[] = '/media/jui/js/ajax-chosen';
+				$scripts[] = '/media/jui/js/jquery';
+				$scripts[] = '/media/jui/js/jquery-noconflict';
+				$scripts[] = '/media/jui/js/jquery-migrate';
+				$scripts[] = '/media/jui/js/bootstrap';
+				$scripts[] = '/media/jui/js/chosen';
+				$scripts[] = '/media/jui/js/ajax-chosen';
+
+				$links[] = '/media/jui/css/chosen';
 
 				$handler = '<script>'
 					. 'var jYProExtraNojQueryHandler = {apply: function (target, thisArg, args) {'
@@ -842,33 +844,45 @@ class PlgSystemJYProExtra extends CMSPlugin
 				// Remove Bootstrap
 				if ($this->params->get('remove_js_bootstrap', 1))
 				{
-					$files[] = '/media/jui/js/bootstrap';
+					$scripts[] = '/media/jui/js/bootstrap';
 
-					$extends       = array('alert', 'button', 'carousel', 'collapse', 'dropdown', 'modal', 'tooltip', 'popover', 'scrollspy', 'tab', 'typeahead', 'affix');
-					$jQueryExtends = array_merge($jQueryExtends, $extends);
+					$jQueryExtends[] = 'alert';
+					$jQueryExtends[] = 'button';
+					$jQueryExtends[] = 'carousel';
+					$jQueryExtends[] = 'collapse';
+					$jQueryExtends[] = 'dropdown';
+					$jQueryExtends[] = 'modal';
+					$jQueryExtends[] = 'tooltip';
+					$jQueryExtends[] = 'popover';
+					$jQueryExtends[] = 'scrollspy';
+					$jQueryExtends[] = 'tab';
+					$jQueryExtends[] = 'typeahead';
+					$jQueryExtends[] = 'affix';
 				}
 
 				// Remove chosen
 				if ($this->params->get('remove_js_chosen', 1))
 				{
-					$files[] = '/media/jui/js/chosen';
-					$files[] = '/media/jui/js/ajax-chosen';
+					$scripts[] = '/media/jui/js/chosen';
+					$scripts[] = '/media/jui/js/ajax-chosen';
+
+					$links[] = '/media/jui/css/chosen';
 
 					$jQueryExtends[] = 'chosen';
 					$jQueryExtends[] = 'ajaxChosen ';
 				}
 			}
 
-			// Remove js files
-			foreach ($files as $src)
+			// Remove scripts
+			foreach ($scripts as $src)
 			{
-				$replace = preg_replace('|<script(.?)*"' . $src . '\.(.?)*</script>|', '', $replace);
+				$replace = preg_replace('#<script(.?)*"' . $src . '\.(.?)*</script>#', '', $replace);
 			}
 
-			// Remove inline java scripts
-			foreach ($patterns as $pattern)
+			// Remove links
+			foreach ($links as $src)
 			{
-				$replace = preg_replace($pattern, '', $replace);
+				$replace = preg_replace('#<link(.?)*"' . $src . '\.(.?)*/>#', '', $replace);
 			}
 
 			// Add jQuery extends
@@ -885,7 +899,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 			}
 
 			// Remove empty lines
-			$replace = preg_replace('#(<\/.*?>)(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+#', '${1}' . PHP_EOL, $replace);
+			$replace = preg_replace('#(<\/.*?>|\/>)(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+#', '${1}' . PHP_EOL, $replace);
 
 			// Replace body
 			$body = str_replace($search, $replace, $body);
