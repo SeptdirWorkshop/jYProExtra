@@ -204,6 +204,9 @@ class PlgSystemJYProExtra extends CMSPlugin
 					// Override FileLayout class
 					$this->overrideClass('FileLayout');
 
+					// Override ModuleHelper class
+					$this->overrideClass('HTMLHelper');
+
 					// Override HtmlView class
 					$this->overrideClass('HtmlView');
 
@@ -243,6 +246,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	{
 		$classes = array(
 			'FileLayout'     => JPATH_ROOT . '/libraries/src/Layout/FileLayout.php',
+			'HTMLHelper'     => JPATH_ROOT . '/libraries/src/HTML/HTMLHelper.php',
 			'HtmlView'       => JPATH_ROOT . '/libraries/src/MVC/View/HtmlView.php',
 			'ModuleHelper'   => JPATH_ROOT . '/libraries/src/Helper/ModuleHelper.php',
 			'BaseController' => JPATH_ROOT . '/libraries/src/MVC/Controller/BaseController.php',
@@ -639,7 +643,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	{
 		// Add modal
 		$link = 'index.php?option=com_ajax&plugin=jyproextra&group=system&action=jYProExtraModal&format=json';
-		HTMLHelper::script('plg_system_jyproextra/customizer.js', array('version' => 'auto', 'relative' => true));
+		HTMLHelper::script('plg_system_jyproextra/customizer.min.js', array('version' => 'auto', 'relative' => true));
 		Factory::getDocument()->addScriptDeclaration("jYProExtraModal('" . $link . "');");
 
 
