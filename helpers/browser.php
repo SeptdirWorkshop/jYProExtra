@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    jYProExtra System Plugin
- * @version    __DEPLOY_VERSION__
+ * @version    1.6.0
  * @author     Septdir Workshop - septdir.com
  * @copyright  Copyright (c) 2018 - 2020 Septdir Workshop. All rights reserved.
  * @license    GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -17,7 +17,7 @@ class jYProExtraHelperBrowser
 	 *
 	 * @var  array
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.6.0
 	 */
 	protected static $_browser = null;
 
@@ -26,7 +26,7 @@ class jYProExtraHelperBrowser
 	 *
 	 * @var  boolean
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.6.0
 	 */
 	protected static $_supported = null;
 
@@ -35,7 +35,7 @@ class jYProExtraHelperBrowser
 	 *
 	 * @return  array[name,version]  Browser data.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.6.0
 	 */
 	public static function getBrowser()
 	{
@@ -97,7 +97,7 @@ class jYProExtraHelperBrowser
 	 *
 	 * @return  bool  True if supported, False if note.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.6.0
 	 */
 	public static function supported($key = null, $supported = array())
 	{
