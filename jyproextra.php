@@ -892,12 +892,12 @@ class PlgSystemJYProExtra extends CMSPlugin
 			// Add jQuery extends
 			if ($jQueryExtends)
 			{
-				$script = '	<script>';
+				$script = '	<script>if (typeof jQuery !== "undefined") {';
 				foreach ($jQueryExtends as $i => $name)
 				{
 					$script .= 'jQuery.fn.' . $name . ' = function (){console.log("jQuery ' . $name . ' not available")};';
 				}
-				$script .= '</script>';
+				$script .= '}</script>';
 
 				$replace .= PHP_EOL . $script . PHP_EOL;
 			}
