@@ -182,7 +182,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	}
 
 	/**
-	 * Set child constant, override classes and set admin cookie.
+	 * Override classes and set admin cookie.
 	 *
 	 * @since  1.0.1
 	 */
@@ -190,30 +190,17 @@ class PlgSystemJYProExtra extends CMSPlugin
 	{
 		if ($this->child && $this->app->isClient('site'))
 		{
-			$template = $this->app->getTemplate();
-			if ($template === 'yootheme')
-			{
-				$params = $this->app->getTemplate(true)->params->get('config');
-				$params = new Registry($params);
+			// Override FileLayout class
+			$this->overrideClass('FileLayout');
 
-				if ($child = $params->get('child_theme'))
-				{
-					// Set constant
-					define('YOOTHEME_CHILD', $child);
+			// Override ModuleHelper class
+			$this->overrideClass('HTMLHelper');
 
-					// Override FileLayout class
-					$this->overrideClass('FileLayout');
+			// Override HtmlView class
+			$this->overrideClass('HtmlView');
 
-					// Override ModuleHelper class
-					$this->overrideClass('HTMLHelper');
-
-					// Override HtmlView class
-					$this->overrideClass('HtmlView');
-
-					// Override ModuleHelper class
-					$this->overrideClass('ModuleHelper');
-				}
-			}
+			// Override ModuleHelper class
+			$this->overrideClass('ModuleHelper');
 		}
 
 
@@ -279,7 +266,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	}
 
 	/**
-	 * Load child languages and enable pagination for all components.
+	 * Set child constant, load child languages and enable pagination for all components.
 	 *
 	 * @since  1.0.0
 	 */
@@ -287,11 +274,24 @@ class PlgSystemJYProExtra extends CMSPlugin
 	{
 		if ($this->app->isClient('site'))
 		{
-			// Load child site languages
-			if ($this->child && defined('YOOTHEME_CHILD'))
+			if ($this->child)
 			{
-				$language = Factory::getLanguage();
-				$language->load('tpl_yootheme_' . YOOTHEME_CHILD, JPATH_SITE, $language->getTag(), true);
+				$template = $this->app->getTemplate();
+				if ($template === 'yootheme')
+				{
+					$params = $this->app->getTemplate(true)->params->get('config');
+					$params = new Registry($params);
+
+					if ($child = $params->get('child_theme'))
+					{
+						// Set constant
+						define('YOOTHEME_CHILD', $child);
+
+						// Load child site languages
+						$language = Factory::getLanguage();
+						$language->load('tpl_yootheme_' . $child, JPATH_SITE, $language->getTag(), true);
+					}
+				}
 			}
 
 			// Enable pagination for all components
