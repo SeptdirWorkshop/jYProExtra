@@ -721,7 +721,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 			foreach ($images as $image)
 			{
 				$skip = false;
-				foreach (array('no-lazy', 'no-handler', 'uk-img', 'data-src', 'srcset') as $value)
+				foreach (array('no-lazy', 'no-handler', 'uk-img', 'uk-svg', 'data-src', 'srcset') as $value)
 				{
 					if (preg_match('/' . $value . '/', $image))
 					{
