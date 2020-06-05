@@ -753,8 +753,8 @@ class PlgSystemJYProExtra extends CMSPlugin
 						$thumbnail = array();
 						if (!empty($width) && !empty($height))
 						{
-							$thumb[] = $width;
-							$thumb[] = $height;
+							$thumbnail[] = $width;
+							$thumbnail[] = $height;
 
 							unset($attrs['width']);
 							unset($attrs['height']);
