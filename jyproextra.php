@@ -203,7 +203,6 @@ class PlgSystemJYProExtra extends CMSPlugin
 			$this->overrideClass('ModuleHelper');
 		}
 
-
 		// Override BaseController class
 		if ($this->app->isClient('site') && $this->webp_cache)
 		{
