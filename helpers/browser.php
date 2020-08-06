@@ -155,9 +155,9 @@ class jYProExtraHelperBrowser
 			self::$_accept = array();
 			foreach (explode(';', $_SERVER['HTTP_ACCEPT']) as $parts)
 			{
-				foreach (explode(',', trim($parts)) as $accept)
+				foreach (explode(',', trim($parts)) as $value)
 				{
-					self::$_accept[] = trim($accept);
+					self::$_accept[] = trim($value);
 				}
 			}
 		}
