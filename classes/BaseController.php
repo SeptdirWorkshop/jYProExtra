@@ -26,19 +26,11 @@ class BaseController extends BaseControllerCore
 	 */
 	public function display($cachable = false, $urlparams = array())
 	{
-		// Add webP support cache params
+		// Add YOOtheme webP support cache params
 		if ($cachable)
 		{
 			\JLoader::register('jYProExtraHelperBrowser', JPATH_PLUGINS . '/system/jyproextra/helpers/browser.php');
-			$webP = \jYProExtraHelperBrowser::supported('webp', array(
-				'Chrome'       => 32,
-				'Firefox'      => 65,
-				'Opera'        => 19,
-				'Edge'         => 18,
-				'YaBrowser'    => 1,
-				'YandexSearch' => 1,
-				'Android'      => 4.2
-			));
+			$webP = (is_callable('imagewebp') && \jYProExtraHelperBrowser::accept('image/webp'));
 
 			// Set params url params
 			$this->input->set('webp_support', ($webP) ? 1 : 0);

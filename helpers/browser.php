@@ -31,6 +31,15 @@ class jYProExtraHelperBrowser
 	protected static $_supported = null;
 
 	/**
+	 * Browser accept types.
+	 *
+	 * @var  boolean
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected static $_accept = null;
+
+	/**
 	 * Method to get user browser data.
 	 *
 	 * @return  array[name,version]  Browser data.
@@ -92,8 +101,8 @@ class jYProExtraHelperBrowser
 	/**
 	 * Method to check browser function support.
 	 *
-	 * @param   null   $key        Function name.
-	 * @param   array  $supported  Versions array[name =>version].
+	 * @param   string|null  $key        Function name.
+	 * @param   array        $supported  Versions array[name =>version].
 	 *
 	 * @return  bool  True if supported, False if note.
 	 *
@@ -119,5 +128,40 @@ class jYProExtraHelperBrowser
 		}
 
 		return self::$_supported[$key];
+	}
+
+	/**
+	 * Method to check browser accept type.
+	 *
+	 * @param   string|null  $accept  Accept name.
+	 *
+	 * @return  bool  True if accept, False if note.
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	public static function accept($accept = null)
+	{
+		if (empty($accept) || self::$_accept === false) return false;
+
+		if (self::$_accept === null)
+		{
+			if (empty($_SERVER['HTTP_ACCEPT']))
+			{
+				self::$_accept = false;
+
+				return false;
+			}
+
+			self::$_accept = array();
+			foreach (explode(';', $_SERVER['HTTP_ACCEPT']) as $parts)
+			{
+				foreach (explode(',', trim($parts)) as $accept)
+				{
+					self::$_accept[] = trim($accept);
+				}
+			}
+		}
+
+		return (in_array($accept, self::$_accept));
 	}
 }
