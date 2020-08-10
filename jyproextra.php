@@ -879,13 +879,13 @@ class PlgSystemJYProExtra extends CMSPlugin
 			// Remove scripts
 			foreach ($scripts as $src)
 			{
-				$replace = preg_replace('#<script(.?)*"' . $src . '\.(.?)*</script>#', '', $replace);
+				$replace = preg_replace('#<script.*src="' . $src . '\..*".*</script>#i', '', $replace);
 			}
 
 			// Remove links
 			foreach ($links as $src)
 			{
-				$replace = preg_replace('#<link(.?)*"' . $src . '\.(.?)*/>#', '', $replace);
+				$replace = preg_replace('#<link.*href="' . $src . '\..*".*/>#i', '', $replace);
 			}
 
 			// Add jQuery extends
