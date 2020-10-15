@@ -926,7 +926,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 				$uri         = Uri::getInstance();
 				$current     = urlencode($uri->toString());
 				$admin       = Uri::root() . 'administrator/';
-				$yootheme    = $admin . '/index.php?p=customizer&option=com_ajax';
+				$yootheme    = $admin . 'index.php?p=customizer&option=com_ajax&format=html';
 				$displayData = array(
 					'customizer' => $yootheme . '&site=' . $current . '&return=' . $current,
 					'builder'    => false,
