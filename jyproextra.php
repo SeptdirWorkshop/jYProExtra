@@ -993,6 +993,16 @@ class PlgSystemJYProExtra extends CMSPlugin
 			$module->params    = '{}';
 			$module->module    = 'mod_breadcrumbs';
 
+			// Replace in head
+			if (preg_match('|<head>(.*)</head>|si', $body, $matches))
+			{
+				$search  = $matches[1];
+				$replace = str_replace('{jyproextra_joomla_breadcrumbs}', '', $search);
+
+				$body = str_replace($search, $replace, $body);
+			}
+
+			// Replace in body
 			$body = str_replace('{jyproextra_joomla_breadcrumbs}', ModuleHelper::renderModule($module), $body);
 			$this->app->setBody($body);
 		}
