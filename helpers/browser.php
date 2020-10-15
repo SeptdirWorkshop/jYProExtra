@@ -52,7 +52,8 @@ class jYProExtraHelperBrowser
 		{
 			$name    = 'Unknown';
 			$version = 0;
-			if ($agent = $_SERVER['HTTP_USER_AGENT'])
+			$agent   = (!empty($_SERVER['HTTP_USER_AGENT'])) ? $_SERVER['HTTP_USER_AGENT'] : false;
+			if ($agent)
 			{
 				preg_match('/(Android)(?:\'&#x20;| )([0-9.]+)/', $agent, $Android);
 				preg_match('/(Version)(?:\/| )([0-9.]+)/', $agent, $Safari);
