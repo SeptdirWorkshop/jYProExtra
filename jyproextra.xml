@@ -148,6 +148,8 @@
 					<option value="1">JYES</option>
 					<option value="0">JNO</option>
 				</field>
+				<field type="spacer" label="PLG_SYSTEM_JYPROEXTRA_PAGINATION_DISABLE"
+					   class="text-error"/>
 				<field type="spacer" hr="true"/>
 
 				<field type="note" label="PLG_SYSTEM_JYPROEXTRA_TOOLBAR"

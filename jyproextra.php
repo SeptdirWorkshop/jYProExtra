@@ -319,7 +319,9 @@ class PlgSystemJYProExtra extends CMSPlugin
 	/**
 	 * Method to override pagination for enabled on all components.
 	 *
-	 * @since  1.2.0
+	 * @depreacted YOOtheme 2.2+
+	 *
+	 * @since      1.2.0
 	 */
 	protected function overridePagination()
 	{
@@ -327,25 +329,28 @@ class PlgSystemJYProExtra extends CMSPlugin
 		$src     = Path::clean(JPATH_THEMES . '/yootheme/html/pagination.php');
 		$dest    = Path::clean(JPATH_THEMES . '/yootheme/html/jyproextra-pagination.php');
 		$context = file_get_contents($src);
-		$context = preg_replace('#if(.?)*#', '', $context, 1);
-		$context = trim($context);
-		$context = rtrim($context, '}');
-		if (File::exists($dest))
+		if (preg_match('#com_content#', $context))
 		{
-			File::delete($dest);
-		}
-		file_put_contents($dest, $context);
+			$context = preg_replace('#if(.?)*#', '', $context, 1);
+			$context = trim($context);
+			$context = rtrim($context, '}');
+			if (File::exists($dest))
+			{
+				File::delete($dest);
+			}
+			file_put_contents($dest, $context);
 
-		// Override Pagination Class
-		$src     = Path::clean(JPATH_ROOT . '/libraries/src/Pagination/Pagination.php');
-		$dest    = Path::clean(__DIR__ . '/classes/Pagination.php');
-		$context = str_replace('pagination.php', 'jyproextra-pagination.php', file_get_contents($src));
-		if (File::exists($dest))
-		{
-			File::delete($dest);
+			// Override Pagination Class
+			$src     = Path::clean(JPATH_ROOT . '/libraries/src/Pagination/Pagination.php');
+			$dest    = Path::clean(__DIR__ . '/classes/Pagination.php');
+			$context = str_replace('pagination.php', 'jyproextra-pagination.php', file_get_contents($src));
+			if (File::exists($dest))
+			{
+				File::delete($dest);
+			}
+			file_put_contents($dest, $context);
+			require_once $dest;
 		}
-		file_put_contents($dest, $context);
-		require_once $dest;
 	}
 
 	/**
