@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    jYProExtra System Plugin
- * @version    __DEPLOY_VERSION__
+ * @version    1.6.2
  * @author     Septdir Workshop - septdir.com
  * @copyright  Copyright (c) 2018 - 2020 Septdir Workshop. All rights reserved.
  * @license    GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -35,7 +35,7 @@ class jYProExtraHelperBrowser
 	 *
 	 * @var  boolean
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.6.2
 	 */
 	protected static $_accept = null;
 
@@ -138,7 +138,7 @@ class jYProExtraHelperBrowser
 	 *
 	 * @return  bool  True if accept, False if note.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.6.2
 	 */
 	public static function accept($accept = null)
 	{

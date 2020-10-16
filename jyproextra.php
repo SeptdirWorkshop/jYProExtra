@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    jYProExtra System Plugin
- * @version    __DEPLOY_VERSION__
+ * @version    1.6.2
  * @author     Septdir Workshop - www.septdir.com
  * @copyright  Copyright (c) 2018 - 2020 Septdir Workshop. All rights reserved.
  * @license    GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -971,7 +971,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 		{
 			// Remove file
 			$search  = $matches[1];
-			$replace = preg_replace('|<link(.?)*theme\.update\.css(.?)*/>|', '', $search);
+			$replace = preg_replace('#<link(.?)*theme\.update\.css(.?)*/>#', '', $search);
 
 			// Replace body
 			$body = str_replace($search, $replace, $body);
