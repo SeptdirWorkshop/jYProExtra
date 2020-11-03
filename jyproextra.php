@@ -406,8 +406,9 @@ class PlgSystemJYProExtra extends CMSPlugin
 		// Add preview buttons
 		if ($this->preview && $this->app->isClient('administrator') && is_object($data))
 		{
-			$preview = false;
-			if ($form->getName() === 'com_content.article' && !empty($data->id))
+			$formName = $form->getName();
+			$preview  = false;
+			if ($formName === 'com_content.article' && !empty($data->id))
 			{
 				$preview = 'index.php?option=com_content&view=article&id=' . $data->id . ':' . $data->alias . '&catid=' . $data->catid;
 				if (!empty($data->language) && $data->language !== '*')
@@ -416,9 +417,18 @@ class PlgSystemJYProExtra extends CMSPlugin
 				}
 			}
 
-			if ($form->getName() === 'com_categories.categorycom_content' && !empty($data->id))
+			if ($formName === 'com_categories.categorycom_content' && !empty($data->id))
 			{
 				$preview = 'index.php?option=com_content&view=category&id=' . $data->id . ':' . $data->alias;
+				if (!empty($data->language) && $data->language !== '*')
+				{
+					$preview .= '&lang=' . $data->language;
+				}
+			}
+
+			if ($formName === 'com_menus.item' && !empty($data->id))
+			{
+				$preview = 'index.php?Itemid=' . $data->id;
 				if (!empty($data->language) && $data->language !== '*')
 				{
 					$preview .= '&lang=' . $data->language;
