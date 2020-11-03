@@ -753,18 +753,8 @@ class PlgSystemJYProExtra extends CMSPlugin
 						// Get attributes
 						$width  = (!empty($attrs['width'])) ? $attrs['width'] : '';
 						$height = (!empty($attrs['height'])) ? $attrs['height'] : '';
-
-						$thumbnail = array();
-						if (!empty($width) && !empty($height))
-						{
-							$thumbnail[] = $width;
-							$thumbnail[] = $height;
-
-							unset($attrs['width']);
-							unset($attrs['height']);
-						}
-						$attrs['uk-img'] = true;
-
+						if (isset($attrs['width'])) unset($attrs['width']);
+						if (isset($attrs['height'])) unset($attrs['height']);
 						foreach ($attrs as &$attr)
 						{
 							if (empty($attr))
@@ -775,8 +765,10 @@ class PlgSystemJYProExtra extends CMSPlugin
 
 						// Render new image
 						$data     = array(
-							'url'   => array($src, 'thumbnail' => $thumbnail, 'srcset' => true),
-							'attrs' => $attrs,
+							'src'    => $src,
+							'width'  => $width,
+							'height' => $height,
+							'attrs'  => $attrs,
 						);
 						$newImage = ($view) ? $view('~theme/templates/jyproextra-image', $data)
 							: HTMLHelper::_('render', 'jyproextra-image', $data);
