@@ -103,6 +103,15 @@ class PlgSystemJYProExtra extends CMSPlugin
 	protected $remove_js = false;
 
 	/**
+	 * UIkit icons function enable.
+	 *
+	 * @var  boolean
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected $uikit_icons = false;
+
+	/**
 	 * Pagination function enable.
 	 *
 	 * @var  boolean
@@ -174,6 +183,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 		$this->unset_modules     = ($this->params->get('unset_modules')) ? true : false;
 		$this->child             = ($this->params->get('child')) ? true : false;
 		$this->remove_js         = ($this->params->get('remove_js')) ? true : false;
+		$this->uikit_icons       = ($this->params->get('uikit_icons')) ? true : false;
 		$this->pagination        = ($this->params->get('pagination')) ? true : false;
 		$this->toolbar           = ($this->params->get('toolbar')) ? true : false;
 		$this->webp_cache        = ($this->params->get('webp_cache')) ? true : false;
@@ -691,6 +701,12 @@ class PlgSystemJYProExtra extends CMSPlugin
 				$this->removeJS($body);
 			}
 
+			// Remove or move uikit-icons
+			if ($this->uikit_icons)
+			{
+				$this->UIkitIcons($body);
+			}
+
 			// Add YOOtheme toolbar
 			if ($this->toolbar)
 			{
@@ -917,6 +933,49 @@ class PlgSystemJYProExtra extends CMSPlugin
 	}
 
 	/**
+	 * Method for move or remove uikit-icons script from head.
+	 *
+	 * @param   string  $body  Current page html.
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected function UIkitIcons(&$body = '')
+	{
+		if (preg_match('|<head>(.*)</head>|si', $body, $matches))
+		{
+			$search = $matches[1];
+			if (preg_match_all('#<script.*src="(.+?)".*</script>#i', $search, $scripts))
+			{
+				$replace = $search;
+				$head    = false;
+				$footer  = false;
+				foreach ($scripts[0] as $s => $script)
+				{
+					if (preg_match('#uikit-icons#', $script))
+					{
+						$replace = str_replace($script, '', $replace);
+						$head    = true;
+						if ($this->params->get('uikit_icons_mode', 'move') === 'move')
+						{
+							$footer = '<script defer src="' . $scripts[1][$s] . '"></script>' . PHP_EOL;
+						}
+						break;
+					}
+				}
+
+				if ($head === true)
+				{
+					$replace = preg_replace('#(<\/.*?>|\/>)(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+#',
+						'${1}' . PHP_EOL, $replace);
+					$body    = str_replace($search, $replace, $body);
+				}
+
+				if ($footer) $body = str_replace('</body>', $footer . '</body>', $body);
+			}
+		}
+	}
+
+	/**
 	 * Method to add YOOtheme toolbar.
 	 *
 	 * @param   string  $body  Current page html.
@@ -955,7 +1014,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 				}
 
 				$toolbar = LayoutHelper::render('plugins.system.jyproextra.toolbar.yootheme', $displayData);
-				$body    = str_replace('</body>', $toolbar . '</body>', $body);
+				$body    = str_replace('</body>', $toolbar . PHP_EOL . '</body>', $body);
 			}
 		}
 	}

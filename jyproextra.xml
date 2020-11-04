@@ -128,6 +128,24 @@
 				</field>
 				<field type="spacer" hr="true"/>
 
+				<field type="note" label="PLG_SYSTEM_JYPROEXTRA_UIKIT_ICONS"
+					   description="PLG_SYSTEM_JYPROEXTRA_UIKIT_ICONS_DESC"/>
+				<field name="uikit_icons" type="radio"
+					   label="PLG_SYSTEM_JYPROEXTRA_ENABLE"
+					   class="btn-group btn-group-yesno"
+					   default="0">
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
+				</field>
+				<field name="uikit_icons_mode" type="list"
+					   label="PLG_SYSTEM_JYPROEXTRA_UIKIT_ICONS_MODE"
+					   default="move"
+					   showon="uikit_icons:1">
+					<option value="move">PLG_SYSTEM_JYPROEXTRA_UIKIT_ICONS_MODE_MOVE</option>
+					<option value="remove">PLG_SYSTEM_JYPROEXTRA_UIKIT_ICONS_MODE_REMOVE</option>
+				</field>
+				<field type="spacer" hr="true"/>
+
 				<field type="note" label="PLG_SYSTEM_JYPROEXTRA_REMOVE_UPDATE_CSS"
 					   description="PLG_SYSTEM_JYPROEXTRA_REMOVE_UPDATE_CSS_DESC"/>
 				<field name="remove_update_css" type="radio"
