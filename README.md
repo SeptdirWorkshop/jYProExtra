@@ -22,6 +22,9 @@ This function allows you to use standard template functions (layout overrides (c
 ### Remove JavaScript
 This function allows you to remove obsolete JavaScript (jQuery, bootstrap) from `<head>`.
 
+### UIkit icons
+This function allows you to delete or move to footer `uikit-icons` script from `head`
+
 ### Remove YOOtheme Pro update stylesheet
 This function allows you to remove the `theme.update.css` file from `<head>`.
 
@@ -32,7 +35,7 @@ This function allows you to display YOOtheme pagination in all components.
 This function allows you to display on the frontend Edit and Settings buttons for administrators.
 
 ### View on site
-This function allows you to display the `View on site` buttons in the category and article editing forms.
+This function allows you to display the `View on site` buttons in the category, article and menu items editing forms.
 
 ### Library
 This function allows you to import and export saved YOOtheme Pro layouts.
