@@ -12,11 +12,13 @@ defined('_JEXEC') or die;
 
 ?>
 <style>
-	.uk-noconflict .yo-sidebar-content {
+	.uk-noconflict .yo-sidebar-content,
+	.yo-customizer .yo-sidebar-content {
 		bottom: 100px;
 	}
 
-	.uk-noconflict .yo-sidebar-jproextra {
+	.uk-noconflict .yo-sidebar-jproextra,
+	.yo-customizer .yo-sidebar-jproextra {
 		position: absolute;
 		bottom: 50px;
 		left: 0;

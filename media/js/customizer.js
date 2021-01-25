@@ -29,12 +29,20 @@ function jYProExtraModal(requestUrl) {
 					// Add modal
 					let content = document.createElement('div');
 					content.innerHTML = response.data[0].content;
-					document.querySelector('body .uk-noconflict').appendChild(content.firstChild);
+					if (document.querySelector('body .uk-noconflict')) {
+						document.querySelector('body .uk-noconflict').appendChild(content.firstChild);
+					} else if (document.querySelector('body .yo-customizer')) {
+						document.querySelector('body .yo-customizer').appendChild(content.firstChild);
+					}
 
 					// Add button
 					let button = document.createElement('div');
 					button.innerHTML = response.data[0].button;
-					document.querySelector('body .uk-noconflict .yo-sidebar').appendChild(button.firstChild);
+					if (document.querySelector('body .uk-noconflict .yo-sidebar')) {
+						document.querySelector('body .uk-noconflict .yo-sidebar').appendChild(button.firstChild);
+					} else if (document.querySelector('body .yo-customizer .yo-sidebar')) {
+						document.querySelector('body .yo-customizer .yo-sidebar').appendChild(button.firstChild);
+					}
 
 					// Add style
 					let style = document.createElement('div');
