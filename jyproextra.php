@@ -670,6 +670,8 @@ class PlgSystemJYProExtra extends CMSPlugin
 		HTMLHelper::script('plg_system_jyproextra/customizer.min.js', array('version' => 'auto', 'relative' => true));
 		Factory::getDocument()->addScriptDeclaration("jYProExtraModal('" . $link . "');");
 
+		// Include jquery
+		HTMLHelper::_('jquery.framework');
 
 		// Remove toolbar from preview
 		Factory::getDocument()->addScriptDeclaration("jYProExtraRemoveToolbar();");
