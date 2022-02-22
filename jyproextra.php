@@ -26,6 +26,7 @@ use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Version;
 use Joomla\Registry\Registry;
 
 class PlgSystemJYProExtra extends CMSPlugin
@@ -157,6 +158,15 @@ class PlgSystemJYProExtra extends CMSPlugin
 	protected $preview = false;
 
 	/**
+	 * Is Joomla 4.
+	 *
+	 * @var  boolean
+	 *
+	 * @since  1.6.0
+	 */
+	protected $joomla4 = false;
+
+	/**
 	 * Is visitor authorized in control panel.
 	 *
 	 * @var  boolean
@@ -189,6 +199,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 		$this->webp_cache        = ($this->params->get('webp_cache')) ? true : false;
 		$this->remove_update_css = ($this->params->get('remove_update_css')) ? true : false;
 		$this->preview           = ($this->params->get('preview')) ? true : false;
+		$this->joomla4           = (new Version())->isCompatible('4.0');
 	}
 
 	/**
@@ -447,14 +458,21 @@ class PlgSystemJYProExtra extends CMSPlugin
 
 			if ($preview)
 			{
-				$toolbar = Toolbar::getInstance('toolbar');
-				Factory::getDocument()->addStyleDeclaration('#toolbar-jyproextra_preview{float:right}');
+				$toolbar = Toolbar::getInstance();
+				if (!$this->joomla4){
+
+				}
+				else {
+					Factory::getDocument()->addStyleDeclaration('#toolbar-jyproextra_preview{float:right}');
+				}
 				$link = Uri::root() . 'index.php?option=com_ajax&plugin=jyproextra&group=system&action=sitePreview&preview='
 					. base64_encode($preview) . '&format=raw';
 				$toolbar->appendButton('Custom', LayoutHelper::render('plugins.system.jyproextra.toolbar.link', array(
 					'link' => $link,
 					'text' => 'PLG_SYSTEM_JYPROEXTRA_PREVIEW_BUTTON',
-					'icon' => 'enter'
+					'icon' => 'enter',
+					'id'=> 'jyproextra_preview',
+					'order' => 99,
 				)), 'jyproextra_preview');
 			}
 		}
@@ -599,7 +617,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 		}
 
 		// Add scripts to customizer
-		if ($this->app->isClient('administrator') && $this->app->input->get('option') === 'com_ajax'
+		if (!$this->joomla4 && $this->app->isClient('administrator') && $this->app->input->get('option') === 'com_ajax'
 			&& $this->app->input->get('p') === 'customizer')
 		{
 			$this->addCustomizerScripts();
@@ -637,18 +655,18 @@ class PlgSystemJYProExtra extends CMSPlugin
 		}
 
 		// Stylesheets
-		$pathsJS = array(
+		$pathsCss = array(
 			Path::clean(JPATH_THEMES . '/yootheme/css/inline.min.css'),
 			Path::clean(JPATH_THEMES . '/yootheme/css/inline.css'),
 		);
-		if (defined('YOOTHEME_CHILD'))
+		if ($child)
 		{
-			$pathsJS = array_merge(array(
+			$pathsCss = array_merge(array(
 				Path::clean(JPATH_THEMES . '/yootheme_' . YOOTHEME_CHILD . '/css/inline.min.css'),
 				Path::clean(JPATH_THEMES . '/yootheme_' . YOOTHEME_CHILD . '/css/inline.css'),
-			), $pathsJS);
+			), $pathsCss);
 		}
-		foreach ($pathsJS as $path)
+		foreach ($pathsCss as $path)
 		{
 			if (file_exists($path))
 			{
@@ -662,6 +680,8 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 * Method to add and run scripts to customizer.
 	 *
 	 * @since  1.4.1
+	 *
+	 * @depreacted 2.0
 	 */
 	protected function addCustomizerScripts()
 	{
@@ -1083,7 +1103,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.3.0
 	 */
-	public function onAjaxJYProExtra()
+	public function onAjaxJyproextra()
 	{
 		$action = $this->app->input->get('action');
 		if (empty($action) || !method_exists($this, $action))

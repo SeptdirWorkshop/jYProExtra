@@ -75,6 +75,18 @@ class JFormFieldUnsetComponents extends JFormFieldList
 						$components[$component][$view] = array();
 					}
 				}
+				$folder = Path::clean(JPATH_ROOT . '/components/' . $component . '/src/View');
+				if (Folder::exists($folder))
+				{
+					foreach (Folder::folders($folder) as $view)
+					{
+						if (!isset($views[$component]))
+						{
+							$views[$component] = array();
+						}
+						$components[$component][strtolower($view)] = array();
+					}
+				}
 			}
 
 			// Convert options

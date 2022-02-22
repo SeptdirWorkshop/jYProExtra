@@ -34,6 +34,7 @@
 				   label="PLG_SYSTEM_JYPROEXTRA_MODULE_UNSET_COMPONENTS"
 				   description="PLG_SYSTEM_JYPROEXTRA_MODULE_UNSET_COMPONENTS_DESC"
 				   multiple="true"
+				   layout="joomla.form.field.list-fancy-select"
 				   class="input-xxlarge">
 				<option value="com_users.profile:edit"/>
 			</field>

@@ -10,8 +10,16 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Version;
 
+if ((new Version())->isCompatible('4.0'))
+{
+	Factory::getDocument()->addStyleDeclaration('
+		a[href="https://www.septdir.com/donate#solution=jyproextra"]:before{display:none;};
+	');
+}
 ?>
 <p>
 	<?php echo Text::_('PLG_SYSTEM_JYPROEXTRA_DONATE_MESSAGE'); ?>

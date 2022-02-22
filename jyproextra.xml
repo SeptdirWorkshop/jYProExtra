@@ -188,6 +188,7 @@
 				<field name="toolbar_hide_users" type="toolbarhideusers"
 					   label="PLG_SYSTEM_JYPROEXTRA_TOOLBAR_HIDE_USERS"
 					   multiple="true"
+					   layout="joomla.form.field.list-fancy-select"
 					   showon="toolbar!:"/>
 				<field type="spacer" hr="true"/>
 
