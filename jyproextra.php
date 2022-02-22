@@ -235,7 +235,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 		{
 			$this->app->input->cookie->set('jyproextra_admin',
 				Factory::getUser()->id,
-				(new Date('now + 1 days'))->toUnix(),
+				(new Date('now + 3 days'))->toUnix(),
 				$this->app->get('cookie_path', '/'),
 				$this->app->get('cookie_domain'),
 				$this->app->isSSLConnection());
