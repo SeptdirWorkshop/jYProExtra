@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    jYProExtra System Plugin
- * @version    __DEPLOY_VERSION__
+ * @version    1.8.0
  * @author     Septdir Workshop - www.septdir.com
  * @copyright  Copyright (c) 2018 - 2021 Septdir Workshop. All rights reserved.
  * @license    GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -14,6 +14,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Toolbar\Toolbar;
+use Joomla\CMS\Version;
 
 class JFormFieldToolbar extends FormField
 {
@@ -41,13 +42,18 @@ class JFormFieldToolbar extends FormField
 		$toolbar->appendButton('Custom', LayoutHelper::render('plugins.system.jyproextra.toolbar.link', array(
 			'link' => 'https://www.septdir.com/support#solution=jyproextra',
 			'text' => 'PLG_SYSTEM_JYPROEXTRA_SUPPORT',
-			'icon' => 'support'
+			'icon' => 'support',
+			'id'   => 'toolbar-support',
+			'order' => 99,
 		)), 'support');
 
 		// Add donate message
 		Factory::getApplication()->enqueueMessage(LayoutHelper::render('plugins.system.jyproextra.donate.message'), '');
 
 		// Toolbar Style
-		Factory::getDocument()->addStyleDeclaration('#toolbar-support{float: right;}');
+		if (!(new Version())->isCompatible('4.0'))
+		{
+			Factory::getDocument()->addStyleDeclaration('#toolbar-support{float: right;}');
+		}
 	}
 }

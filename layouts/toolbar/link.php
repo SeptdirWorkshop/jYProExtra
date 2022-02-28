@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    jYProExtra System Plugin
- * @version    __DEPLOY_VERSION__
+ * @version    1.8.0
  * @author     Septdir Workshop - www.septdir.com
  * @copyright  Copyright (c) 2018 - 2021 Septdir Workshop. All rights reserved.
  * @license    GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -10,25 +10,9 @@
 
 defined('_JEXEC') or die;
 
-use Joomla\CMS\Language\Text;
-use Joomla\CMS\Router\Route;
+use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Version;
 
-extract($displayData);
+$version = (((new Version())->isCompatible('4.0'))) ? 'joomla4' : 'joomla3';
 
-/**
- * Layout variables
- * -----------------
- *
- * @var  string  $link Button link
- * @var  string  $text Button text
- * @var  string  $icon Button icon
- * @var  boolean $new  Button target
- *
- */
-
-$new = (isset($new)) ? $new : true;
-?>
-<a href="<?php echo Route::_($link); ?>" class="btn btn-small"<?php echo ($new) ? ' target="_blank"' : ''; ?>>
-	<span aria-hidden="true" class="icon-<?php echo $icon; ?>"></span>
-	<?php echo Text::_($text); ?>
-</a>
+echo LayoutHelper::render('plugins.system.jyproextra.toolbar.link.' . $version, $displayData);
