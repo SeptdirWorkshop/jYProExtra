@@ -392,6 +392,10 @@ class PlgSystemJYProExtra extends CMSPlugin
 				'FieldLayout'     => 'YooFieldLayout',
 				'ModuleLayout'    => 'YooModuleLayout',
 			);
+
+			$fieldsPath = '/plugins/system/jyproextra/fields/';
+			$fieldsPath .= ($this->joomla4) ? 'joomla4' : 'joomla3';
+
 			foreach ($form->getFieldsets() as $fieldset)
 			{
 				foreach ($form->getFieldset($fieldset->name) as $field)
@@ -402,7 +406,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 						$name  = $field->__get('fieldname');
 						$group = $field->__get('group');
 						$form->setFieldAttribute($name, 'type', $types[$type], $group);
-						$form->setFieldAttribute($name, 'addfieldpath', '/plugins/system/jyproextra/fields', $group);
+						$form->setFieldAttribute($name, 'addfieldpath', $fieldsPath, $group);
 					}
 				}
 			}
@@ -410,10 +414,10 @@ class PlgSystemJYProExtra extends CMSPlugin
 
 		// Change modules form
 		if ($this->unset_modules
-			&& in_array($form->getName(), array('com_modules.module', 'com_advancedmodules.module', 'com_config.modules')))
+			&& in_array($form->getName(), array('com_modules . module', 'com_advancedmodules . module', 'com_config . modules')))
 		{
 			// Add params
-			Form::addFormPath(__DIR__ . '/forms');
+			Form::addFormPath(__DIR__ . ' / forms');
 			$form->loadFile('module');
 
 			// Remove unset customizer & unset empty in builder module
@@ -429,49 +433,51 @@ class PlgSystemJYProExtra extends CMSPlugin
 		{
 			$formName = $form->getName();
 			$preview  = false;
-			if ($formName === 'com_content.article' && !empty($data->id))
+			if ($formName === 'com_content . article' && !empty($data->id))
 			{
-				$preview = 'index.php?option=com_content&view=article&id=' . $data->id . ':' . $data->alias . '&catid=' . $data->catid;
-				if (!empty($data->language) && $data->language !== '*')
+				$preview = 'index . php ? option = com_content & view = article & id = ' . $data->id . ' : ' . $data->alias . ' & catid = ' . $data->catid;
+				if (!empty($data->language) && $data->language !== ' * ')
 				{
-					$preview .= '&lang=' . $data->language;
+					$preview .= ' & lang = ' . $data->language;
 				}
 			}
 
-			if ($formName === 'com_categories.categorycom_content' && !empty($data->id))
+			if ($formName === 'com_categories . categorycom_content' && !empty($data->id))
 			{
-				$preview = 'index.php?option=com_content&view=category&id=' . $data->id . ':' . $data->alias;
-				if (!empty($data->language) && $data->language !== '*')
+				$preview = 'index . php ? option = com_content & view = category & id = ' . $data->id . ' : ' . $data->alias;
+				if (!empty($data->language) && $data->language !== ' * ')
 				{
-					$preview .= '&lang=' . $data->language;
+					$preview .= ' & lang = ' . $data->language;
 				}
 			}
 
-			if ($formName === 'com_menus.item' && !empty($data->id))
+			if ($formName === 'com_menus . item' && !empty($data->id))
 			{
-				$preview = 'index.php?Itemid=' . $data->id;
-				if (!empty($data->language) && $data->language !== '*')
+				$preview = 'index . php ? Itemid = ' . $data->id;
+				if (!empty($data->language) && $data->language !== ' * ')
 				{
-					$preview .= '&lang=' . $data->language;
+					$preview .= ' & lang = ' . $data->language;
 				}
 			}
 
 			if ($preview)
 			{
 				$toolbar = Toolbar::getInstance();
-				if (!$this->joomla4){
+				if (!$this->joomla4)
+				{
 
 				}
-				else {
+				else
+				{
 					Factory::getDocument()->addStyleDeclaration('#toolbar-jyproextra_preview{float:right}');
 				}
 				$link = Uri::root() . 'index.php?option=com_ajax&plugin=jyproextra&group=system&action=sitePreview&preview='
 					. base64_encode($preview) . '&format=raw';
 				$toolbar->appendButton('Custom', LayoutHelper::render('plugins.system.jyproextra.toolbar.link', array(
-					'link' => $link,
-					'text' => 'PLG_SYSTEM_JYPROEXTRA_PREVIEW_BUTTON',
-					'icon' => 'enter',
-					'id'=> 'jyproextra_preview',
+					'link'  => $link,
+					'text'  => 'PLG_SYSTEM_JYPROEXTRA_PREVIEW_BUTTON',
+					'icon'  => 'enter',
+					'id'    => 'jyproextra_preview',
 					'order' => 99,
 				)), 'jyproextra_preview');
 			}
@@ -492,7 +498,8 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.1.0
 	 */
-	public function onAfterCleanModuleList(&$modules)
+	public
+	function onAfterCleanModuleList(&$modules)
 	{
 		if ($this->unset_modules && !empty($modules) && $this->app->isClient('site')
 			&& $this->app->getTemplate() === 'yootheme')
@@ -558,7 +565,8 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.1.0
 	 */
-	public function onRenderModule(&$module)
+	public
+	function onRenderModule(&$module)
 	{
 		if ($this->unset_modules && !empty($module->params) && $this->app->isClient('site')
 			&& $this->app->getTemplate() === 'yootheme')
@@ -608,7 +616,8 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.2.0
 	 */
-	public function onBeforeCompileHead()
+	public
+	function onBeforeCompileHead()
 	{
 		// Include inline files contents
 		if ($this->inline && $this->app->isClient('site') && $this->app->getTemplate() === 'yootheme')
@@ -629,7 +638,8 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.4.1
 	 */
-	protected function includeInlineFiles()
+	protected
+	function includeInlineFiles()
 	{
 		$doc = Factory::getDocument();
 
@@ -679,11 +689,12 @@ class PlgSystemJYProExtra extends CMSPlugin
 	/**
 	 * Method to add and run scripts to customizer.
 	 *
-	 * @since  1.4.1
+	 * @since      1.4.1
 	 *
 	 * @depreacted 2.0
 	 */
-	protected function addCustomizerScripts()
+	protected
+	function addCustomizerScripts()
 	{
 		// Add modal
 		$link = 'index.php?option=com_ajax&plugin=jyproextra&group=system&action=jYProExtraModal&format=json';
@@ -702,7 +713,8 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.0.0
 	 */
-	public function onAfterRender()
+	public
+	function onAfterRender()
 	{
 		$body = false;
 		if (($this->images || $this->remove_js || $this->toolbar || $this->remove_update_css) && $this->app->isClient('site')
@@ -759,7 +771,8 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.2.0
 	 */
-	protected function convertImages(&$body = '')
+	protected
+	function convertImages(&$body = '')
 	{
 		// Check template file exist
 		if (!File::exists(Path::clean(JPATH_THEMES . '/yootheme/templates/jyproextra-image.php'))) return;
@@ -836,7 +849,8 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.2.0
 	 */
-	protected function removeJS(&$body = '')
+	protected
+	function removeJS(&$body = '')
 	{
 		if (preg_match('|<head>(.*)</head>|si', $body, $matches))
 		{
@@ -961,7 +975,8 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.7.0
 	 */
-	protected function UIkitIcons(&$body = '')
+	protected
+	function UIkitIcons(&$body = '')
 	{
 		if (preg_match('|<head>(.*)</head>|si', $body, $matches))
 		{
@@ -1004,7 +1019,8 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.3.0
 	 */
-	protected function addYOOthemeToolbar(&$body = '')
+	protected
+	function addYOOthemeToolbar(&$body = '')
 	{
 		if ($userID = (int) $this->app->input->cookie->get('jyproextra_admin'))
 		{
@@ -1048,7 +1064,8 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.5.0
 	 */
-	protected function removeUpdateCss(&$body = '')
+	protected
+	function removeUpdateCss(&$body = '')
 	{
 		if (preg_match('|<head>(.*)</head>|si', $body, $matches))
 		{
@@ -1068,7 +1085,8 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.3.0
 	 */
-	protected function replaceBreadcrumbsShortcode($body = '')
+	protected
+	function replaceBreadcrumbsShortcode($body = '')
 	{
 		if (preg_match('/{jyproextra_joomla_breadcrumbs}/i', $body))
 		{
@@ -1105,7 +1123,8 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.3.0
 	 */
-	public function onAjaxJyproextra()
+	public
+	function onAjaxJyproextra()
 	{
 		$action = $this->app->input->get('action');
 		if (empty($action) || !method_exists($this, $action))
@@ -1125,7 +1144,8 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.3.0
 	 */
-	protected function libraryExport()
+	protected
+	function libraryExport()
 	{
 		$keys = explode(',', $this->app->input->get('keys', '', 'string'));
 		$keys = array_filter(array_map('trim', $keys), function ($element) {
@@ -1199,7 +1219,8 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.3.0
 	 */
-	protected function libraryImport()
+	protected
+	function libraryImport()
 	{
 		// Get file
 		$files = $this->app->input->files->get('files', array());
@@ -1298,7 +1319,8 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.4.1
 	 */
-	protected function jYProExtraModal()
+	protected
+	function jYProExtraModal()
 	{
 		if (!Factory::getUser()->authorise('core.edit', 'com_plugins'))
 		{
@@ -1320,7 +1342,8 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.6.0
 	 */
-	protected function sitePreview()
+	protected
+	function sitePreview()
 	{
 		if ($preview = $this->app->input->getBase64('preview'))
 		{
@@ -1341,7 +1364,8 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.3.0
 	 */
-	protected function generateLibraryKey($length = 8)
+	protected
+	function generateLibraryKey($length = 8)
 	{
 		$secret = '';
 		$chars  = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'r', 's',
@@ -1364,7 +1388,8 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.3.1
 	 */
-	public function onExtensionAfterInstall($installer, $eid)
+	public
+	function onExtensionAfterInstall($installer, $eid)
 	{
 		if ($eid) $this->copyYOOthemeFiles($installer);
 	}
@@ -1377,7 +1402,8 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.3.1
 	 */
-	public function onExtensionAfterUpdate($installer, $eid)
+	public
+	function onExtensionAfterUpdate($installer, $eid)
 	{
 		if ($eid) $this->copyYOOthemeFiles($installer);
 	}
@@ -1389,7 +1415,8 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.3.1
 	 */
-	protected function copyYOOthemeFiles($installer)
+	protected
+	function copyYOOthemeFiles($installer)
 	{
 		$manifest = $installer->getManifest();
 		if ((string) $manifest->attributes()['type'] === 'package' && (string) $manifest->packagename === 'yootheme')
@@ -1406,7 +1433,8 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.5.0
 	 */
-	protected function isAuthorizedAdmin()
+	protected
+	function isAuthorizedAdmin()
 	{
 		if ($this->_isAuthorizedAdmin === null)
 		{
