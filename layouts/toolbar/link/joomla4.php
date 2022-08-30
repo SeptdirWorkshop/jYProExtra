@@ -1,7 +1,7 @@
 <?php
 /*
  * @package    jYProExtra System Plugin
- * @version    1.8.0
+ * @version    1.8.1
  * @author     Septdir Workshop - septdir.com
  * @copyright  Copyright (c) 2018 - 2022 Septdir Workshop. All rights reserved.
  * @license    GNU/GPL license: https://www.gnu.org/copyleft/gpl.html

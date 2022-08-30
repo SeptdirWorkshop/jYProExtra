@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    jYProExtra System Plugin
- * @version    1.8.0
+ * @version    1.8.1
  * @author     Septdir Workshop - www.septdir.com
  * @copyright  Copyright (c) 2018 - 2021 Septdir Workshop. All rights reserved.
  * @license    GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -25,7 +25,7 @@ class YOOFieldLayoutField extends FieldLayoutField
 	 *
 	 * @var  string
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.8.1
 	 */
 	protected $type = 'YooFieldLayout';
 
@@ -34,7 +34,7 @@ class YOOFieldLayoutField extends FieldLayoutField
 	 *
 	 * @return  string   The field input.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.8.1
 	 */
 	protected function getInput()
 	{
