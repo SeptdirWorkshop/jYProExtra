@@ -393,7 +393,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 				'ModuleLayout'    => 'YooModuleLayout',
 			);
 
-			$fieldPath   = '/plugins/system/jyproextra/fields/joomla3';
+			$fieldPath   = '/plugins/system/jyproextra/fields';
 			$fieldPrefix = '\Joomla\Plugin\System\JYProExtra\Field';
 
 			foreach ($form->getFieldsets() as $fieldset)
