@@ -498,8 +498,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.1.0
 	 */
-	public
-	function onAfterCleanModuleList(&$modules)
+	public function onAfterCleanModuleList(&$modules)
 	{
 		if ($this->unset_modules && !empty($modules) && $this->app->isClient('site')
 			&& $this->app->getTemplate() === 'yootheme')
@@ -565,8 +564,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.1.0
 	 */
-	public
-	function onRenderModule(&$module)
+	public function onRenderModule(&$module)
 	{
 		if ($this->unset_modules && !empty($module->params) && $this->app->isClient('site')
 			&& $this->app->getTemplate() === 'yootheme')
@@ -616,8 +614,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.2.0
 	 */
-	public
-	function onBeforeCompileHead()
+	public function onBeforeCompileHead()
 	{
 		// Include inline files contents
 		if ($this->inline && $this->app->isClient('site') && $this->app->getTemplate() === 'yootheme')
@@ -638,8 +635,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.4.1
 	 */
-	protected
-	function includeInlineFiles()
+	protected function includeInlineFiles()
 	{
 		$doc = Factory::getDocument();
 
@@ -693,8 +689,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @depreacted 2.0
 	 */
-	protected
-	function addCustomizerScripts()
+	protected function addCustomizerScripts()
 	{
 		// Add modal
 		$link = 'index.php?option=com_ajax&plugin=jyproextra&group=system&action=jYProExtraModal&format=json';
@@ -713,8 +708,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.0.0
 	 */
-	public
-	function onAfterRender()
+	public function onAfterRender()
 	{
 		$body = false;
 		if (($this->images || $this->remove_js || $this->toolbar || $this->remove_update_css) && $this->app->isClient('site')
@@ -771,17 +765,29 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.2.0
 	 */
-	protected
-	function convertImages(&$body = '')
+	protected function convertImages(&$body = '')
 	{
 		// Check template file exist
 		if (!File::exists(Path::clean(JPATH_THEMES . '/yootheme/templates/jyproextra-image.php'))) return;
 
 		// Replace images
-		if (preg_match_all('/<img[^>]+>/i', $body, $matches))
+		$searchBody = $body;
+
+		// Unset picture
+		if (preg_match_all('#<picture[^>]*>(.*?)</picture>#s', $searchBody, $matches))
+		{
+			$pictures = (!empty($matches[0])) ? $matches[0] : array();
+			foreach ($pictures as $picture)
+			{
+				$searchBody = str_replace($picture, '', $searchBody);
+			}
+		}
+
+		if (preg_match_all('/<img[^>]+>/i', $searchBody, $matches))
 		{
 			$images = (!empty($matches[0])) ? $matches[0] : array();
-			$view   = (function_exists('YOOtheme\app')) ? YOOtheme\app(YOOtheme\View::class) : false;
+
+			$view = (function_exists('YOOtheme\app')) ? YOOtheme\app(YOOtheme\View::class) : false;
 
 			foreach ($images as $image)
 			{
@@ -849,8 +855,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.2.0
 	 */
-	protected
-	function removeJS(&$body = '')
+	protected function removeJS(&$body = '')
 	{
 		if (preg_match('|<head>(.*)</head>|si', $body, $matches))
 		{
@@ -975,8 +980,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.7.0
 	 */
-	protected
-	function UIkitIcons(&$body = '')
+	protected function UIkitIcons(&$body = '')
 	{
 		if (preg_match('|<head>(.*)</head>|si', $body, $matches))
 		{
@@ -1019,8 +1023,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.3.0
 	 */
-	protected
-	function addYOOthemeToolbar(&$body = '')
+	protected function addYOOthemeToolbar(&$body = '')
 	{
 		if ($userID = (int) $this->app->input->cookie->get('jyproextra_admin'))
 		{
@@ -1064,8 +1067,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.5.0
 	 */
-	protected
-	function removeUpdateCss(&$body = '')
+	protected function removeUpdateCss(&$body = '')
 	{
 		if (preg_match('|<head>(.*)</head>|si', $body, $matches))
 		{
@@ -1085,8 +1087,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.3.0
 	 */
-	protected
-	function replaceBreadcrumbsShortcode($body = '')
+	protected function replaceBreadcrumbsShortcode($body = '')
 	{
 		if (preg_match('/{jyproextra_joomla_breadcrumbs}/i', $body))
 		{
@@ -1123,8 +1124,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.3.0
 	 */
-	public
-	function onAjaxJyproextra()
+	public function onAjaxJyproextra()
 	{
 		$action = $this->app->input->get('action');
 		if (empty($action) || !method_exists($this, $action))
@@ -1144,8 +1144,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.3.0
 	 */
-	protected
-	function libraryExport()
+	protected function libraryExport()
 	{
 		$keys = explode(',', $this->app->input->get('keys', '', 'string'));
 		$keys = array_filter(array_map('trim', $keys), function ($element) {
@@ -1219,8 +1218,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.3.0
 	 */
-	protected
-	function libraryImport()
+	protected function libraryImport()
 	{
 		// Get file
 		$files = $this->app->input->files->get('files', array());
@@ -1319,8 +1317,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.4.1
 	 */
-	protected
-	function jYProExtraModal()
+	protected function jYProExtraModal()
 	{
 		if (!Factory::getUser()->authorise('core.edit', 'com_plugins'))
 		{
@@ -1342,8 +1339,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.6.0
 	 */
-	protected
-	function sitePreview()
+	protected function sitePreview()
 	{
 		if ($preview = $this->app->input->getBase64('preview'))
 		{
@@ -1364,8 +1360,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.3.0
 	 */
-	protected
-	function generateLibraryKey($length = 8)
+	protected function generateLibraryKey($length = 8)
 	{
 		$secret = '';
 		$chars  = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'r', 's',
@@ -1388,8 +1383,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.3.1
 	 */
-	public
-	function onExtensionAfterInstall($installer, $eid)
+	public function onExtensionAfterInstall($installer, $eid)
 	{
 		if ($eid) $this->copyYOOthemeFiles($installer);
 	}
@@ -1402,8 +1396,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.3.1
 	 */
-	public
-	function onExtensionAfterUpdate($installer, $eid)
+	public function onExtensionAfterUpdate($installer, $eid)
 	{
 		if ($eid) $this->copyYOOthemeFiles($installer);
 	}
@@ -1415,8 +1408,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.3.1
 	 */
-	protected
-	function copyYOOthemeFiles($installer)
+	protected function copyYOOthemeFiles($installer)
 	{
 		$manifest = $installer->getManifest();
 		if ((string) $manifest->attributes()['type'] === 'package' && (string) $manifest->packagename === 'yootheme')
@@ -1433,8 +1425,7 @@ class PlgSystemJYProExtra extends CMSPlugin
 	 *
 	 * @since  1.5.0
 	 */
-	protected
-	function isAuthorizedAdmin()
+	protected function isAuthorizedAdmin()
 	{
 		if ($this->_isAuthorizedAdmin === null)
 		{
