@@ -210,7 +210,7 @@ class YooModuleLayoutField extends ModulelayoutField
 
 			// Compute attributes for the grouped list
 			$attr = $this->element['size'] ? ' size="' . (int) $this->element['size'] . '"' : '';
-			$attr .= $this->element['class'] ? ' class="form-select' . (string) $this->element['class'] . '"'
+			$attr .= $this->element['class'] ? ' class="form-select ' . (string) $this->element['class'] . '"'
 				: 'class="form-select"';
 
 			// Prepare HTML code

@@ -421,10 +421,10 @@ class PlgSystemJYProExtra extends CMSPlugin
 
 		// Change modules form
 		if ($this->unset_modules
-			&& in_array($form->getName(), array('com_modules . module', 'com_advancedmodules . module', 'com_config . modules')))
+			&& in_array($form->getName(), array('com_modules.module', 'com_advancedmodules.module', 'com_config.modules')))
 		{
 			// Add params
-			Form::addFormPath(__DIR__ . ' / forms');
+			Form::addFormPath(__DIR__ . '/forms');
 			$form->loadFile('module');
 
 			// Remove unset customizer & unset empty in builder module
@@ -440,30 +440,30 @@ class PlgSystemJYProExtra extends CMSPlugin
 		{
 			$formName = $form->getName();
 			$preview  = false;
-			if ($formName === 'com_content . article' && !empty($data->id))
+			if ($formName === 'com_content.article' && !empty($data->id))
 			{
-				$preview = 'index . php ? option = com_content & view = article & id = ' . $data->id . ' : ' . $data->alias . ' & catid = ' . $data->catid;
-				if (!empty($data->language) && $data->language !== ' * ')
+				$preview = 'index.php?option=com_content&view=article&id=' . $data->id . ':' . $data->alias . '&catid=' . $data->catid;
+				if (!empty($data->language) && $data->language !== '*')
 				{
-					$preview .= ' & lang = ' . $data->language;
+					$preview .= '&lang=' . $data->language;
 				}
 			}
 
-			if ($formName === 'com_categories . categorycom_content' && !empty($data->id))
+			if ($formName === 'com_categories.categorycom_content' && !empty($data->id))
 			{
-				$preview = 'index . php ? option = com_content & view = category & id = ' . $data->id . ' : ' . $data->alias;
-				if (!empty($data->language) && $data->language !== ' * ')
+				$preview = 'index.php?option=com_content&view=category&id=' . $data->id . ':' . $data->alias;
+				if (!empty($data->language) && $data->language !== '*')
 				{
-					$preview .= ' & lang = ' . $data->language;
+					$preview .= '&lang=' . $data->language;
 				}
 			}
 
-			if ($formName === 'com_menus . item' && !empty($data->id))
+			if ($formName === 'com_menus.item' && !empty($data->id))
 			{
-				$preview = 'index . php ? Itemid = ' . $data->id;
-				if (!empty($data->language) && $data->language !== ' * ')
+				$preview = 'index.php?Itemid=' . $data->id;
+				if (!empty($data->language) && $data->language !== '*')
 				{
-					$preview .= ' & lang = ' . $data->language;
+					$preview .= '&lang=' . $data->language;
 				}
 			}
 
