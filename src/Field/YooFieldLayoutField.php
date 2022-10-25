@@ -1,14 +1,14 @@
 <?php
-/**
+/*
  * @package    jYProExtra System Plugin
  * @version    __DEPLOY_VERSION__
- * @author     Septdir Workshop - www.septdir.com
- * @copyright  Copyright (c) 2018 - 2021 Septdir Workshop. All rights reserved.
+ * @author     Septdir Workshop - septdir.com
+ * @copyright  Copyright (c) 2018 - 2022 Septdir Workshop. All rights reserved.
  * @license    GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
  * @link       https://www.septdir.com/
  */
 
-namespace Joomla\Component\Fields\Administrator\Field;
+namespace Joomla\Plugin\System\JYProExtra\Field;
 
 defined('_JEXEC') or die;
 
@@ -17,8 +17,9 @@ use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Filesystem\Path;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\Component\Fields\Administrator\Field\FieldLayoutField;
 
-class YOOFieldLayoutField extends FieldLayoutField
+class YooFieldLayoutField extends FieldLayoutField
 {
 	/**
 	 * The form field type.

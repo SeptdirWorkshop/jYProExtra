@@ -10,6 +10,7 @@
 	<version>1.8.2-dev</version>
 	<description>PLG_SYSTEM_JYPROEXTRA_DESCRIPTION</description>
 	<scriptfile>script.php</scriptfile>
+	<namespace path="src">Joomla\Plugin\System\JYProExtra</namespace>
 	<languages folder="language">
 		<language tag="en-GB">en-GB/en-GB.plg_system_jyproextra.ini</language>
 		<language tag="en-GB">en-GB/en-GB.plg_system_jyproextra.sys.ini</language>
@@ -23,6 +24,7 @@
 		<folder>forms</folder>
 		<folder>helpers</folder>
 		<folder>templates</folder>
+		<folder>src</folder>
 		<filename plugin="jyproextra">jyproextra.php</filename>
 	</files>
 	<media destination="plg_system_jyproextra" folder="media">

@@ -393,8 +393,8 @@ class PlgSystemJYProExtra extends CMSPlugin
 				'ModuleLayout'    => 'YooModuleLayout',
 			);
 
-			$fieldsPath = '/plugins/system/jyproextra/fields/';
-			$fieldsPath .= ($this->joomla4) ? 'joomla4' : 'joomla3';
+			$fieldPath   = '/plugins/system/jyproextra/fields/joomla3';
+			$fieldPrefix = '\Joomla\Plugin\System\JYProExtra\Field';
 
 			foreach ($form->getFieldsets() as $fieldset)
 			{
@@ -406,7 +406,14 @@ class PlgSystemJYProExtra extends CMSPlugin
 						$name  = $field->__get('fieldname');
 						$group = $field->__get('group');
 						$form->setFieldAttribute($name, 'type', $types[$type], $group);
-						$form->setFieldAttribute($name, 'addfieldpath', $fieldsPath, $group);
+						if ($this->joomla4)
+						{
+							$form->setFieldAttribute($name, 'addfieldprefix', $fieldPrefix, $group);
+						}
+						else
+						{
+							$form->setFieldAttribute($name, 'addfieldpath', $fieldPath, $group);
+						}
 					}
 				}
 			}

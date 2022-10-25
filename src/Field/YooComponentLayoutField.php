@@ -1,14 +1,14 @@
 <?php
-/**
+/*
  * @package    jYProExtra System Plugin
  * @version    __DEPLOY_VERSION__
- * @author     Septdir Workshop - www.septdir.com
- * @copyright  Copyright (c) 2018 - 2021 Septdir Workshop. All rights reserved.
+ * @author     Septdir Workshop - septdir.com
+ * @copyright  Copyright (c) 2018 - 2022 Septdir Workshop. All rights reserved.
  * @license    GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
  * @link       https://www.septdir.com/
  */
 
-namespace Joomla\CMS\Form\Field;
+namespace Joomla\Plugin\System\JYProExtra\Field;
 
 defined('_JEXEC') or die;
 
@@ -16,12 +16,13 @@ use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Filesystem\Path;
+use Joomla\CMS\Form\Field\ComponentlayoutField;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\Database\ParameterType;
 
-class YooModuleLayout extends ModulelayoutField
+class YooComponentLayoutField extends ComponentlayoutField
 {
 	/**
 	 * The form field type.
@@ -30,7 +31,7 @@ class YooModuleLayout extends ModulelayoutField
 	 *
 	 * @since  1.8.1
 	 */
-	protected $type = 'YooModuleLayout';
+	protected $type = 'YOOComponentLayout';
 
 	/**
 	 * Method to get the field input for module layouts.
@@ -53,21 +54,19 @@ class YooModuleLayout extends ModulelayoutField
 
 		$client = ApplicationHelper::getClientInfo($clientId);
 
-		// Get the module.
-		$module = (string) $this->element['module'];
+		// Get the extension.
+		$extension = (string) $this->element['extension'];
 
-		if (empty($module) && ($this->form instanceof Form))
+		if (empty($extension) && ($this->form instanceof Form))
 		{
-			$module = $this->form->getValue('module');
+			$extension = $this->form->getValue('extension');
 		}
 
-		$module = preg_replace('#\W#', '', $module);
+		$extension = preg_replace('#\W#', '', $extension);
 
-		// Get the template.
 		$template = (string) $this->element['template'];
 		$template = preg_replace('#\W#', '', $template);
 
-		// Get the style.
 		$template_style_id = 0;
 
 		if ($this->form instanceof Form)
@@ -76,23 +75,26 @@ class YooModuleLayout extends ModulelayoutField
 			$template_style_id = (int) preg_replace('#\W#', '', $template_style_id);
 		}
 
-		// If an extension and view are present build the options.
-		if ($module && $client)
+		$view = (string) $this->element['view'];
+		$view = preg_replace('#\W#', '', $view);
+
+		// If a template, extension and view are present build the options.
+		if ($extension && $view && $client)
 		{
 			// Load language file
 			$lang = Factory::getLanguage();
-			$lang->load($module . '.sys', $client->path)
-			|| $lang->load($module . '.sys', $client->path . '/modules/' . $module);
+			$lang->load($extension . '.sys', JPATH_ADMINISTRATOR)
+			|| $lang->load($extension . '.sys', JPATH_ADMINISTRATOR . '/components/' . $extension);
 
 			// Get the database object and a new query object.
-			$db = Factory::getDbo();
+			$db    = Factory::getDbo();
 			$query = $db->getQuery(true);
 
 			// Build the query.
 			$query->select(
 				[
-					$db->quoteName('element'),
-					$db->quoteName('name'),
+					$db->quoteName('e.element'),
+					$db->quoteName('e.name'),
 				]
 			)
 				->from($db->quoteName('#__extensions', 'e'))
@@ -136,29 +138,60 @@ class YooModuleLayout extends ModulelayoutField
 				}
 			}
 
-			// Build the search paths for module layouts.
-			$module_path = Path::clean($client->path . '/modules/' . $module . '/tmpl');
+			// Build the search paths for component layouts.
+			$component_path = Path::clean($client->path . '/components/' . $extension . '/tmpl/' . $view);
+
+			// Check if the new layouts folder exists, else use the old one
+			if (!is_dir($component_path))
+			{
+				$component_path = Path::clean($client->path . '/components/' . $extension . '/views/' . $view . '/tmpl');
+			}
 
 			// Prepare array of component layouts
-			$module_layouts = array();
+			$component_layouts = array();
 
 			// Prepare the grouped list
 			$groups = array();
 
-			// Add the layout options from the module path.
-			if (is_dir($module_path) && ($module_layouts = Folder::files($module_path, '^[^_]*\.php$')))
+			// Add a Use Global option if useglobal="true" in XML file
+			if ((string) $this->element['useglobal'] === 'true')
 			{
-				// Create the group for the module
-				$groups['_'] = array();
-				$groups['_']['id'] = $this->id . '__';
-				$groups['_']['text'] = Text::sprintf('JOPTION_FROM_MODULE');
+				$groups[Text::_('JOPTION_FROM_STANDARD')]['items'][] = HTMLHelper::_('select.option', '', Text::_('JGLOBAL_USE_GLOBAL'));
+			}
+
+			// Add the layout options from the component path.
+			if (is_dir($component_path) && ($component_layouts = Folder::files($component_path, '^[^_]*\.xml$', false, true)))
+			{
+				// Create the group for the component
+				$groups['_']          = array();
+				$groups['_']['id']    = $this->id . '__';
+				$groups['_']['text']  = Text::sprintf('JOPTION_FROM_COMPONENT');
 				$groups['_']['items'] = array();
 
-				foreach ($module_layouts as $file)
+				foreach ($component_layouts as $i => $file)
 				{
-					// Add an option to the module group
-					$value = basename($file, '.php');
-					$text = $lang->hasKey($key = strtoupper($module . '_LAYOUT_' . $value)) ? Text::_($key) : $value;
+					// Attempt to load the XML file.
+					if (!$xml = simplexml_load_file($file))
+					{
+						unset($component_layouts[$i]);
+
+						continue;
+					}
+
+					// Get the help data from the XML file if present.
+					if (!$menu = $xml->xpath('layout[1]'))
+					{
+						unset($component_layouts[$i]);
+
+						continue;
+					}
+
+					$menu = $menu[0];
+
+					// Add an option to the component group
+					$value                  = basename($file, '.xml');
+					$component_layouts[$i]  = $value;
+					$text                   = isset($menu['option']) ? Text::_($menu['option']) : (isset($menu['title']) ? Text::_($menu['title']) : $value);
 					$groups['_']['items'][] = HTMLHelper::_('select.option', '_:' . $value, $text);
 				}
 			}
@@ -172,15 +205,23 @@ class YooModuleLayout extends ModulelayoutField
 					$lang->load('tpl_' . $template->element . '.sys', $client->path)
 					|| $lang->load('tpl_' . $template->element . '.sys', $client->path . '/templates/' . $template->element);
 
-					$template_path = Path::clean($client->path . '/templates/' . $template->element . '/html/' . $module);
+					$template_path = Path::clean(
+						$client->path
+						. '/templates/'
+						. $template->element
+						. '/html/'
+						. $extension
+						. '/'
+						. $view
+					);
 
 					// Add the layout options from the template path.
-					if (is_dir($template_path) && ($files = Folder::files($template_path, '^[^_]*\.php$')))
+					if (is_dir($template_path) && ($files = Folder::files($template_path, '^[^_]*\.php$', false, true)))
 					{
 						foreach ($files as $i => $file)
 						{
-							// Remove layout that already exist in component ones
-							if (\in_array($file, $module_layouts))
+							// Remove layout files that exist in the component folder
+							if (\in_array(basename($file, '.php'), $component_layouts))
 							{
 								unset($files[$i]);
 							}
@@ -189,18 +230,30 @@ class YooModuleLayout extends ModulelayoutField
 						if (\count($files))
 						{
 							// Create the group for the template
-							$groups[$template->element] = array();
-							$groups[$template->element]['id'] = $this->id . '_' . $template->element;
-							$groups[$template->element]['text'] = Text::sprintf('JOPTION_FROM_TEMPLATE', $template->name);
-							$groups[$template->element]['items'] = array();
+							$groups[$template->name]          = array();
+							$groups[$template->name]['id']    = $this->id . '_' . $template->element;
+							$groups[$template->name]['text']  = Text::sprintf('JOPTION_FROM_TEMPLATE', $template->name);
+							$groups[$template->name]['items'] = array();
 
 							foreach ($files as $file)
 							{
 								// Add an option to the template group
-								$value = basename($file, '.php');
-								$text = $lang->hasKey($key = strtoupper('TPL_' . $template->element . '_' . $module . '_LAYOUT_' . $value))
+								$value                              = basename($file, '.php');
+								$text                               = $lang
+									->hasKey(
+										$key = strtoupper(
+											'TPL_'
+											. $template->name
+											. '_'
+											. $extension
+											. '_'
+											. $view
+											. '_LAYOUT_'
+											. $value
+										)
+									)
 									? Text::_($key) : $value;
-								$groups[$template->element]['items'][] = HTMLHelper::_('select.option', $template->element . ':' . $value, $text);
+								$groups[$template->name]['items'][] = HTMLHelper::_('select.option', $template->element . ':' . $value, $text);
 							}
 						}
 					}
