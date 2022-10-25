@@ -104,6 +104,15 @@ class PlgSystemJYProExtra extends CMSPlugin
 	protected $remove_js = false;
 
 	/**
+	 * Removing Font Awesome function enable.
+	 *
+	 * @var  boolean
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected $remove_fontawesome = false;
+
+	/**
 	 * UIkit icons function enable.
 	 *
 	 * @var  boolean
@@ -188,18 +197,19 @@ class PlgSystemJYProExtra extends CMSPlugin
 		parent::__construct($subject, $config);
 
 		// Set functions status
-		$this->images            = ($this->params->get('images')) ? true : false;
-		$this->inline            = ($this->params->get('inline')) ? true : false;
-		$this->unset_modules     = ($this->params->get('unset_modules')) ? true : false;
-		$this->child             = ($this->params->get('child')) ? true : false;
-		$this->remove_js         = ($this->params->get('remove_js')) ? true : false;
-		$this->uikit_icons       = ($this->params->get('uikit_icons')) ? true : false;
-		$this->pagination        = ($this->params->get('pagination')) ? true : false;
-		$this->toolbar           = ($this->params->get('toolbar')) ? true : false;
-		$this->webp_cache        = ($this->params->get('webp_cache')) ? true : false;
-		$this->remove_update_css = ($this->params->get('remove_update_css')) ? true : false;
-		$this->preview           = ($this->params->get('preview')) ? true : false;
-		$this->joomla4           = (new Version())->isCompatible('4.0');
+		$this->images             = ((int) $this->params->get('images') === 1);
+		$this->inline             = ((int) $this->params->get('inline') === 1);
+		$this->unset_modules      = ((int) $this->params->get('unset_modules') === 1);
+		$this->child              = ((int) $this->params->get('child') === 1);
+		$this->remove_js          = ((int) $this->params->get('remove_js') === 1);
+		$this->remove_fontawesome = ((int) $this->params->get('remove_fontawesome') === 1);
+		$this->uikit_icons        = ((int) $this->params->get('uikit_icons') === 1);
+		$this->pagination         = ((int) $this->params->get('pagination') === 1);
+		$this->toolbar            = ((int) $this->params->get('toolbar') === 1);
+		$this->webp_cache         = ((int) $this->params->get('webp_cache') === 1);
+		$this->remove_update_css  = ((int) $this->params->get('remove_update_css') === 1);
+		$this->preview            = ((int) $this->params->get('preview') === 1);
+		$this->joomla4            = (new Version())->isCompatible('4.0');
 	}
 
 	/**
@@ -718,7 +728,13 @@ class PlgSystemJYProExtra extends CMSPlugin
 	public function onAfterRender()
 	{
 		$body = false;
-		if (($this->images || $this->remove_js || $this->toolbar || $this->remove_update_css) && $this->app->isClient('site')
+		if (($this->images
+				|| $this->remove_js
+				|| $this->remove_fontawesome
+				|| $this->uikit_icons
+				|| $this->toolbar
+				|| $this->remove_update_css)
+			&& $this->app->isClient('site')
 			&& $this->app->getTemplate() === 'yootheme' && $this->app->input->get('format', 'html') == 'html'
 			&& !$this->app->input->get('customizer'))
 		{
@@ -734,6 +750,12 @@ class PlgSystemJYProExtra extends CMSPlugin
 			if ($this->remove_js)
 			{
 				$this->removeJS($body);
+			}
+
+			// Remove Font Awesome
+			if ($this->remove_fontawesome)
+			{
+				$this->removeFontAwesome($body);
 			}
 
 			// Remove or move uikit-icons
@@ -970,6 +992,35 @@ class PlgSystemJYProExtra extends CMSPlugin
 				$script = '	<script>if (typeof jQuery !== "undefined") {' . $jQueryFN . '}</script>';
 
 				$replace .= PHP_EOL . $script . PHP_EOL;
+			}
+
+			// Remove empty lines
+			$replace = preg_replace('#(<\/.*?>|\/>)(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+#', '${1}' . PHP_EOL, $replace);
+
+			// Replace body
+			$body = str_replace($search, $replace, $body);
+		}
+	}
+
+	/**
+	 * Method for remove Font Awesome from head.
+	 *
+	 * @param   string  $body  Current page html.
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected function removeFontAwesome(&$body = '')
+	{
+		if (preg_match('|<head>(.*)</head>|si', $body, $matches))
+		{
+			$search  = $matches[1];
+			$replace = $search;
+			$links   = array('/media/system/css/joomla-fontawesome');
+
+			// Remove links
+			foreach ($links as $src)
+			{
+				$replace = preg_replace('#<link.*href="' . $src . '\..*".*/>#i', '', $replace);
 			}
 
 			// Remove empty lines

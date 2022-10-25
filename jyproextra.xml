@@ -130,6 +130,17 @@
 				</field>
 				<field type="spacer" hr="true"/>
 
+				<field type="note" label="PLG_SYSTEM_JYPROEXTRA_REMOVE_FONTAWESOME"
+					   description="PLG_SYSTEM_JYPROEXTRA_REMOVE_FONTAWESOME_DESC"/>
+				<field name="remove_fontawesome" type="radio"
+					   label="PLG_SYSTEM_JYPROEXTRA_ENABLE"
+					   class="btn-group btn-group-yesno"
+					   default="0">
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
+				</field>
+				<field type="spacer" hr="true"/>
+
 				<field type="note" label="PLG_SYSTEM_JYPROEXTRA_UIKIT_ICONS"
 					   description="PLG_SYSTEM_JYPROEXTRA_UIKIT_ICONS_DESC"/>
 				<field name="uikit_icons" type="radio"
