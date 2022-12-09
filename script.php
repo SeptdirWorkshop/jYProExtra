@@ -39,7 +39,7 @@ class PlgSystemJYProExtraInstallerScript
 	 *
 	 * @since  1.0.0
 	 */
-	protected $minimumJoomla = '3.9.0';
+	protected $minimumJoomla = '4.2';
 
 	/**
 	 * YOOtheme external files.
